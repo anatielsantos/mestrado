@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Other files and directories
+datasets/
+pix2pix-tensorflow/
+projetos/
+
+mestrado.code-workspace
