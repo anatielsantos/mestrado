@@ -61,7 +61,7 @@ import os
 import time
 from matplotlib import pyplot as plt
 from IPython import display
-!pip install - U tensorboard
+#!pip install - U tensorboard
 
 """## Load the dataset
 
@@ -590,7 +590,7 @@ display.IFrame(
 ## Restore the latest checkpoint and test
 """
 
-!ls {checkpoint_dir}
+#!ls {checkpoint_dir}
 
 # restoring the latest checkpoint in checkpoint_dir
 checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
