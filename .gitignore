@@ -132,5 +132,6 @@ dmypy.json
 datasets/
 pix2pix-tensorflow/
 projetos/
+keras-contrib/
 
 mestrado.code-workspace
