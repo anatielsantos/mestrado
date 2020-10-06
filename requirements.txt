@@ -1,0 +1,10 @@
+keras
+matplotlib
+numpy
+scipy
+pillow
+#urllib
+#skimage
+scikit-image
+#gzip
+#pickle
