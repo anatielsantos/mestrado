@@ -3,6 +3,7 @@ matplotlib
 numpy
 scipy
 pillow
+opencv-python
 #urllib
 #skimage
 scikit-image
