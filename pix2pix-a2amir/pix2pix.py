@@ -537,7 +537,7 @@ def save_generated_images(model1, test_input, tar1, address, gt_name):
     prediction1 = model1(test_input, training=True)
     A=prediction1[0] * 0.5 + 0.5
     # img=Image.fromarray(A)
-    mpimg.imsave(address+str(gt_name), A)
+    mpimg.imsave(address+str(gt_name), np.asarray(A))
     
 
 # Run the trained model on the entire test dataset
