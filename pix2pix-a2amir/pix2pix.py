@@ -519,7 +519,7 @@ def train(dataset, epochs):
         print('Time taken for epoch {} is {} sec\n'.format(
             epoch + 1, time.time()-start))
 
-#train(train_dataset, EPOCHS)
+train(train_dataset, EPOCHS)
 
 # restoring the latest checkpoint in checkpoint_dir 200_1500_3/  Croped_4284_200/
 checkpoint.restore(tf.train.latest_checkpoint(
@@ -553,4 +553,3 @@ for inp, tar1, name in test_dataset.take(774):
     print("Test ", c, "/", len(test_dataset.take(774)))
     c+=1
     save_generated_images(generator, inp, tar1, address, gt_name)
-    break
