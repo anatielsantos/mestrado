@@ -134,5 +134,6 @@ pix2pix-tensorflow/
 projetos/
 keras-contrib/
 pix2pix-a2amir/checkpoints/
+pix2pix-a2amir/generated_images/
 
 mestrado.code-workspace
