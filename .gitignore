@@ -133,5 +133,6 @@ datasets/
 pix2pix-tensorflow/
 projetos/
 keras-contrib/
+pix2pix-a2amir/checkpoints/
 
 mestrado.code-workspace
