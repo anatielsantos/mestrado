@@ -437,7 +437,7 @@ Generate Images
     The generator will then translate the input image into the output we expect.
     Last step is to plot the predictions and voila!'''
 
-EPOCHS = 10
+EPOCHS = 200
 
 
 def generate_images(model, test_input, tar, save, address):
