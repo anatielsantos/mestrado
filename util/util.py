@@ -3,8 +3,13 @@ import glob
 import numpy as np
 from skimage.color import rgb2gray
 from skimage.io import imsave
+import cv2
 
-conjunto = "infection_mask"
+import os
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
+conjunto = "lung_and_infection_mask"
 path_train = glob.glob(f"/home/anatielsantos/mestrado/bases/covid-19/{conjunto}/train/*.nii")
 path_test = glob.glob(f"/home/anatielsantos/mestrado/bases/covid-19/{conjunto}/test/*.nii")
 path_val = glob.glob(f"/home/anatielsantos/mestrado/bases/covid-19/{conjunto}/val/*.nii")
@@ -47,6 +52,25 @@ def reshape_center(path_image):
         imsave(f"/home/anatielsantos/workspace_visual/datasets/covid-19/B/val/{new_name_img}.jpg", new_image, check_contrast=False)
         print(f"Imagem {i} salva")
 
+# resize 50%
+# images = diretório das imagens originais
+# path_sava = diretório para salvar as imagens redimensionadas
+def resize_image(images, path_save, conjunto):
+    print("Resizing start")
+    for image in images:
+        img = cv2.imread(image)
+
+        name_img = image.split('/')
+        new_name_img = name_img[-1][0:]
+
+        scale_percent = 50
+        width = int(img.shape[1] * scale_percent / 100)
+        height = int(img.shape[0] * scale_percent / 100)
+        dim = (width, height)
+        img_resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
+        cv2.imwrite(path_save + conjunto + "/" + new_name_img, img_resized)
+    print("Resizing end")
+
 # separa um volume em slices 2D
 # path = conjunto de imagens a serem fatiadas
 # group =  grupo (train, test, val)
@@ -67,8 +91,13 @@ def save_slice(path_image, group, num_image = 0):
             print("Salvando imagem ", i, "slice ", p)
             new_slice_gray = rgb2gray(new_slice)
 
-            imsave(f"/home/anatielsantos/workspace_visual/datasets/covid-19/B/{group}/img{i+num_image}_slc{p}.jpg", new_slice_gray, check_contrast=False)
+            imsave(f"/home/anatielsantos/workspace_visual/mestrado/datasets/covid19/B-lung-lesion/{group}/img{i+num_image}_slc{p}.jpg", new_slice_gray, check_contrast=False)
 
-save_slice(path_train, "train", 0)
-save_slice(path_test, "test", 6)
-save_slice(path_val, "val", 8)
+#save_slice(path_train, "train", 0)
+#save_slice(path_test, "test", 6)
+#save_slice(path_val, "val", 8)
+
+ttv = "val"
+images = glob.glob(f"/home/anatielsantos/mestrado/bases/bases_dissertacao/datasets_covid19/datasets/covid19/A/{ttv}/*.jpg")
+path_save = "/home/anatielsantos/mestrado/bases/bases_dissertacao/datasets_covid19/datasets/covid19-256x256/A/"
+resize_image(images, path_save, ttv)
