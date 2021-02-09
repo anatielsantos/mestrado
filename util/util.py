@@ -94,25 +94,7 @@ def save_slice(path_image, group, num_image = 0):
         images = (images >0)*1
     print(images.shape)
     np.savez_compressed(f"/home/anatielsantos/workspace_visual/mestrado/datasets/covid19/B-lesion/{group}.npz",images)
-        # exit()
-        # new_slice = np.ones((img_array.shape[1], img_array.shape[2]))
-
-        # for p in range(img_array.shape[0]):
-        #     for l in range(img_array.shape[1]):
-        #         for c in range(img_array.shape[2]):
-        #             new_slice[l, c] = img_array[p, l, c]
-
-        #     print("Salvando imagem ", i, "slice ", p)
-            
-        #     new_slice_gray = rgb2gray(new_slice)
-
-            #imsave(f"/home/anatielsantos/workspace_visual/mestrado/datasets/covid19/B-lung-lesion/{group}/img{i+num_image}_slc{p}.jpg", new_slice_gray, check_contrast=False)
 
 save_slice(path_train, "train", 0)
 save_slice(path_test, "test", 6)
 save_slice(path_val, "val", 8)
-
-ttv = "val"
-images = glob.glob(f"/home/anatielsantos/mestrado/bases/bases_dissertacao/datasets_covid19/datasets/covid19/A/{ttv}/*.jpg")
-path_save = "/home/anatielsantos/mestrado/bases/bases_dissertacao/datasets_covid19/datasets/covid19-256x256/A/"
-resize_image(images, path_save, ttv)
