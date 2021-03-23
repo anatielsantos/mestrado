@@ -11,9 +11,9 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 conjunto = "lung_and_infection_mask"
-path_train = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/infection_mask/train/*.nii")
-path_test = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/infection_mask/test/*.nii")
-path_val = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/infection_mask/val/*.nii")
+path_train = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/images/train/*.nii")
+path_test = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/images/test/*.nii")
+path_val = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/images/val/*.nii")
 print("Train: ", len(path_train), "imagens")
 print("Test: ", len(path_test), "imagens")
 print("Val: ", len(path_val), "imagens")
@@ -96,16 +96,19 @@ def save_slice(path_image, group, num_image = 0):
         # else:
         #     images = np.concatenate([images,resized_image_array])
 
+        # gaussian blur
+        img_array_blur = cv2.GaussianBlur(img_array,(5,5),0)
+
         if images is None:
-            images=img_array
+            images=img_array_blur
         else:
-            images = np.concatenate([images, img_array])
+            images = np.concatenate([images, img_array_blur])
 
         # binarizar imagem
-        images = (images >0)*1
+        #images = (images >0)*1
     print(images.shape)
-    np.savez_compressed(f"/home/anatielsantos/workspace_visual/mestrado/datasets/covid19/B-lesion/512x512/{group}.npz",images)
+    np.savez_compressed(f"/home/anatielsantos/workspace_visual/mestrado/datasets/covid19/A/512x512/{group}_blur.npz",images)
 
-# save_slice(path_train, "train", 0)
+save_slice(path_train, "train", 0)
 save_slice(path_test, "test", 6)
 save_slice(path_val, "val", 8)
