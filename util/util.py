@@ -10,15 +10,25 @@ import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
-conjunto = "lung_and_infection_mask"
-path_train = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/images/train/*.nii")
-path_test = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/images/test/*.nii")
-path_val = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/images/val/*.nii")
-print("Train: ", len(path_train), "imagens")
-print("Test: ", len(path_test), "imagens")
-print("Val: ", len(path_val), "imagens")
+# images
+path_images_train = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/images/train/*.nii")
+path_images_test = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/images/test/*.nii")
+path_images_val = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/images/val/*.nii")
+print("Images")
+print("Train: ", len(path_images_train), "imagens")
+print("Test: ", len(path_images_test), "imagens")
+print("Val: ", len(path_images_val), "imagens")
 
-# retorna o maior shape entre as imagens do dataset
+# masks
+path_masks_train = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/infection_mask/train/*.nii")
+path_masks_test = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/infection_mask/test/*.nii")
+path_masks_val = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/infection_mask/val/*.nii")
+print("Masks")
+print("Train: ", len(path_masks_train), "masks")
+print("Test: ", len(path_masks_test), "masks")
+print("Val: ", len(path_masks_val), "masks")
+
+# returns the largest shape among dataset images
 def shape_larger(path_image):
     maior_x = 0
     maior_y = 0
@@ -33,7 +43,7 @@ def shape_larger(path_image):
     
     return maior_x, maior_y
 
-# salva todas as imagens do dataset com o shape da maior imagem
+# save all the dataset images with the shape of the largest image
 def reshape_center(path_image):
     x, y = shape_larger(path_image)
 
@@ -53,62 +63,75 @@ def reshape_center(path_image):
         imsave(f"/home/anatielsantos/workspace_visual/datasets/covid-19/B/val/{new_name_img}.jpg", new_image, check_contrast=False)
         print(f"Imagem {i} salva")
 
-# resize 50%
-# images = diretório das imagens originais
-# path_sava = diretório para salvar as imagens redimensionadas
-def resize_image(images, path_save, conjunto):
-    print("Resizing start")
-    for image in images:
-        img = cv2.imread(image)
+# resize images do rown, cols
+def resize_image(img_array, rows, cols):
+    resized_image_array = np.zeros((img_array.shape[0],rows,cols),dtype=np.float64)
+    #print(img_array.shape,np.unique(img_array))
+    
+    for slice_id in range(img_array.shape[0]):
+        resized_image_array[slice_id]=resize(img_array[slice_id],(rows,cols),preserve_range=True)
+    print(resized_image_array.shape)
 
-        name_img = image.split('/')
-        new_name_img = name_img[-1][0:]
+    return resized_image_array
 
-        scale_percent = 50
-        width = int(img.shape[1] * scale_percent / 100)
-        height = int(img.shape[0] * scale_percent / 100)
-        dim = (width, height)
-        img_resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
-        cv2.imwrite(path_save + conjunto + "/" + new_name_img, img_resized)
-    print("Resizing end")
+# returns only images with lesion
+def masked(img_array, mask_array):
+    fatias = 0
+    for slice_id in range(mask_array.shape[0]):
+        if np.amax(mask_array[slice_id]) > 0:
+            fatias += 1
 
-# separa um volume em slices 2D
-# path = conjunto de imagens a serem fatiadas
-# group =  grupo (train, test, val)
-# contagem inicial da imagem dentro do grupo (nomes sequenciais nos 3 grupos)
-def save_slice(path_image, group, num_image = 0):
+    masked_images = np.zeros((fatias,mask_array.shape[1],mask_array.shape[2]),dtype=np.float64)
+
+    s = 0
+    for slice_id in range(img_array.shape[0]):
+        if np.amax(mask_array[slice_id]) > 0:
+            masked_images[fatias - (fatias - s)]=img_array[slice_id]
+            s += 1
+    print(masked_images.shape)
+
+    return masked_images
+
+# blur
+def blur_image(image_array):
+    image_array_blur = cv2.blur(image_array,(5,5))
+
+    return image_array_blur
+
+# group = train, test, val
+def save_npz(path_image, path_mask, group):
     images = None
     for i in range(len(path_image)):
+        # read images
         img = sitk.ReadImage(path_image[i])
         img_array = sitk.GetArrayFromImage(img)
-        
-        # resize
-        #resized_image_array = np.zeros((img_array.shape[0],512,512),dtype=np.float64)
-        print(img_array.shape,np.unique(img_array))
-        
-        # for slice_id in range(img_array.shape[0]):
-        #     resized_image_array[slice_id]=resize(img_array[slice_id],(256,256),preserve_range=True)
-        # print(resized_image_array.shape,np.unique(resized_image_array))
 
+        # read masks
+        mask = sitk.ReadImage(path_mask[i])
+        mask_array = sitk.GetArrayFromImage(mask)
+
+        # masked images
+        print("Masked images")
+        img_masked = masked(img_array, mask_array)
+
+        # resize images
+        # print("Resizing start")
+        # resized_image_array = resize_image(img_masked, 256, 256)
+
+        # blur
+        # print("Blurring start")
+        # img_blur = blur_image(resized_image_array)
         
-        # if images is None:
-        #     images=resized_image_array
-        # else:
-        #     images = np.concatenate([images,resized_image_array])
-
-        # gaussian blur
-        img_array_blur = cv2.GaussianBlur(img_array,(5,5),0)
-
         if images is None:
-            images=img_array_blur
+            images=img_masked
         else:
-            images = np.concatenate([images, img_array_blur])
+            images = np.concatenate([images,img_masked])
 
-        # binarizar imagem
-        #images = (images >0)*1
+        # binarize image
+        #images = (images > 0) * 1
     print(images.shape)
-    np.savez_compressed(f"/home/anatielsantos/workspace_visual/mestrado/datasets/covid19/A/512x512/{group}_blur.npz",images)
+    #np.savez_compressed(f"/home/anatielsantos/workspace_visual/mestrado/datasets/covid19/A/512x512/{group}_masked.npz",images)
 
-save_slice(path_train, "train", 0)
-save_slice(path_test, "test", 6)
-save_slice(path_val, "val", 8)
+save_npz(path_images_train, path_masks_train, "train")
+save_npz(path_images_test, path_masks_test, "test")
+save_npz(path_images_val, path_masks_val, "val")
