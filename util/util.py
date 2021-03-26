@@ -1,7 +1,6 @@
 import SimpleITK as sitk
 import glob
 import numpy as np
-from skimage.color import rgb2gray
 from skimage.transform import resize
 from skimage.io import imsave
 import cv2
@@ -130,7 +129,7 @@ def save_npz(path_image, path_mask, group):
         # binarize image
         #images = (images > 0) * 1
     print(images.shape)
-    #np.savez_compressed(f"/home/anatielsantos/workspace_visual/mestrado/datasets/covid19/A/512x512/{group}_masked.npz",images)
+    np.savez_compressed(f"/home/anatielsantos/workspace_visual/mestrado/datasets/covid19/A/512x512/{group}_masked.npz",images)
 
 save_npz(path_images_train, path_masks_train, "train")
 save_npz(path_images_test, path_masks_test, "test")
