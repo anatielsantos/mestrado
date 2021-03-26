@@ -69,25 +69,29 @@ def resize_image(img_array, rows, cols):
     
     for slice_id in range(img_array.shape[0]):
         resized_image_array[slice_id]=resize(img_array[slice_id],(rows,cols),preserve_range=True)
-    print(resized_image_array.shape)
 
     return resized_image_array
 
 # returns only images with lesion
-def masked(img_array, mask_array):
+# img_or_mask = save "img" or save "mask"
+def masked(img_array, mask_array, img_or_mask):
     fatias = 0
     for slice_id in range(mask_array.shape[0]):
         if np.amax(mask_array[slice_id]) > 0:
             fatias += 1
 
     masked_images = np.zeros((fatias,mask_array.shape[1],mask_array.shape[2]),dtype=np.float64)
+    
+    if img_or_mask == "img":
+        save = img_array
+    elif img_or_mask == "mask":
+        save = mask_array
 
     s = 0
     for slice_id in range(img_array.shape[0]):
         if np.amax(mask_array[slice_id]) > 0:
-            masked_images[fatias - (fatias - s)]=img_array[slice_id]
+            masked_images[fatias - (fatias - s)]=save[slice_id]
             s += 1
-    print(masked_images.shape)
 
     return masked_images
 
@@ -110,15 +114,12 @@ def save_npz(path_image, path_mask, group):
         mask_array = sitk.GetArrayFromImage(mask)
 
         # masked images
-        print("Masked images")
-        img_masked = masked(img_array, mask_array)
+        img_masked = masked(img_array, mask_array, "img")
 
         # resize images
-        # print("Resizing start")
         # resized_image_array = resize_image(img_masked, 256, 256)
 
         # blur
-        # print("Blurring start")
         # img_blur = blur_image(resized_image_array)
         
         if images is None:
