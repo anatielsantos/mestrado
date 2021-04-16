@@ -101,6 +101,19 @@ def blur_image(image_array):
 
     return image_array_blur
 
+def imadjust(x,a,b,c,d,gamma=1):
+    # Similar to imadjust in MATLAB.
+    # Converts an image range from [a,b] to [c,d].
+    # The Equation of a line can be used for this transformation:
+    #   y=((d-c)/(b-a))*(x-a)+c
+    # However, it is better to use a more generalized equation:
+    #   y=((x-a)/(b-a))^gamma*(d-c)+c
+    # If gamma is equal to 1, then the line equation is used.
+    # When gamma is not equal to 1, then the transformation is not linear.
+
+    y = (((x - a) / (b - a)) ** gamma) * (d - c) + c
+    return y
+
 # group = train, test, val
 def save_npz(path_image, path_mask, group):
     images = None
@@ -121,16 +134,19 @@ def save_npz(path_image, path_mask, group):
 
         # blur
         # img_blur = blur_image(resized_image_array)
+
+        # normalization 0 to 1
+        img_float = imadjust(img_masked,img_masked.min(),img_masked.max(),0,1)
         
         if images is None:
-            images=img_masked
+            images=img_float
         else:
-            images = np.concatenate([images,img_masked])
+            images = np.concatenate([images,img_float])
 
         # binarize image
         #images = (images > 0) * 1
     print(images.shape)
-    np.savez_compressed(f"/home/anatielsantos/workspace_visual/mestrado/datasets/covid19/A/512x512/{group}_masked.npz",images)
+    np.savez_compressed(f"/home/anatielsantos/workspace_visual/mestrado/datasets/covid19/A/512x512/{group}_masked_float.npz",images)
 
 save_npz(path_images_train, path_masks_train, "train")
 save_npz(path_images_test, path_masks_test, "test")
