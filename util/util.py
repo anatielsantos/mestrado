@@ -5,10 +5,13 @@ from skimage.transform import resize
 from skimage.io import imsave
 import cv2
 
+from load_data import load_train_data, load_test_data, load_val_data
+
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
+# load data
 # images
 path_images_train = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/images/train/*.nii")
 path_images_test = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/images/test/*.nii")
@@ -19,9 +22,9 @@ print("Test: ", len(path_images_test), "imagens")
 print("Val: ", len(path_images_val), "imagens")
 
 # masks
-path_masks_train = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/infection_mask/train/*.nii")
-path_masks_test = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/infection_mask/test/*.nii")
-path_masks_val = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/infection_mask/val/*.nii")
+path_masks_train = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/lung_and_infection_mask/train/*.nii")
+path_masks_test = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/lung_and_infection_mask/test/*.nii")
+path_masks_val = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/lung_and_infection_mask/val/*.nii")
 print("Masks")
 print("Train: ", len(path_masks_train), "masks")
 print("Test: ", len(path_masks_test), "masks")
@@ -78,7 +81,8 @@ def masked(img_array, mask_array, img_or_mask):
     fatias = 0
     for slice_id in range(mask_array.shape[0]):
         if np.amax(mask_array[slice_id]) > 0:
-            fatias += 1
+             if np.amax(mask_array[slice_id]) == 3:
+                fatias += 1
 
     masked_images = np.zeros((fatias,mask_array.shape[1],mask_array.shape[2]),dtype=np.float64)
     
@@ -90,8 +94,9 @@ def masked(img_array, mask_array, img_or_mask):
     s = 0
     for slice_id in range(img_array.shape[0]):
         if np.amax(mask_array[slice_id]) > 0:
-            masked_images[fatias - (fatias - s)]=save[slice_id]
-            s += 1
+            if np.amax(mask_array[slice_id]) == 3:
+                masked_images[fatias - (fatias - s)]=save[slice_id]
+                s += 1
 
     return masked_images
 
@@ -114,8 +119,22 @@ def imadjust(x,a,b,c,d,gamma=1):
     y = (((x - a) / (b - a)) ** gamma) * (d - c) + c
     return y
 
+def extract_lung(images, masks):
+    print(images.shape)
+    print(masks.shape)
+    
+    new_image = images
+    for s in range(len(new_image[:,0,0])):
+        for l in range(len(new_image[0,:,0])):
+            for c in range(len(new_image[0,0,:])):
+                if (masks[s,l,c] == 0):
+                    new_image[s,l,c] = 0
+        
+        #imsave(f"/home/anatielsantos/Desktop/tes{s}.jpg", new_image[s], check_contrast=False)
+    return new_image
+
 # group = train, test, val
-def save_npz(path_image, path_mask, group):
+def preprocess(path_image, path_mask):
     images = None
     for i in range(len(path_image)):
         # read images
@@ -127,7 +146,7 @@ def save_npz(path_image, path_mask, group):
         mask_array = sitk.GetArrayFromImage(mask)
 
         # masked images
-        img_masked = masked(img_array, mask_array, "img")
+        img_masked = masked(img_array, mask_array, "mask")
 
         # resize images
         # resized_image_array = resize_image(img_masked, 256, 256)
@@ -136,18 +155,33 @@ def save_npz(path_image, path_mask, group):
         # img_blur = blur_image(resized_image_array)
 
         # normalization 0 to 1
-        img_float = imadjust(img_masked,img_masked.min(),img_masked.max(),0,1)
+        # img_float = imadjust(img_masked,img_masked.min(),img_masked.max(),0,1)
         
         if images is None:
-            images=img_float
+            images = img_masked
         else:
-            images = np.concatenate([images,img_float])
+            images = np.concatenate([images,img_masked])
 
         # binarize image
-        #images = (images > 0) * 1
-    print(images.shape)
-    np.savez_compressed(f"/home/anatielsantos/workspace_visual/mestrado/datasets/covid19/A/512x512/{group}_masked_float.npz",images)
+        # images = (images > 0) * 1
 
-save_npz(path_images_train, path_masks_train, "train")
-save_npz(path_images_test, path_masks_test, "test")
-save_npz(path_images_val, path_masks_val, "val")
+    return images   
+
+if __name__=="__main__":
+    # extract lung
+    print("Extracting lung CT")
+    img_train, mask_train = load_train_data()
+    img_val, mask_val = load_val_data()
+    img_test, mask_test = load_test_data()
+    
+    # images = extract_lung(img_train, mask_train)
+    images = extract_lung(img_val, mask_val)
+    # images = extract_lung(img_test, mask_test)
+    
+    # images = preprocess(path_images_train, path_masks_train)
+    # images = preprocess(path_images_val, path_masks_val)
+    # images = preprocess(path_images_test, path_masks_test)
+    
+    group = "val"
+    subset = "A"
+    np.savez_compressed(f"/home/anatielsantos/workspace_visual/mestrado/datasets/covid19/{subset}/512x512/masked_lung/{group}_masked_lung.npz",images)
