@@ -167,6 +167,17 @@ def preprocess(path_image, path_mask):
 
     return images   
 
+# clahe equalization
+def equalize_clahe(images):
+    print("Clahe equalization...")
+    final_img = images
+    for i in range(images.shape[0]):
+        if i % 10 == 0:
+            print(i, "/", images.shape[0])
+        final_img[i][:,:,0] = equalize_adapthist(images[i][:,:,0])
+                                 
+    return final_img
+
 if __name__=="__main__":
     # extract lung
     print("Extracting lung CT")
