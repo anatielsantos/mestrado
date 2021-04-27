@@ -130,10 +130,8 @@ dmypy.json
 
 # Other files and directories
 datasets/
-pix2pix-tensorflow/
 projetos/
 keras-contrib/
-pix2pix-a2amir/checkpoints/
-pix2pix-a2amir/generated_images/
+pix2pix_r/
 
 mestrado.code-workspace
