@@ -3,13 +3,14 @@ import glob
 import numpy as np
 from skimage.transform import resize
 from skimage.io import imsave
+from skimage.exposure import equalize_adapthist
 import cv2
 
 from load_data import load_train_data, load_test_data, load_val_data
 
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 # load data
 # images
@@ -22,9 +23,9 @@ print("Test: ", len(path_images_test), "imagens")
 print("Val: ", len(path_images_val), "imagens")
 
 # masks
-path_masks_train = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/lung_and_infection_mask/train/*.nii")
-path_masks_test = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/lung_and_infection_mask/test/*.nii")
-path_masks_val = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/lung_and_infection_mask/val/*.nii")
+path_masks_train = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/lung_mask/train/*.nii")
+path_masks_test = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/lung_mask/test/*.nii")
+path_masks_val = glob.glob("/home/anatielsantos/mestrado/bases/covid-19-nii/lung_mask/val/*.nii")
 print("Masks")
 print("Train: ", len(path_masks_train), "masks")
 print("Test: ", len(path_masks_test), "masks")
@@ -102,6 +103,8 @@ def masked(img_array, mask_array, img_or_mask):
 
 # blur
 def blur_image(image_array):
+    print("Blurring image...")
+
     image_array_blur = cv2.blur(image_array,(5,5))
 
     return image_array_blur
@@ -116,13 +119,13 @@ def imadjust(x,a,b,c,d,gamma=1):
     # If gamma is equal to 1, then the line equation is used.
     # When gamma is not equal to 1, then the transformation is not linear.
 
+    print("Adjusting image [0 1] ...")
+
     y = (((x - a) / (b - a)) ** gamma) * (d - c) + c
     return y
 
 def extract_lung(images, masks):
-    print(images.shape)
-    print(masks.shape)
-    
+    print("Extracting lung...")
     new_image = images
     for s in range(len(new_image[:,0,0])):
         for l in range(len(new_image[0,:,0])):
@@ -132,6 +135,15 @@ def extract_lung(images, masks):
         
         #imsave(f"/home/anatielsantos/Desktop/tes{s}.jpg", new_image[s], check_contrast=False)
     return new_image
+
+# clahe equalization
+def equalize_clahe(images):
+    print("Clahe equalization...")
+    final_img = images
+    for i in range(images.shape[0]):
+        final_img[i] = equalize_adapthist(images[i])
+                                 
+    return final_img
 
 # group = train, test, val
 def preprocess(path_image, path_mask):
@@ -146,53 +158,52 @@ def preprocess(path_image, path_mask):
         mask_array = sitk.GetArrayFromImage(mask)
 
         # masked images
-        img_masked = masked(img_array, mask_array, "mask")
+        # img_masked = masked(img_array, mask_array, "mask")
 
         # resize images
         # resized_image_array = resize_image(img_masked, 256, 256)
 
         # blur
-        # img_blur = blur_image(resized_image_array)
+        #img_blur = blur_image(img_array)
 
         # normalization 0 to 1
-        # img_float = imadjust(img_masked,img_masked.min(),img_masked.max(),0,1)
+        img_float = imadjust(img_array,img_array.min(),img_array.max(),0,1)
+
+        # clahe equalization
+        clahe = equalize_clahe(img_float)
+
+        # extract lung
+        lung = extract_lung(clahe, mask_array)
         
         if images is None:
-            images = img_masked
+            images = lung
         else:
-            images = np.concatenate([images,img_masked])
+            images = np.concatenate([images,lung])
 
         # binarize image
-        # images = (images > 0) * 1
+        #images = (images > 0) * 1
 
     return images   
 
-# clahe equalization
-def equalize_clahe(images):
-    print("Clahe equalization...")
-    final_img = images
-    for i in range(images.shape[0]):
-        if i % 10 == 0:
-            print(i, "/", images.shape[0])
-        final_img[i][:,:,0] = equalize_adapthist(images[i][:,:,0])
-                                 
-    return final_img
-
 if __name__=="__main__":
     # extract lung
-    print("Extracting lung CT")
-    img_train, mask_train = load_train_data()
-    img_val, mask_val = load_val_data()
-    img_test, mask_test = load_test_data()
+
+    # img_train, mask_train = load_train_data()
+    # img_val, mask_val = load_val_data()
+    # img_test, mask_test = load_test_data()
     
+    # img_train_blur = blur_image(img_train)
+    # img_val_blur = blur_image(img_val)
+    # img_test_blur = blur_image(img_test)
+
     # images = extract_lung(img_train, mask_train)
-    images = extract_lung(img_val, mask_val)
+    # images = extract_lung(img_train, mask_val)
     # images = extract_lung(img_test, mask_test)
     
     # images = preprocess(path_images_train, path_masks_train)
     # images = preprocess(path_images_val, path_masks_val)
-    # images = preprocess(path_images_test, path_masks_test)
+    images = preprocess(path_images_test, path_masks_test)
     
-    group = "val"
+    group = "test"
     subset = "A"
-    np.savez_compressed(f"/home/anatielsantos/workspace_visual/mestrado/datasets/covid19/{subset}/512x512/masked_lung/{group}_masked_lung.npz",images)
+    np.savez_compressed(f"/home/anatielsantos/workspace_visual/mestrado/datasets/covid19/{subset}/512x512/lung_extracted/{group}_lung_clahe.npz",images)
