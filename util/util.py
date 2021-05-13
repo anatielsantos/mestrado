@@ -31,6 +31,8 @@ print("Train: ", len(path_masks_train), "masks")
 print("Test: ", len(path_masks_test), "masks")
 print("Val: ", len(path_masks_val), "masks")
 
+print("-"*30)
+
 # returns the largest shape among dataset images
 def shape_larger(path_image):
     maior_x = 0
@@ -119,7 +121,7 @@ def imadjust(x,a,b,c,d,gamma=1):
     # If gamma is equal to 1, then the line equation is used.
     # When gamma is not equal to 1, then the transformation is not linear.
 
-    print("Adjusting image [0 1] ...")
+    print("Adjusting image [0 1]...")
 
     y = (((x - a) / (b - a)) ** gamma) * (d - c) + c
     return y
@@ -206,4 +208,5 @@ if __name__=="__main__":
     
     group = "test"
     subset = "A"
+    print("Saving file...")
     np.savez_compressed(f"/home/anatielsantos/workspace_visual/mestrado/datasets/covid19/{subset}/512x512/lung_extracted/{group}_lung_clahe.npz",images)
