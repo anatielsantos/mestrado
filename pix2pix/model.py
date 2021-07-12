@@ -1,5 +1,8 @@
 import tensorflow as tf
 from tensorflow.python.keras.engine import data_adapter
+from keras.models import Model
+from keras.layers import *
+from keras.optimizers import Adam, SGD
 
 from losses import dice
 
@@ -41,55 +44,109 @@ class Pix2Pix(tf.keras.Model):
 
         return result
 
+    # Unet generator architecture changed
     def build_generator(self):
         inputs = tf.keras.layers.Input(shape=[self.image_height,self.image_width,self.input_channels])
+        conv1 = Conv2D(32, (3, 3), padding='same')(inputs)
+        conv1 = LeakyReLU()(conv1)
+        conv1 = Dropout(0.2)(conv1)
+        conv1 = BatchNormalization()(conv1)
+        conv1 = Conv2D(32, (3, 3),padding='same')(conv1)
+        conv1 = LeakyReLU()(conv1)
+        conv1 = BatchNormalization()(conv1)
+        conc1 = concatenate([inputs, conv1], axis=3)
+        pool1 = AveragePooling2D(pool_size=(2, 2))(conc1)
 
-        down_stack = [
-            self.downsample(64, 4, apply_batchnorm=False), # (bs, 128, 128, 64)
-            self.downsample(128, 4), # (bs, 64, 64, 128)
-            self.downsample(256, 4), # (bs, 32, 32, 256)
-            self.downsample(512, 4), # (bs, 16, 16, 512)
-            self.downsample(512, 4), # (bs, 8, 8, 512)
-            self.downsample(512, 4), # (bs, 4, 4, 512)
-            self.downsample(512, 4), # (bs, 2, 2, 512)
-            self.downsample(512, 4), # (bs, 1, 1, 512)
-        ]
 
-        up_stack = [
-            self.upsample(512, 4, apply_dropout=True), # (bs, 2, 2, 1024)
-            self.upsample(512, 4, apply_dropout=True), # (bs, 4, 4, 1024)
-            self.upsample(512, 4, apply_dropout=True), # (bs, 8, 8, 1024)
-            self.upsample(512, 4), # (bs, 16, 16, 1024)
-            self.upsample(256, 4), # (bs, 32, 32, 512)
-            self.upsample(128, 4), # (bs, 64, 64, 256)
-            self.upsample(64, 4), # (bs, 128, 128, 128)
-        ]
+        conv2 = Conv2D(64, (3, 3), padding='same')(pool1)
+        conv2 = LeakyReLU()(conv2)
+        conv2 = BatchNormalization()(conv2)
+        conv2 = Dropout(0.2)(conv2)
+        conv2 = Conv2D(64, (3, 3), padding='same')(conv2)
+        conv2 = LeakyReLU()(conv2)
+        conv2 = BatchNormalization()(conv2)
+        conc2 = concatenate([pool1, conv2], axis=3)
+        pool2 = AveragePooling2D(pool_size=(2, 2))(conc2)
 
-        initializer = tf.random_normal_initializer(0., 0.02)
-        last = tf.keras.layers.Conv2DTranspose(self.output_channels, 4,
-            strides=2,
-            padding='same',
-            kernel_initializer=initializer,
-            activation='sigmoid') # (bs, 256, 256, 3)
 
-        x = inputs
+        conv3 = Conv2D(128, (3, 3), padding='same')(pool2)
+        conv3 = LeakyReLU()(conv3)
+        conv3 = BatchNormalization()(conv3)
+        conv3 = Dropout(0.2)(conv3)
+        conv3 = Conv2D(128, (3, 3), padding='same')(conv3)
+        conv3 = LeakyReLU()(conv3)
+        conv3 = BatchNormalization()(conv3)
+        conc3 = concatenate([pool2, conv3], axis=3)
+        pool3 = AveragePooling2D(pool_size=(2, 2))(conc3)
 
-        # Downsampling through the model
-        skips = []
-        for down in down_stack:
-            x = down(x)
-            skips.append(x)
 
-        skips = reversed(skips[:-1])
+        conv4 = Conv2D(256, (3, 3), padding='same')(pool3)
+        conv4 = LeakyReLU()(conv4)
+        conv4 = BatchNormalization()(conv4)
+        conv4 = Dropout(0.2)(conv4)
+        conv4 = Conv2D(256, (3, 3), padding='same')(conv4)
+        conv4 = LeakyReLU()(conv4)
+        conv4 = BatchNormalization()(conv4)
+        conc4 = concatenate([pool3, conv4], axis=3)
+        pool4 = AveragePooling2D(pool_size=(2, 2))(conc4)
 
-        # Upsampling and establishing the skip connections
-        for up, skip in zip(up_stack, skips):
-            x = up(x)
-            x = tf.keras.layers.Concatenate()([x, skip])
 
-        x = last(x)
+        conv5 = Conv2D(512, (3, 3), padding='same')(pool4)
+        conv5 = LeakyReLU()(conv5)
+        conv5 = BatchNormalization()(conv5)
+        conv5 = Dropout(0.2)(conv5)
+        conv5 = Conv2D(512, (3, 3), padding='same')(conv5)
+        conv5 = LeakyReLU()(conv5)
+        conv5 = BatchNormalization()(conv5)
+        conc5 = concatenate([pool4, conv5], axis=3)
 
-        self.generator = tf.keras.Model(inputs=inputs, outputs=x)
+
+        up6 = concatenate([Conv2DTranspose(256, (2, 2), strides=(2, 2), padding='same')(conc5), conv4], axis=3)
+        conv6 = Conv2D(256, (3, 3), padding='same')(up6)
+        conv6 = LeakyReLU()(conv6)
+        conv6 = BatchNormalization()(conv6)
+        conv6 = Dropout(0.2)(conv6)
+        conv6 = Conv2D(256, (3, 3), padding='same')(conv6)
+        conv6 = LeakyReLU()(conv6)
+        conv6 = BatchNormalization()(conv6)
+        conc6 = concatenate([up6, conv6], axis=3)
+
+
+        up7 = concatenate([Conv2DTranspose(128, (2, 2), strides=(2, 2), padding='same')(conc6), conv3], axis=3)
+        conv7 = Conv2D(128, (3, 3), padding='same')(up7)
+        conv7 = LeakyReLU()(conv7)
+        conv7 = BatchNormalization()(conv7)
+        conv7 = Dropout(0.2)(conv7)
+        conv7 = Conv2D(128, (3, 3), padding='same')(conv7)
+        conv7 = LeakyReLU()(conv7)
+        conv7 = BatchNormalization()(conv7)
+        conc7 = concatenate([up7, conv7], axis=3)
+
+
+        up8 = concatenate([Conv2DTranspose(64, (2, 2), strides=(2, 2), padding='same')(conc7), conv2], axis=3)
+        conv8 = Conv2D(64, (3, 3), padding='same')(up8)
+        conv8 = LeakyReLU()(conv8)
+        conv8 = BatchNormalization()(conv8)
+        conv8 = Dropout(0.2)(conv8)
+        conv8 = Conv2D(64, (3, 3), padding='same')(conv8)
+        conv8 = LeakyReLU()(conv8)
+        conv8 = BatchNormalization()(conv8)
+        conc8 = concatenate([up8, conv8], axis=3)
+
+
+        up9 = concatenate([Conv2DTranspose(32, (2, 2), strides=(2, 2), padding='same')(conc8), conv1], axis=3)
+        conv9 = Conv2D(32, (3, 3), padding='same')(up9)
+        conv9 = LeakyReLU()(conv9)
+        conv9 = Dropout(0.2)(conv9)
+        conv9 = Conv2D(32, (3, 3), padding='same')(conv9)
+        conv9 = LeakyReLU()(conv9)
+        conc9 = concatenate([up9, conv9], axis=3)
+
+
+        conv10 = Conv2D(1, (1, 1), activation='sigmoid')(conc9)
+        
+        self.generator = Model(inputs=inputs, outputs=[conv10])
+        
 
     def build_discriminator(self):
         initializer = tf.random_normal_initializer(0., 0.02)

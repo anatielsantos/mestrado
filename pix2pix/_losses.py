@@ -1,6 +1,5 @@
 import tensorflow as tf
 import tensorflow.keras.backend as K
-from sklearn.metrics import confusion_matrix
 
 loss_object = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
@@ -49,16 +48,3 @@ def iou(y_true, y_pred):
     union = K.sum(y_true_f) + K.sum(y_pred_f) - intersection
     iou_ = intersection/union
     return iou_
-
-def calc_metric(y_pred,y_true):
-    cm = confusion_matrix(y_pred.flatten(),y_true.flatten())
-    tn, fp, fn, tp = cm.ravel()
-    dice = (2.0 * tp) / ((2.0 * tp) + fp + fn)
-    jaccard = (1.0 * tp) / (tp + fp + fn) 
-    sensitivity = (1.0 * tp) / (tp + fn)
-    specificity = (1.0 * tn) / (tn + fp)
-    accuracy = (1.0 * (tn + tp)) / (tn + fp + tp + fn)
-    auc = 1 - 0.5 * (((1.0 * fp) / (fp + tn)) + ((1.0 * fn) / (fn + tp)))
-    prec = float(tp)/float(tp + fp)
-    fscore = float(2*tp)/float(2*tp + fp + fn)
-    return dice,jaccard,sensitivity,specificity,accuracy,auc,prec,fscore
