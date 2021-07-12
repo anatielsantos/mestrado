@@ -3,16 +3,16 @@ from __future__ import print_function
 # GPU
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "6"
+os.environ["CUDA_VISIBLE_DEVICES"] = "5"
 
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import *
-from tensorflow.keras.optimizers import Adam, SGD
-from tensorflow.keras.callbacks import ModelCheckpoint, LearningRateScheduler, History
+from keras.models import Model
+from keras.layers import *
+from keras.optimizers import Adam, SGD
+from keras.callbacks import ModelCheckpoint, LearningRateScheduler, History
 
 from skimage.segmentation import mark_boundaries
 from skimage.exposure import rescale_intensity
@@ -20,7 +20,8 @@ from skimage.transform import resize
 from skimage.io import imsave
 import skimage.transform as trans
 import skimage.io as io
-from data_covid import load_train_data, load_test_data, dice_coef, dice_coef_loss, dice_bce_loss
+from data_covid import load_train_data, load_val_data, load_test_data, dice_coef, dice_coef_loss
+from losses import *
 
 
 BATCH_SIZE = 1
@@ -28,47 +29,6 @@ EPOCHS = 500
 
 # model
 def unet(pretrained_weights = None,input_size = (512,512,1)):
-#     inputs = Input(input_size)
-#     conv1 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(inputs)
-#     conv1 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv1)
-#     pool1 = MaxPooling2D(pool_size=(2, 2))(conv1)
-#     conv2 = Conv2D(128, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(pool1)
-#     conv2 = Conv2D(128, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv2)
-#     pool2 = MaxPooling2D(pool_size=(2, 2))(conv2)
-#     conv3 = Conv2D(256, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(pool2)
-#     conv3 = Conv2D(256, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv3)
-#     pool3 = MaxPooling2D(pool_size=(2, 2))(conv3)
-#     conv4 = Conv2D(512, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(pool3)
-#     conv4 = Conv2D(512, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv4)
-#     drop4 = Dropout(0.5)(conv4)
-#     pool4 = MaxPooling2D(pool_size=(2, 2))(drop4)
-
-#     conv5 = Conv2D(1024, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(pool4)
-#     conv5 = Conv2D(1024, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv5)
-#     drop5 = Dropout(0.5)(conv5)
-
-#     up6 = Conv2D(512, 2, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(UpSampling2D(size = (2,2))(drop5))
-#     merge6 = concatenate([drop4,up6], axis = 3)
-#     conv6 = Conv2D(512, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(merge6)
-#     conv6 = Conv2D(512, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv6)
-
-#     up7 = Conv2D(256, 2, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(UpSampling2D(size = (2,2))(conv6))
-#     merge7 = concatenate([conv3,up7], axis = 3)
-#     conv7 = Conv2D(256, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(merge7)
-#     conv7 = Conv2D(256, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv7)
-
-#     up8 = Conv2D(128, 2, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(UpSampling2D(size = (2,2))(conv7))
-#     merge8 = concatenate([conv2,up8], axis = 3)
-#     conv8 = Conv2D(128, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(merge8)
-#     conv8 = Conv2D(128, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv8)
-
-#     up9 = Conv2D(64, 2, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(UpSampling2D(size = (2,2))(conv8))
-#     merge9 = concatenate([conv1,up9], axis = 3)
-#     conv9 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(merge9)
-#     conv9 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv9)
-#     conv9 = Conv2D(2, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv9)
-#     conv10 = Conv2D(1, 1, activation = 'sigmoid')(conv9)
-
     inputs = Input(input_size)
     conv1 = Conv2D(32, (3, 3), padding='same')(inputs)
     conv1 = LeakyReLU()(conv1)
@@ -168,10 +128,14 @@ def unet(pretrained_weights = None,input_size = (512,512,1)):
 
     conv10 = Conv2D(1, (1, 1), activation='sigmoid')(conc9)
 
-    #model = Model(inputs, conv10)
-    model = Model(inputs=[inputs], outputs=[conv10])
-    model.compile(optimizer = Adam(lr = 1e-4),  loss=dice_bce_loss, metrics=[dice_coef], run_eagerly=True)
-    #model.summary()
+    model = Model(inputs=inputs, outputs=[conv10])
+
+    # model.compile(optimizer=Adam(lr=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.000000199), loss=dice_coef_loss, metrics=['accuracy', dice_coef])
+
+    otimizador = Adam(lr=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.000000199)
+    model.compile(optimizer=otimizador, loss=dice_coef_loss, metrics=['accuracy',dice_coef])
+    # self.model.compile(optimizer=otimizador, loss=focal_tversky, metrics=['accuracy',dice_jonnison])
+    # exit()
 
     if(pretrained_weights):
         model.load_weights(pretrained_weights)
@@ -185,6 +149,10 @@ def train():
 
     imgs_train, imgs_mask_train = load_train_data()
     print('Loaded train images: ', imgs_train.shape, imgs_mask_train.shape)
+    print('-'*30)
+    
+    imgs_val, imgs_mask_val = load_val_data()
+    print('Loaded val images: ', imgs_val.shape, imgs_mask_val.shape)
     print('-'*30)
 
     imgs_train = imgs_train.astype('float32')
@@ -201,19 +169,23 @@ def train():
     
     model = unet()
     #Saving the weights and the loss of the best predictions we obtained
-    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/models/dice_bce_weights_unet_masked_lung_500epc.h5', monitor='val_loss', save_best_only=True)
+    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/models/unet2d/weights_unet_masked_lung_clahe_500epc.h5', monitor='val_loss', save_best_only=True)
+    # checkpoint = ModelCheckpoint('/data/flavio/anatiel/models/unet2d/weights_train_unet_masked_lung_blur_3epc.h5', monitor='dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
+    # checkpoint2 = ModelCheckpoint('/data/flavio/anatiel/models/unet2d/weights_val_unet_masked_lung_blur_3epc.h5', monitor='val_dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
     
     print('Fitting model...')
     print('-'*30)
     history = model.fit(imgs_train, imgs_mask_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.2, callbacks=[model_checkpoint])
+    # history = model.fit(imgs_train, imgs_mask_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, callbacks=[checkpoint,checkpoint2], validation_data=(imgs_val, imgs_mask_val))
 
-    model.save('/data/flavio/anatiel/models/dice_bce_weights_unet_masked_lung_500epc_last.h5')
+    model.save('/data/flavio/anatiel/models/unet2d/weights_unet_masked_lung_clahe_500epc_last.h5')
         
     # convert the history.history dict to a pandas DataFrame:     
     hist_df = pd.DataFrame(history.history) 
     
     # save to json:  
-    hist_json_file = 'anatiel/unet/dice_bce_history_masked_lung_500epc.json'
+    print("saving history...")
+    hist_json_file = 'anatiel/unet/history_masked_lung_clahe_500epc.json' 
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("history saved")
@@ -225,7 +197,7 @@ def train():
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Test'], loc='upper left')
     # save plot to file
-    plt.savefig('anatiel/unet/dice_bce_plot_dice_masked_lung_500epc.png')
+    plt.savefig('anatiel/unet/plot_dice_masked_lung_clahe_500epc.png')
     plt.show()
     
 if __name__ == "__main__":
