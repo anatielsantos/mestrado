@@ -56,14 +56,13 @@ mpp.Pool.istarmap = istarmap
 import os
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 # The GPU id to use, usually either "0" or "1"
-os.environ["CUDA_VISIBLE_DEVICES"]="6"
+os.environ["CUDA_VISIBLE_DEVICES"]="0"
 import keras.models as models
 from skimage.transform import resize
 from skimage.io import imsave
 import numpy as np
 import SimpleITK as sitk
 import glob
-
 np.random.seed(1337)
 # import tensorflow as tf
 import tensorflow as tf
@@ -366,9 +365,9 @@ def main():
     ext = '.nii.gz'
     search_pattern = '*'
 
-    main_dir = '/data/flavio/anatiel/datasets/dissertacao/dataset1/PulmoesZeroPedding/'
-    model_path = '/data/flavio/anatiel/models/extractlung/2D-Unet_lungs.h5'
-    normalize_path = '/data/flavio/anatiel/models/extractlung/images_test_lungs.npz'
+    main_dir = '/home/anatiel/mestrado/datasets/dissertacao/dataset1/PulmoesZeroPedding/'
+    model_path = '/home/anatiel/mestrado/models/extractlung/2D-Unet_lungs.h5'
+    normalize_path = '/home/anatiel/mestrado/models/extractlung/images_test_lungs.npz'
 
     src_dir = '{}'.format(main_dir)
     dst_dir = '{}/PulmoesMascaraUNet'.format(main_dir)
