@@ -20,7 +20,6 @@ def extract_lung(exam_id, src_path, mask_path, output_path):
         npyMask = sitk.GetArrayFromImage(mask)
 
         new_image = npyImage
-        print(new_image.shape)
         for s in range(len(new_image[:,0,0])):
             if s % 10 == 0:
                 print(s, "/", len(new_image[:,0,0]))
@@ -77,7 +76,6 @@ def exec_extract_lung(src_dir, mask_dir, dst_dir, ext, reverse = False, desc = N
             
 def main():
     ext = '.nii.gz'
-    width = 640 # new width
     main_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/PulmoesZeroPedding' 
     main_mask_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/PulmoesZeroPedding/PulmoesMascaraUNet'
     
