@@ -5,11 +5,37 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 import numpy as np
 import SimpleITK as sitk
-from tqdm import tqdm
 import traceback
 import glob
+from tqdm import tqdm
+from scipy.ndimage import morphology
 
-from skimage.measure import label   
+from skimage.measure import label
+
+def fill_holes(binary_masks):
+    # binary_masks = morphology.binary_fill_holes(
+    # morphology.binary_dilation(
+    #     morphology.binary_fill_holes(binary_masks > 0),
+    #     iterations=1), structure=np.ones((10,10,1))
+    # ).astype(np.int) 
+
+    # return binary_masks
+
+    binary_masks = morphology.binary_fill_holes(
+    morphology.binary_dilation(
+        morphology.binary_fill_holes(binary_masks > 0),
+        iterations=1)
+    )
+
+    return binary_masks
+
+
+    area, radius = mean_blob_size(m_b)
+    struct_size = int(1.25 * radius)
+    struct_el = morph.disk(struct_size)
+    m_padded = pad_mask(m_, pad=struct_size)
+    m_padded = morph.binary_closing(m_padded, selem=struct_el)
+
 
 def getLargestCC(segmentation):
     labels = label(segmentation)
@@ -22,7 +48,7 @@ def getLargestCC(segmentation):
     
     label_max_1=(labels == largest_1).astype(int)
     label_max_2=(labels == largest_2).astype(int)
-    return label_max_1, label_max_2
+    return (label_max_1 + label_max_2)
 
 def get_voi_lung(exam_id, path_mask, output_path):
     try:
@@ -31,9 +57,11 @@ def get_voi_lung(exam_id, path_mask, output_path):
         image_mask = sitk.ReadImage(path_mask)
         image_array = sitk.GetArrayFromImage(image_mask).astype(np.int16)
 
-        roi_1, roi_2 = getLargestCC(image_array)
+        voi = getLargestCC(image_array)
 
-        itkImage = sitk.GetImageFromArray((roi_1 + roi_2).astype(np.int16))
+        voi_fill_hole = fill_holes(voi)
+
+        itkImage = sitk.GetImageFromArray(voi_fill_hole.astype(np.int16))
         sitk.WriteImage(itkImage, output_path)
 
         del image_mask
@@ -59,7 +87,7 @@ def exec_get_voi_lung(mask_dir, dst_dir, ext, reverse = False, desc = None):
 
     for input_path in input_mask_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_LungBBox' + ext
+        output_path = dst_dir + '/' + exam_id + '_LungOK' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -79,10 +107,10 @@ def exec_get_voi_lung(mask_dir, dst_dir, ext, reverse = False, desc = None):
 def main():
     ext = '.nii.gz'
     main_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/PulmoesZeroPedding' 
-    main_mask_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/PulmoesZeroPedding/PulmoesMascaraUNet'
+    main_mask_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/PulmoesZeroPedding/PulmoesMascara'
     
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = '{}/BBox'.format(main_dir)
+    dst_dir = '{}/PulmoesMascaraOK'.format(main_dir)
 
     exec_get_voi_lung(mask_dir, dst_dir, ext, reverse = False, desc = 'Getting bounding box')
 
