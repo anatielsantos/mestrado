@@ -1,25 +1,33 @@
+# GPU
+import os
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
+# import tensorflow.compat.v1 as tf
+# tf.disable_v2_behavior()
+import tensorflow as tf
 
 import sys
 import SimpleITK as sitk
 import numpy as np
-import glob, cv2, os, math, time
-import statistics as stat
-import threading
-from scipy.ndimage import morphology
-from scipy import signal
-from matplotlib import pyplot
+import glob, os, time
+# import statistics as stat
+# import threading
+# from scipy.ndimage import morphology
+# from scipy import signal
+# from matplotlib import pyplot
 import multiprocessing as mp
 from itertools import repeat
 import traceback
 import time
 
-from scipy import ndimage as ndi
-from skimage.segmentation import watershed
+# from scipy import ndimage as ndi
+# from skimage.segmentation import watershed
 from skimage.feature import peak_local_max
 
-#if IN_NOTEBOOK:
-#    from tqdm.notebook import tqdm
-#else:
+# if IN_NOTEBOOK:
+#     from tqdm.notebook import tqdm
+# else:
 from tqdm import tqdm
 
 """# Definição de funções"""
@@ -48,25 +56,18 @@ def istarmap(self, func, iterable, chunksize=1):
         ))
     return (item for chunk in result for item in chunk)
 
-
 mpp.Pool.istarmap = istarmap
 
 
-
-import os
-os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-# The GPU id to use, usually either "0" or "1"
-os.environ["CUDA_VISIBLE_DEVICES"]="0"
 import keras.models as models
 from skimage.transform import resize
 from skimage.io import imsave
 import numpy as np
 import SimpleITK as sitk
 import glob
+
 np.random.seed(1337)
-# import tensorflow as tf
-import tensorflow as tf
-#tf.set_random_seed(1337)
+# tf.set_random_seed(1337)
 tf.random.set_seed(1337)
 
 from keras.models import Model
@@ -76,9 +77,8 @@ from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, CSVLogger
 from keras.layers import Dense,Flatten, Dropout,BatchNormalization, ZeroPadding2D,Lambda
 from keras import backend as K
 from keras.regularizers import l2
-from keras.utils import plot_model
+# from keras.utils import plot_model
 from keras.layers.advanced_activations import LeakyReLU
-from keras.preprocessing.image import ImageDataGenerator
 from keras.preprocessing.image import ImageDataGenerator
 
 from skimage.transform import resize
@@ -268,17 +268,17 @@ def execExtractLungs(exam_id, input_path, output_path, model, normalize_path):
 
         binary_masks = predictPatient(model, input_path, normalize_path)
 
-        binary_masks = morphology.binary_fill_holes(
-            morphology.binary_dilation(
-                morphology.binary_fill_holes(binary_masks > 0),
-                iterations=1)
-            )
+        # binary_masks = morphology.binary_fill_holes(
+        #     morphology.binary_dilation(
+        #         morphology.binary_fill_holes(binary_masks > 0),
+        #         iterations=1)
+        #     )
 
         # binary_masks.dtype='uint16'
-        itkImage = sitk.GetImageFromArray(int(binary_masks))
+        itkImage = sitk.GetImageFromArray(binary_masks)
 
         image = sitk.ReadImage(input_path)
-        npyImage = sitk.GetArrayFromImage(image)
+        #npyImage = sitk.GetArrayFromImage(image)
 
         # print(image.GetSize())
         # print(image.GetSpacing())
@@ -288,7 +288,7 @@ def execExtractLungs(exam_id, input_path, output_path, model, normalize_path):
         # print(itkImage.GetPixelIDTypeAsString())
 
         # corrige o tipo da imagem pois no Colab está saindo 64 bits
-        # itkImage = sitk.Cast(itkImage,image.GetPixelIDValue())    
+        itkImage = sitk.Cast(itkImage,image.GetPixelIDValue())    
         
         itkImage.CopyInformation(image)
 
@@ -365,12 +365,12 @@ def main():
     ext = '.nii.gz'
     search_pattern = '*'
 
-    main_dir = '/home/anatiel/mestrado/datasets/dissertacao/dataset1/PulmoesZeroPedding/'
-    model_path = '/home/anatiel/mestrado/models/extractlung/2D-Unet_lungs.h5'
-    normalize_path = '/home/anatiel/mestrado/models/extractlung/images_test_lungs.npz'
+    main_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset2/PulmoesZeroPedding/'
+    model_path = '/home/anatielsantos/mestrado/models/extractlung/2D-Unet_lungs.h5'
+    normalize_path = '/home/anatielsantos/mestrado/models/extractlung/images_test_lungs.npz'
 
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/PulmoesMascaraUNet'.format(main_dir)
+    dst_dir = '{}/PulmoesMascara'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
@@ -381,11 +381,11 @@ def main():
     execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, normalize_path, reverse = False, desc = 'Extraindo pulmões (unet)', parallel=False)
 
 if __name__ == '__main__':
-    arquivo = open("anatiel/dissertacao/lungseg/time_execution_lungseg.txt", "a")
-    start = time.time()
+    # arquivo = open("anatiel/dissertacao/lungseg/time_execution_lungseg.txt", "a")
+    # start = time.time()
     main()
-    stop = time.time()
-    exec_time = stop - start
-    arquivo.write(str(exec_time))
+    # stop = time.time()
+    # exec_time = stop - start
+    # arquivo.write(str(exec_time))
 
     
