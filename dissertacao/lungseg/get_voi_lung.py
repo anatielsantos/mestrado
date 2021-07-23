@@ -13,29 +13,21 @@ from scipy.ndimage import morphology
 from skimage.measure import label
 
 def fill_holes(binary_masks):
-    # binary_masks = morphology.binary_fill_holes(
-    # morphology.binary_dilation(
-    #     morphology.binary_fill_holes(binary_masks > 0),
-    #     iterations=1), structure=np.ones((10,10,1))
-    # ).astype(np.int) 
-
-    # return binary_masks
-
+    # with structure element
     binary_masks = morphology.binary_fill_holes(
     morphology.binary_dilation(
         morphology.binary_fill_holes(binary_masks > 0),
-        iterations=1)
-    )
+        iterations=1), structure=np.ones((3,1,1))
+    ).astype(np.int) 
+
+    # without structure element
+    # binary_masks = morphology.binary_fill_holes(
+    # morphology.binary_dilation(
+    #     morphology.binary_fill_holes(binary_masks > 0),
+    #     iterations=1)
+    # )
 
     return binary_masks
-
-
-    area, radius = mean_blob_size(m_b)
-    struct_size = int(1.25 * radius)
-    struct_el = morph.disk(struct_size)
-    m_padded = pad_mask(m_, pad=struct_size)
-    m_padded = morph.binary_closing(m_padded, selem=struct_el)
-
 
 def getLargestCC(segmentation):
     labels = label(segmentation)
@@ -105,14 +97,15 @@ def exec_get_voi_lung(mask_dir, dst_dir, ext, reverse = False, desc = None):
         get_voi_lung(exam_id, input_mask_paths[i], output_paths[i])
 
 def main():
+    dataset = 'dataset1'
     ext = '.nii.gz'
-    main_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/PulmoesZeroPedding' 
-    main_mask_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/PulmoesZeroPedding/PulmoesMascara'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/PulmoesZeroPedding' 
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/PulmoesZeroPedding/PulmoesMascara'
     
     mask_dir = '{}'.format(main_mask_dir)
     dst_dir = '{}/PulmoesMascaraOK'.format(main_dir)
 
-    exec_get_voi_lung(mask_dir, dst_dir, ext, reverse = False, desc = 'Getting bounding box')
+    exec_get_voi_lung(mask_dir, dst_dir, ext, reverse = False, desc = f'Getting VOI from {dataset}')
 
 if __name__=="__main__":    
     main()
