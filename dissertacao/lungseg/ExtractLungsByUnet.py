@@ -341,8 +341,9 @@ def execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, normali
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
-            print('Arquivo ' + output_path + ' ja existe.')
-            continue
+            print('Arquivo ' + output_path + ' ja existe e será removido')
+            os.remove(output_path)
+            # continue
 
         exam_ids.append(exam_id)
         input_paths.append(input_path)

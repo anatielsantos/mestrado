@@ -19,16 +19,16 @@ def extract_lung(exam_id, src_path, mask_path, output_path):
         mask = sitk.ReadImage(mask_path)
         npyMask = sitk.GetArrayFromImage(mask)
 
-        new_image = npyImage
-        for s in range(len(new_image[:,0,0])):
-            if s % 10 == 0:
-                print(s, "/", len(new_image[:,0,0]))
-            for l in range(len(new_image[0,:,0])):
-                for c in range(len(new_image[0,0,:])):
-                    if (npyMask[s,l,c] < 1):
-                        new_image[s,l,c] = 0
+        # new_image = npyImage
+        # for s in range(len(new_image[:,0,0])):
+        #     if s % 10 == 0:
+        #         print(s, "/", len(new_image[:,0,0]))
+        #     for l in range(len(new_image[0,:,0])):
+        #         for c in range(len(new_image[0,0,:])):
+        #             if (npyMask[s,l,c] < 1):
+        #                 new_image[s,l,c] = 0
         
-        itkImage = sitk.GetImageFromArray(new_image)
+        itkImage = sitk.GetImageFromArray((npyImage * npyMask))
         sitk.WriteImage(itkImage, output_path)
 
         del image
@@ -61,8 +61,9 @@ def exec_extract_lung(src_dir, mask_dir, dst_dir, ext, reverse = False, desc = N
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
-            print('Arquivo ' + output_path + ' ja existe.')
-            continue
+            print('Arquivo ' + output_path + ' ja existe e será removido')
+            os.remove(output_path)
+            # continue
 
         exam_ids.append(exam_id)
         input_src_paths.append(input_path)
@@ -75,16 +76,17 @@ def exec_extract_lung(src_dir, mask_dir, dst_dir, ext, reverse = False, desc = N
         extract_lung(exam_id, input_src_paths[i], input_mask_paths[i], output_paths[i])
             
 def main():
+    dataset = 'dataset1'
     ext = '.nii.gz'
-    main_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/PulmoesZeroPedding' 
-    main_mask_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/PulmoesZeroPedding/PulmoesMascaraUNet'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/PulmoesZeroPedding' 
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/PulmoesZeroPedding/PulmoesMascaraFillHoles'
     
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/PulmoesMascara'.format(main_dir)
+    dst_dir = '{}/Pulmoes'.format(main_dir)
 
     mask_dir = '{}'.format(main_mask_dir)
 
-    exec_extract_lung(src_dir, mask_dir, dst_dir, ext, reverse = False, desc = 'Extracting lung')
+    exec_extract_lung(src_dir, mask_dir, dst_dir, ext, reverse = False, desc = f'Extracting lung from {dataset}')
 
 if __name__=="__main__":    
     # arquivo = open("anatiel/dissertacao/lungseg/time_execution_zero_padding.txt", "a")

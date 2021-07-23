@@ -18,7 +18,7 @@ def fill_holes(binary_masks):
     morphology.binary_dilation(
         morphology.binary_fill_holes(binary_masks > 0),
         iterations=1), structure=np.ones((3,1,1))
-    ).astype(np.int) 
+    ).astype(np.int)
 
     # without structure element
     # binary_masks = morphology.binary_fill_holes(
@@ -79,12 +79,13 @@ def exec_get_voi_lung(mask_dir, dst_dir, ext, reverse = False, desc = None):
 
     for input_path in input_mask_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_LungOK' + ext
+        output_path = dst_dir + '/' + exam_id + '_FillHoles' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
-            print('Arquivo ' + output_path + ' ja existe.')
-            continue
+            print('Arquivo ' + output_path + ' ja existe e será removido')
+            os.remove(output_path)
+            # continue
 
         exam_ids.append(exam_id)
         input_src_paths.append(input_path)
@@ -97,7 +98,7 @@ def exec_get_voi_lung(mask_dir, dst_dir, ext, reverse = False, desc = None):
         get_voi_lung(exam_id, input_mask_paths[i], output_paths[i])
 
 def main():
-    dataset = 'dataset2'
+    dataset = 'dataset1'
     ext = '.nii.gz'
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/PulmoesZeroPedding' 
     main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/PulmoesZeroPedding/PulmoesMascara'
