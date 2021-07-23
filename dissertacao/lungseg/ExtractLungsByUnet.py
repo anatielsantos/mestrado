@@ -365,13 +365,14 @@ def main():
 
     ext = '.nii.gz'
     search_pattern = '*'
+    dataset = 'dataset2'
 
-    main_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset2/PulmoesZeroPedding/'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/PulmoesZeroPedding/'
     model_path = '/home/anatielsantos/mestrado/models/extractlung/2D-Unet_lungs.h5'
     normalize_path = '/home/anatielsantos/mestrado/models/extractlung/images_test_lungs.npz'
 
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/PulmoesMascara'.format(main_dir)
+    dst_dir = '{}/PulmoesMascara16bits'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
