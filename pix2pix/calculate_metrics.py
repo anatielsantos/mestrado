@@ -23,6 +23,8 @@ path_preds_unet_closing_opening_best = "/data/flavio/anatiel/preds/unet/best/clo
 path_preds_unet_closing_opening_last = "/data/flavio/anatiel/preds/unet/last/closing_opening/"
 #path_preds_unet_closing_opening_last = "/data/flavio/anatiel/preds/unet/last/closing_dilate/"
 
+path_preds_unet_dice_bce = "/data/flavio/anatiel/preds/unet/dice_bce/"
+
 def calculate_metrics(preds, tar_images_test, op):
     print('Calculating metrics...')
     print("-"*30)
@@ -49,12 +51,12 @@ def calculate_metrics(preds, tar_images_test, op):
 if __name__=="__main__":
     
     # ['', '_clahe/', '_blur/']
-    pre_set = '_blur'
+    pre_set = ''
     
     # ['_opening_dilate', '_closing_dilate', '_closing_opening']
-    op = '_closing_opening'
+    op = '_none'
     
-    path = path_preds_unet_closing_opening_last
+    path = path_preds_unet_dice_bce
     preds = np.load(path+'imgs_mask_test'+pre_set+op+'.npy')
     
     # preds = np.load('/data/flavio/anatiel/preds/'+net+'/'+model+'/gen2/imgs_mask_test'+pre_set+op+'_gen2.npy')
