@@ -133,5 +133,6 @@ datasets/
 projetos/
 keras-contrib/
 pix2pix_r/
+dissertacao/dataset/
 
 mestrado.code-workspace
