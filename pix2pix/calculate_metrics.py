@@ -57,7 +57,7 @@ if __name__=="__main__":
     op = '_none'
     
     path = path_preds_unet_dice_bce
-    preds = np.load(path+'imgs_mask_test'+pre_set+op+'.npy')
+    preds = np.load(path+'dice_bceimgs_mask_test'+pre_set+op+'_best.npy')
     
     # preds = np.load('/data/flavio/anatiel/preds/'+net+'/'+model+'/gen2/imgs_mask_test'+pre_set+op+'_gen2.npy')
     
