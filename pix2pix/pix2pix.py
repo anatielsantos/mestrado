@@ -37,12 +37,12 @@ def load_images(path_src, path_mask):
     return [src,tar]
 
 # dataset path
-path_src_train = '/data/flavio/anatiel/datasets/A/512x512/train.npz'
-path_mask_train = '/data/flavio/anatiel/datasets/B_lesion/512x512/train.npz'
-path_src_val = '/data/flavio/anatiel/datasets/A/512x512/val.npz'
-path_mask_val = '/data/flavio/anatiel/datasets/B_lesion/512x512/val.npz'
-path_src_test = '/data/flavio/anatiel/datasets/A/512x512/test_lung.npz'
-path_mask_test = '/data/flavio/anatiel/datasets/B_lesion/512x512/test.npz'
+path_src_train = '/home/flavio/anatiel/mestrado/dissertacao/dataset/A/train.npz'
+path_mask_train = '/home/flavio/anatiel/mestrado/dissertacao/dataset/B_lesion/train.npz'
+path_src_val = '/home/flavio/anatiel/mestrado/dissertacao/dataset/A/val.npz'
+path_mask_val = '/home/flavio/anatiel/mestrado/dissertacao/dataset/B_lesion/val.npz'
+path_src_test = '/home/flavio/anatiel/mestrado/dissertacao/dataset/A/test_lung.npz'
+path_mask_test = '/home/flavio/anatiel/mestrado/dissertacao/dataset/B_lesion/test.npz'
 
 
 # load dataset
