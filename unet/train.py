@@ -195,7 +195,7 @@ def train():
     #Normalization of the train set
     imgs_train -= mean
     imgs_train /= std
-    imgs_mask_train = imgs_mask_train.astype('float32')
+    # imgs_mask_train = imgs_mask_train.astype('float32')
 
     print('Creating and compiling model...')
     print('-'*30)
