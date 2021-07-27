@@ -53,7 +53,8 @@ def compress_dataset(src_dir, dst_dir, ext, reverse = False, desc = None):
     for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
         images.append(load_image(exam_id, input_src_paths[i]))        
 
-    np.savez_compressed(f"{output_path}/{joint}", images)
+    print(images.shape)
+    #np.savez_compressed(f"{output_path}/{joint}", images)
             
 def main():
     ext = '.nii.gz'
