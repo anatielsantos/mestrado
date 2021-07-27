@@ -90,8 +90,8 @@ from sklearn.metrics import confusion_matrix
 K.set_image_data_format('channels_last')
 
 project_name = '2D-Unet'
-img_rows = 512
-img_cols = 512
+img_rows = 640
+img_cols = 640
 img_depth = 1
 smooth = 1.
 
@@ -367,7 +367,7 @@ def main():
     search_pattern = '*'
     dataset = 'dataset2'
 
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding'
     model_path = '/home/anatielsantos/mestrado/models/extractlung/2D-Unet_lungs.h5'
     normalize_path = '/home/anatielsantos/mestrado/models/extractlung/images_test_lungs.npz'
 
