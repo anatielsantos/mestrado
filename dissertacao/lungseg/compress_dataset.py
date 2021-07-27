@@ -10,7 +10,7 @@ from tqdm import tqdm
 import traceback
 
 # extract pulmonary parenchyma
-def compress_dataset(exam_id, path):
+def load_image(exam_id, path):
     try:
         print(exam_id + ':')
         
@@ -25,7 +25,7 @@ def compress_dataset(exam_id, path):
         print(traceback.format_exc())
         return
     
-def exec_compress_dataset(src_dir, dst_dir, ext, reverse = False, desc = None):
+def compress_dataset(src_dir, dst_dir, ext, reverse = False, desc = None):
     try:
         os.stat(dst_dir)
     except:
@@ -38,7 +38,7 @@ def exec_compress_dataset(src_dir, dst_dir, ext, reverse = False, desc = None):
     input_src_paths = []
 
     output_path = dst_dir
-    joint = 'test' # [train, val, test]
+    joint = 'train_mask' # [train, val, test]
     
     for input_path in input_src_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
@@ -48,23 +48,24 @@ def exec_compress_dataset(src_dir, dst_dir, ext, reverse = False, desc = None):
 
     images = []
     for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
-        images.append(compress_dataset(exam_id, input_src_paths[i]))
-    
-    np.savez_compressed(f"{output_path}/{joint}",images)
+        print(i)
+        if i < 9:
+            images.append(load_image(exam_id, input_src_paths[i]))
+
+    np.savez_compressed(f"{output_path}/{joint}",np.asarray(images))
             
 def main():
     ext = '.nii.gz'
-    im = 'masks'
-    main_dir_train = f'/home/anatielsantos/mestrado/datasets/dissertacao/{im}/train'
-    main_dir_val = f'/home/anatielsantos/mestrado/datasets/dissertacao/{im}/val'
-    main_dir_test = f'/home/anatielsantos/mestrado/datasets/dissertacao/{im}/test'
+    dataset = 'dataset1'
+    im = 'mask'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/{im}'
     
-    src = main_dir_test
-    dst = main_dir_test
+    src = main_dir
+    dst = main_dir
     src_dir = '{}'.format(src)
     dst_dir = '{}'.format(dst)
 
-    exec_compress_dataset(src_dir, dst_dir, ext, reverse = False, desc = f'Compressing datasets')
+    compress_dataset(src_dir, dst_dir, ext, reverse = False, desc = f'Compressing datasets')
 
 if __name__=="__main__":    
     start = time.time()
