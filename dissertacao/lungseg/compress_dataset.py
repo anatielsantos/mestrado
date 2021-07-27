@@ -10,18 +10,17 @@ from tqdm import tqdm
 import traceback
 
 # extract pulmonary parenchyma
-def load_image(exam_id, path):
+def load_image(path):
     try:
-        print(exam_id + ':')
-        
         image = sitk.ReadImage(path)
         npyImage = sitk.GetArrayFromImage(image)
+        print(npyImage.shape)
 
         # bin mask
         # npyImage = (npyImage>0)*1
 
         del image
-        return npyImage
+        return np.asarray(npyImage)
 
     except Exception as e:
         print("type error: " + str(e))
@@ -49,12 +48,11 @@ def compress_dataset(src_dir, dst_dir, ext, reverse = False, desc = None):
         exam_ids.append(exam_id)
         input_src_paths.append(input_path)
 
-    images = []
+    images = list()
     for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
-        images.append(load_image(exam_id, input_src_paths[i]))        
+        images.append(load_image(input_src_paths[i]))
 
-    print(images.shape)
-    #np.savez_compressed(f"{output_path}/{joint}", images)
+    np.savez_compressed(f"{output_path}/{joint}", images)
             
 def main():
     ext = '.nii.gz'
