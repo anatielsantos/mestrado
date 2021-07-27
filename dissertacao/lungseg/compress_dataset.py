@@ -17,6 +17,9 @@ def load_image(exam_id, path):
         image = sitk.ReadImage(path)
         npyImage = sitk.GetArrayFromImage(image)
 
+        # bin mask
+        # npyImage = (npyImage>0)*1
+
         del image
         return npyImage
 
@@ -38,7 +41,7 @@ def compress_dataset(src_dir, dst_dir, ext, reverse = False, desc = None):
     input_src_paths = []
 
     output_path = dst_dir
-    joint = 'train_mask' # [train, val, test]
+    joint = 'train_image' # [train, val, test]
     
     for input_path in input_src_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
@@ -48,16 +51,14 @@ def compress_dataset(src_dir, dst_dir, ext, reverse = False, desc = None):
 
     images = []
     for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
-        print(i)
-        if i < 9:
-            images.append(load_image(exam_id, input_src_paths[i]))
+        images.append(load_image(exam_id, input_src_paths[i]))        
 
-    np.savez_compressed(f"{output_path}/{joint}",np.asarray(images))
+    np.savez_compressed(f"{output_path}/{joint}", images)
             
 def main():
     ext = '.nii.gz'
     dataset = 'dataset1'
-    im = 'mask'
+    im = 'image'
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/{im}'
     
     src = main_dir
