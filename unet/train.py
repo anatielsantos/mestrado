@@ -28,7 +28,7 @@ BATCH_SIZE = 1
 EPOCHS = 200
 
 # model
-def unet(pretrained_weights = None,input_size = (1,512,512)):
+def unet(pretrained_weights = None,input_size = (512,512,1)):
 #     inputs = Input(input_size)
 #     conv1 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(inputs)
 #     conv1 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv1)
