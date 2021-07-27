@@ -26,7 +26,9 @@ def zero_pad(width, exam_id, input_path, output_path):
         new_width = (width - npyImage.shape[1]) // 2
         # image_pad = np.pad(npyImage, new_width, mode='constant') # 3D
         image_pad = np.pad(npyImage, [(0, 0), (new_width, new_width), (new_width, new_width)], mode='minimum') # 2D
-        image_pad = np.int16((image_pad>0)*1)
+        
+        # bin
+        #image_pad = np.int16((image_pad>0)*1)
         
         itkImage = sitk.GetImageFromArray(image_pad)
         sitk.WriteImage(itkImage, output_path)
@@ -70,11 +72,11 @@ def exec_zero_padding(src_dir, dst_dir, ext, width, reverse = False, desc = None
 def main():
     ext = '.nii.gz'
     width = 640 # new width
-    dataset = 'dataset1'
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/PulmoesMascara/PulmoesMascaraFillHoles'
+    dataset = 'dataset2'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
     
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/LungZeroPedding'.format(main_dir)
+    dst_dir = '{}/ZeroPedding'.format(main_dir)
 
     exec_zero_padding(src_dir, dst_dir, ext, width, reverse = False, desc = 'Making zero padding')
 
