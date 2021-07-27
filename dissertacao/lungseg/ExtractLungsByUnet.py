@@ -90,8 +90,8 @@ from sklearn.metrics import confusion_matrix
 K.set_image_data_format('channels_last')
 
 project_name = '2D-Unet'
-img_rows = 640
-img_cols = 640
+img_rows = 512
+img_cols = 512
 img_depth = 1
 smooth = 1.
 
@@ -341,9 +341,9 @@ def execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, normali
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
-            print('Arquivo ' + output_path + ' ja existe e será removido')
-            os.remove(output_path)
-            # continue
+            print('Arquivo ' + output_path + ' ja existe')
+            # os.remove(output_path)
+            continue
 
         exam_ids.append(exam_id)
         input_paths.append(input_path)
@@ -367,12 +367,12 @@ def main():
     search_pattern = '*'
     dataset = 'dataset2'
 
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/PulmoesZeroPedding/'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/'
     model_path = '/home/anatielsantos/mestrado/models/extractlung/2D-Unet_lungs.h5'
     normalize_path = '/home/anatielsantos/mestrado/models/extractlung/images_test_lungs.npz'
 
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/PulmoesMascara16bits'.format(main_dir)
+    dst_dir = '{}/PulmoesMascara'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
