@@ -188,15 +188,15 @@ def train():
     print('Loaded train images: ', imgs_train[0].shape, imgs_mask_train[0].shape)
     print('-'*30)
 
-    imgs_train = np.array(imgs_train)#.astype('float32')
+    imgs_train = np.array(imgs_train.astype('float32'))
     print(imgs_train.shape)
-    mean = np.mean(imgs_train[0,:,:])  # mean for data centering
+    mean = np.mean(imgs_train)  # mean for data centering
     std = np.std(imgs_train)  # std for data normalization
 
     # Normalization of the train set
     imgs_train -= mean
     imgs_train /= std
-    imgs_mask_train = np.array(imgs_mask_train)#.astype('float32')
+    imgs_mask_train = np.array(imgs_mask_train.astype('float32'))
 
     print('Creating and compiling model...')
     print('-'*30)
