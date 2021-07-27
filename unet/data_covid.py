@@ -30,8 +30,8 @@ def dice_bce_loss(y_true, y_pred):
     return dice_bce_loss
 
 def load_train_data():
-    imgs_train_npz = np.load('/home/flavio/anatiel/mestrado/dissertacao/dataset/A/train_image.npz', allow_pickle=True)
-    masks_train_npz = np.load('/home/flavio/anatiel/mestrado/dissertacao/dataset/B_lung/train_mask.npz', allow_pickle=True)
+    imgs_train_npz = np.load('/data/flavio/anatiel/datasets/A/512x512/train_image.npz', allow_pickle=True)
+    masks_train_npz = np.load('/data/flavio/anatiel/datasets/B_lung/512x512/train_mask.npz', allow_pickle=True)
     imgs_train = imgs_train_npz['arr_0']
     masks_train = masks_train_npz['arr_0']
     
