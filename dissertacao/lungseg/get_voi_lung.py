@@ -83,9 +83,9 @@ def exec_get_voi_lung(mask_dir, dst_dir, ext, reverse = False, desc = None):
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
-            print('Arquivo ' + output_path + ' ja existe e será removido')
-            os.remove(output_path)
-            # continue
+            print('Arquivo ' + output_path + ' ja existe')
+            # os.remove(output_path)
+            continue
 
         exam_ids.append(exam_id)
         input_src_paths.append(input_path)
@@ -100,8 +100,8 @@ def exec_get_voi_lung(mask_dir, dst_dir, ext, reverse = False, desc = None):
 def main():
     dataset = 'dataset1'
     ext = '.nii.gz'
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/PulmoesZeroPedding' 
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/PulmoesZeroPedding/PulmoesMascara'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/PulmoesMascara' 
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/PulmoesMascara'
     
     mask_dir = '{}'.format(main_mask_dir)
     dst_dir = '{}/PulmoesMascaraFillHoles'.format(main_dir)

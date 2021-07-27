@@ -25,7 +25,7 @@ def zero_pad(width, exam_id, input_path, output_path):
 
         new_width = (width - npyImage.shape[1]) // 2
         # image_pad = np.pad(npyImage, new_width, mode='constant') # 3D
-        image_pad = np.pad(npyImage, [(0, 0), (new_width, new_width), (new_width, new_width)], mode='constant') # 2D
+        image_pad = np.pad(npyImage, [(0, 0), (new_width, new_width), (new_width, new_width)], mode='minimum') # 2D
         image_pad = np.int16((image_pad>0)*1)
         
         itkImage = sitk.GetImageFromArray(image_pad)
@@ -70,18 +70,16 @@ def exec_zero_padding(src_dir, dst_dir, ext, width, reverse = False, desc = None
 def main():
     ext = '.nii.gz'
     width = 640 # new width
-    dataset = 'dataset2'
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/lesion_mask'
+    dataset = 'dataset1'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/PulmoesMascara/PulmoesMascaraFillHoles'
     
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/LesionZeroPedding'.format(main_dir)
+    dst_dir = '{}/LungZeroPedding'.format(main_dir)
 
     exec_zero_padding(src_dir, dst_dir, ext, width, reverse = False, desc = 'Making zero padding')
 
 if __name__=="__main__":    
-    # arquivo = open("anatiel/dissertacao/lungseg/time_execution_zero_padding.txt", "a")
-    # start = time.time()
+    start = time.time()
     main()
-    # stop = time.time()
-    # exec_time = stop - start
-    # arquivo.write(str(exec_time))
+    stop = time.time()
+    print("Elapsed time: "+str(stop - start)+" seconds")
