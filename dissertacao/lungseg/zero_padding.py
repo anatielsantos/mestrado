@@ -72,7 +72,7 @@ def exec_zero_padding(src_dir, dst_dir, ext, width, reverse = False, desc = None
 def main():
     ext = '.nii.gz'
     width = 640 # new width
-    dataset = 'dataset2'
+    dataset = 'dataset1'
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
     
     src_dir = '{}'.format(main_dir)
