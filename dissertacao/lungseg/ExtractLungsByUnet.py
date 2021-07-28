@@ -365,7 +365,7 @@ def main():
 
     ext = '.nii.gz'
     search_pattern = '*'
-    dataset = 'dataset2'
+    dataset = 'dataset1'
 
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding'
     model_path = '/home/anatielsantos/mestrado/models/extractlung/2D-Unet_lungs.h5'
