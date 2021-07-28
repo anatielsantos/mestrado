@@ -9,7 +9,6 @@ import glob, time
 from tqdm import tqdm
 import traceback
 
-# extract pulmonary parenchyma
 def load_image(path):
     try:
         image = sitk.ReadImage(path)
