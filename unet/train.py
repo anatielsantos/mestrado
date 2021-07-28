@@ -185,7 +185,7 @@ def train():
     print('-'*30)
 
     imgs_train, imgs_mask_train = load_train_data()
-    print('Loaded train images: ', imgs_train.shape, imgs_mask_train.shape)
+    print('Loaded train images: ', imgs_train[0].shape, imgs_mask_train[0].shape)
     print('-'*30)
 
     imgs_train = imgs_train.astype('float32')
