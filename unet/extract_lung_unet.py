@@ -113,8 +113,6 @@ def execPredictPatient(exam_id, input_path, output_path, model):
         print(traceback.format_exc())
         return
 
-"""# Main"""
-
 def execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = None, parallel = True):
     try:
         os.stat(dst_dir)
@@ -152,7 +150,6 @@ def execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse
             execPredictPatient(exam_id, input_paths[i], output_paths[i], model)
 
 def main():
-
     ext = '.nii.gz'
     search_pattern = '*'
     dataset = 'dataset2'
@@ -166,7 +163,7 @@ def main():
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
 
-    model = unet(pretrained_weights = None,input_size = (640,640,1))
+    model = unet(pretrained_weights = None,input_size = (img_cols, img_depth, 1))
     model.load_weights(model_path)
 
     execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = 'Predicting (Unet)', parallel=False)
