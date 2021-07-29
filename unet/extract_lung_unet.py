@@ -3,20 +3,15 @@ import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
-# import tensorflow.compat.v1 as tf
-# tf.disable_v2_behavior()
-import tensorflow as tf
-import sys
 import SimpleITK as sitk
 import numpy as np
-import glob, os, time
+import glob, time
 import multiprocessing as mp
 import traceback
 import time
 import multiprocessing.pool as mpp
-
 from itertools import repeat
-from skimage.feature import peak_local_max
+
 from tqdm import tqdm
 from train import unet
 
@@ -44,32 +39,9 @@ def istarmap(self, func, iterable, chunksize=1):
 
 mpp.Pool.istarmap = istarmap
 
-# import keras.models as models
-# from skimage.transform import resize
-# from skimage.io import imsave
-
 np.random.seed(1337)
-# tf.set_random_seed(1337)
-tf.random.set_seed(1337)
 
-# from keras.models import Model
-# from keras.layers import Input, concatenate, Conv2D, MaxPooling2D, Conv2DTranspose, AveragePooling2D, ZeroPadding3D
-# from keras.optimizers import RMSprop, Adam, SGD
-# from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, CSVLogger
-# from keras.layers import Dense,Flatten, Dropout,BatchNormalization, ZeroPadding2D,Lambda
-from keras import backend as K
-# from keras.regularizers import l2
-# from keras.utils import plot_model
-# from keras.layers.advanced_activations import LeakyReLU
-from keras.preprocessing.image import ImageDataGenerator
-
-# from skimage.transform import resize
-# from skimage.io import imsave
-# from sklearn.metrics import confusion_matrix
-
-K.set_image_data_format('channels_last')
-
-project_name = '2D-Unet'
+project_name = 'Unet LungSeg'
 img_rows = 640
 img_cols = 640
 img_depth = 1
@@ -80,35 +52,10 @@ def preprocess_squeeze(imgs):
     print(' ---------------- preprocessed squeezed -----------------')
     return imgs
 
-def dice_coef(y_true, y_pred):
-    im_sum = K.sum(y_pred) + K.sum(y_true)
-    intersection = y_true * y_pred
-    return 2.*K.sum(intersection)/im_sum
-
-def dice_coef_loss(y_true, y_pred):
-    return 1-dice_coef(y_true, y_pred)
-
 def load_patient(image):
-    # imgs_train = np.load(image)
-    # imgs_train = imgs_train['arr_0']
-
-    # seed=1
-    # datagen_images_train = ImageDataGenerator(
-    #     featurewise_center=True,
-    #     featurewise_std_normalization=True,
-    #     )
-    # datagen_images_train.fit(imgs_train)
-
-    # del imgs_train
-
     itkImage = sitk.ReadImage(image)
     npyImage = sitk.GetArrayFromImage(itkImage)
     npyImage = np.expand_dims(npyImage, axis=-1)
-
-    # for (X,_) in range(npyImage,[1]*npyImage.shape[0],batch_size=npyImage.shape[0], shuffle=False, seed=seed):
-
-    #     return X
-    #     break
 
     return npyImage
 
@@ -131,7 +78,7 @@ def predictPatient(model, image):
 
     return npyImagePredict
 
-def execExtractLungs(exam_id, input_path, output_path, model):
+def execPredictPatient(exam_id, input_path, output_path, model):
     try:
         print(exam_id + ':')
 
@@ -197,12 +144,12 @@ def execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse
 
     if(parallel):
         with mp.Pool(mp.cpu_count()) as pool:
-            for _ in tqdm(pool.istarmap(execExtractLungs, zip(exam_ids, input_paths, output_paths, repeat(model))),
+            for _ in tqdm(pool.istarmap(execPredictPatient, zip(exam_ids, input_paths, output_paths, repeat(model))),
                           total=len(exam_ids)):
                 pass
     else:
         for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
-            execExtractLungs(exam_id, input_paths[i], output_paths[i], model)
+            execPredictPatient(exam_id, input_paths[i], output_paths[i], model)
 
 def main():
 
