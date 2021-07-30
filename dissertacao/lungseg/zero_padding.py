@@ -24,11 +24,11 @@ def zero_pad(width, exam_id, input_path, output_path):
             raise ValueError("New width needs to be bigger than current.")    
 
         new_width = (width - npyImage.shape[1]) // 2
-        # image_pad = np.pad(npyImage, new_width, mode='constant') # 3D
+        # image_pad = np.pad(npyImage, new_width, mode='minimum') # 3D
         image_pad = np.pad(npyImage, [(0, 0), (new_width, new_width), (new_width, new_width)], mode='minimum') # 2D
         
         # bin
-        #image_pad = np.int16((image_pad>0)*1)
+        # image_pad = np.int16((image_pad>0)*1)
         
         itkImage = sitk.GetImageFromArray(image_pad)
         sitk.WriteImage(itkImage, output_path)
