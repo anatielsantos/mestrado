@@ -155,15 +155,15 @@ def main():
     dataset = 'dataset2'
 
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding'
-    model_path = '/home/anatielsantos/mestrado/models/extractlung/2D-Unet_lungs.h5'
+    model_path = '/home/anatielsantos/mestrado/models/extractlung/weights_unet_201epc_last.h5'
 
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/PredsUnet'.format(main_dir)
+    dst_dir = '{}/PredsUnetLast'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
 
-    model = unet(pretrained_weights = None,input_size = (img_cols, img_depth, 1))
+    model = unet()
     model.load_weights(model_path)
 
     execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = 'Predicting (Unet)', parallel=False)

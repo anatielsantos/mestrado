@@ -25,7 +25,7 @@ from data_covid import load_train_data, load_test_data, dice_coef, dice_coef_los
 
 
 BATCH_SIZE = 1
-EPOCHS = 201
+EPOCHS = 500
 
 # model
 def unet(pretrained_weights = None,input_size = (512,512,1)):
