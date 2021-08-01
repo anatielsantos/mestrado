@@ -28,7 +28,7 @@ BATCH_SIZE = 1
 EPOCHS = 500
 
 # model
-def unet(pretrained_weights = None,input_size = (512,512,1)):
+def unet(pretrained_weights = None,input_size = (640,640,1)):
 #     inputs = Input(input_size)
 #     conv1 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(inputs)
 #     conv1 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv1)
@@ -202,19 +202,19 @@ def train():
     
     model = unet()
     #Saving the weights and the loss of the best predictions we obtained
-    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/models/extractlung/weights_unet_500epc_best.h5', monitor='val_loss', save_best_only=True)
+    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/models/dissertacao/weights_unet_500epc_best.h5', monitor='val_loss', save_best_only=True)
     
     print('Fitting model...')
     print('-'*30)
     history = model.fit(imgs_train, imgs_mask_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[model_checkpoint])
 
-    model.save('/data/flavio/anatiel/models/extractlung/weights_unet_500epc_last.h5')
+    model.save('/data/flavio/anatiel/models/dissertacao/weights_unet_500epc_last.h5')
         
     # convert the history.history dict to a pandas DataFrame:     
     hist_df = pd.DataFrame(history.history) 
     
     # save to json:  
-    hist_json_file = '/data/flavio/anatiel/models/extractlung/history_500epc.json'
+    hist_json_file = '/data/flavio/anatiel/models/dissertacao//history_500epc.json'
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("history saved")
@@ -226,7 +226,7 @@ def train():
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Test'], loc='upper left')
     # save plot to file
-    plt.savefig('/data/flavio/anatiel/models/extractlung/plot_500epc.png')
+    plt.savefig('/data/flavio/anatiel/models/dissertacao/plot_500epc.png')
     # plt.show()
     
 if __name__ == "__main__":
