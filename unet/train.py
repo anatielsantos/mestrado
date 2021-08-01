@@ -226,8 +226,8 @@ def train():
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Test'], loc='upper left')
     # save plot to file
-    # plt.savefig('/data/flavio/anatiel/models/extractlung/plot_500epc.png')
-    plt.show()
+    plt.savefig('/data/flavio/anatiel/models/extractlung/plot_500epc.png')
+    # plt.show()
     
 if __name__ == "__main__":
     # model training
