@@ -23,25 +23,32 @@ import matplotlib.pyplot as plt
 BUFFER_SIZE = 400
 BATCH_SIZE = 1
 EPOCHS = 500
-IMG_WIDTH = 512
-IMG_HEIGHT = 512
+IMG_WIDTH = 640
+IMG_HEIGHT = 640
 INPUT_CHANNELS = 1
 OUTPUT_CHANNELS = 1
 
 # load dataset
 def load_images(path_src, path_mask):
-    src = np.expand_dims(np.load(path_src)['arr_0'], axis=-1)
-    tar = np.expand_dims(np.load(path_mask)['arr_0'].astype(np.float32), axis=-1)
+    # src = np.expand_dims(np.load(path_src)['arr_0'], axis=-1)
+    # tar = np.expand_dims(np.load(path_mask)['arr_0'].astype(np.float32), axis=-1)
         
-    return [src,tar]
+    # return [src,tar]
+
+    src_npz = np.load(path_src, allow_pickle=True)
+    tar_npz = np.load(path_mask, allow_pickle=True)
+    src = src_npz['arr_0']
+    tar = tar_npz['arr_0']
+    
+    return np.float32(np.expand_dims(np.concatenate(src), axis=-1)), np.float32(np.expand_dims(np.concatenate(tar), axis=-1))
 
 # dataset path
-path_src_train = '/home/anatielsantos/mestrado/datasets/dissertacao/train/image/train.npz'
-path_mask_train = '/home/anatielsantos/mestrado/datasets/dissertacao/train/mask/train.npz'
+path_src_train = '/data/flavio/anatiel/datasets/dissertacao/train_images.npz'
+path_mask_train = '/data/flavio/anatiel/datasets/dissertacao/train_masks.npz'
 # path_src_val = '/home/flavio/anatiel/mestrado/dissertacao/dataset/A/val.npz'
 # path_mask_val = '/home/flavio/anatiel/mestrado/dissertacao/dataset/B_lesion/val.npz'
-path_src_test = '/home/anatielsantos/mestrado/datasets/dissertacao/test/image/test.npz'
-path_mask_test = '/home/anatielsantos/mestrado/datasets/dissertacao/test/mask/test.npz'
+path_src_test = '/data/flavio/anatiel/datasets/dissertacao/test_images.npz'
+path_mask_test = '/data/flavio/anatiel/datasets/dissertacao/test_masks.npz'
 
 # paths save
 path_weights = '/data/flavio/anatiel/models/dissertacao/'
