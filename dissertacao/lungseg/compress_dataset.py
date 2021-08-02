@@ -94,7 +94,7 @@ def compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, de
 def main():
     ext = '.nii.gz'
     joint = 'test' # [train, test]
-    main_dir_image = f'/home/anatielsantos/mestrado/datasets/dissertacao/{joint}/image'
+    main_dir_image = f'/home/anatielsantos/mestrado/datasets/dissertacao/{joint}/image/lung_extracted'
     main_dir_mask = f'/home/anatielsantos/mestrado/datasets/dissertacao/{joint}/mask'
     
     src = main_dir_image

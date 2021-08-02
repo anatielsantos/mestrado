@@ -76,22 +76,20 @@ def exec_extract_lung(src_dir, mask_dir, dst_dir, ext, reverse = False, desc = N
         extract_lung(exam_id, input_src_paths[i], input_mask_paths[i], output_paths[i])
             
 def main():
-    dataset = 'dataset1'
+    joint = 'test'
     ext = '.nii.gz'
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/PulmoesZeroPedding' 
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/PulmoesZeroPedding/PulmoesMascaraFillHoles'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{joint}/image' 
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{joint}/mask/lung_mask'
     
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/Pulmoes'.format(main_dir)
+    dst_dir = '{}/lung_extracted'.format(main_dir)
 
     mask_dir = '{}'.format(main_mask_dir)
 
-    exec_extract_lung(src_dir, mask_dir, dst_dir, ext, reverse = False, desc = f'Extracting lung from {dataset}')
+    exec_extract_lung(src_dir, mask_dir, dst_dir, ext, reverse = False, desc = f'Extracting lung from {joint}')
 
 if __name__=="__main__":    
-    # arquivo = open("anatiel/dissertacao/lungseg/time_execution_zero_padding.txt", "a")
-    # start = time.time()
+    start = time.time()
     main()
-    # stop = time.time()
-    # exec_time = stop - start
-    # arquivo.write(str(exec_time))
+    stop = time.time()
+    print("Elapsed time: "+str(stop - start)+" seconds")
