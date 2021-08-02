@@ -4,7 +4,7 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "4"
 
 #configuração necessária nas GPU's RTX 
-import tensorflow as tf
+# import tensorflow as tf
 # config = tf.compat.v1.ConfigProto()
 # config.gpu_options.allow_growth = True
 # session = tf.compat.v1.InteractiveSession(config=config)
