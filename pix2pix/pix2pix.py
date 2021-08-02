@@ -9,7 +9,7 @@ config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth = True
 session = tf.compat.v1.InteractiveSession(config=config)
 
-from keras.callbacks import ModelCheckpoint
+from tensorflow.keras.callbacks import ModelCheckpoint
 from model import Pix2Pix
 from utils import *
 from losses import *
@@ -70,8 +70,8 @@ def train(src_images_train, tar_images_train):
     # createing pix2pix
     model = Pix2Pix(IMG_HEIGHT,IMG_WIDTH,INPUT_CHANNELS,OUTPUT_CHANNELS)
     model.compile(
-        discriminator_optimizer = tf.keras.optimizers.Adam(2e-4, beta_1=0.5),
-        generator_optimizer = tf.keras.optimizers.Adam(2e-4, beta_1=0.5),
+        discriminator_optimizer = tensorflow.keras.optimizers.Adam(2e-4, beta_1=0.5),
+        generator_optimizer = tensorflow.keras.optimizers.Adam(2e-4, beta_1=0.5),
         discriminator_loss = discriminator_loss,
         generator_loss = generator_loss,
         metrics=['accuracy', dice]
