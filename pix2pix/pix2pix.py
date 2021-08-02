@@ -48,8 +48,8 @@ path_src_train = '/data/flavio/anatiel/datasets/dissertacao/train_images.npz'
 path_mask_train = '/data/flavio/anatiel/datasets/dissertacao/train_masks.npz'
 # path_src_val = '/home/flavio/anatiel/mestrado/dissertacao/dataset/A/val.npz'
 # path_mask_val = '/home/flavio/anatiel/mestrado/dissertacao/dataset/B_lesion/val.npz'
-path_src_test = '/data/flavio/anatiel/datasets/dissertacao/test_images.npz'
-path_mask_test = '/data/flavio/anatiel/datasets/dissertacao/test_masks.npz'
+# path_src_test = '/data/flavio/anatiel/datasets/dissertacao/test_images.npz'
+# path_mask_test = '/data/flavio/anatiel/datasets/dissertacao/test_masks.npz'
 
 # paths save
 path_weights = '/data/flavio/anatiel/models/dissertacao/'
@@ -59,10 +59,10 @@ path_plot = '/data/flavio/anatiel/models/dissertacao/'
 # load dataset
 [src_images_train, tar_images_train] = load_images(path_src_train, path_mask_train)
 # [src_images_val, tar_images_val] = load_images(path_src_val, path_mask_val)
-[src_images_test, tar_images_test] = load_images(path_src_test, path_mask_test)
+# [src_images_test, tar_images_test] = load_images(path_src_test, path_mask_test)
 print('Loaded train images: ', src_images_train.shape, tar_images_train.shape)
 # print('Loaded val images: ', src_images_val.shape, tar_images_val.shape)
-print('Loaded test images: ', src_images_test.shape, tar_images_test.shape)
+# print('Loaded test images: ', src_images_test.shape, tar_images_test.shape)
 print('amin: ', np.amin(src_images_train), ' amax: ', np.amax(src_images_train))
 
 def train(src_images_train, tar_images_train):    
@@ -79,21 +79,21 @@ def train(src_images_train, tar_images_train):
     )
 
     # train model
-    checkpoint = ModelCheckpoint(path_weights+'best_gan_weights_train_512_masked_lung_500epc.hdf5', monitor='dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
+    checkpoint = ModelCheckpoint(path_weights+'gan_500epc_best.hdf5', monitor='dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
     #checkpoint2 = ModelCheckpoint(path_weights+'best_weights_val_gan_512_masked_lung_blur_500epc.hdf5', monitor='val_dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
     
     #history=model.fit(src_images_train, tar_images_train, batch_size=BATCH_SIZE, epochs=EPOCHS,callbacks=[checkpoint,checkpoint2],validation_data=(src_images_val, tar_images_val))
     
-    history = model.fit(src_images_train, tar_images_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.2, callbacks=[checkpoint])
+    history = model.fit(src_images_train, tar_images_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[checkpoint])
     
-    model.save(path_weights+'last_gan_weights_train_512_masked_lung_500epc.hdf5')
+    model.save(path_weights+'gan_500epc_last.hdf5')
     
     # convert the history.history dict to a pandas DataFrame:     
     hist_df = pd.DataFrame(history.history) 
     
     # save to json:  
     print("Saving history")
-    hist_json_file = path_json+'history_gan_500epc.json' 
+    hist_json_file = path_json+'gan_history_500epc.json' 
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("History saved")
@@ -104,7 +104,7 @@ def train(src_images_train, tar_images_train):
     plt.xlabel('Epoch')
     plt.legend(['Train'], loc='upper left')
     # save plot to file
-    plt.savefig(path_plot+'plot_gan_train_500epc.png')
+    plt.savefig(path_plot+'gan_plot_500epc.png')
     # plt.show()
 
 if __name__=="__main__":
