@@ -5,9 +5,9 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "4"
 
 #configuração necessária nas GPU's RTX 
 import tensorflow as tf
-config = tf.compat.v1.ConfigProto()
-config.gpu_options.allow_growth = True
-session = tf.compat.v1.InteractiveSession(config=config)
+# config = tf.compat.v1.ConfigProto()
+# config.gpu_options.allow_growth = True
+# session = tf.compat.v1.InteractiveSession(config=config)
 
 from keras.callbacks import ModelCheckpoint
 from model import Pix2Pix
