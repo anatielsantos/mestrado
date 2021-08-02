@@ -265,8 +265,8 @@ class Pix2Pix(tf.keras.Model):
         print(target)
         return {'dice':dice(target,pred) }
     
-    def save(self,filepath, overwrite=True, include_optimizer=True, save_format=None, signatures=None):
-        self.generator.save(filepath, overwrite, include_optimizer, save_format, signatures)
+    def save(self,filepath, overwrite=True, include_optimizer=True, save_format=None, signatures=None, options=None):
+        self.generator.save(filepath, overwrite, include_optimizer, save_format, signatures, options)
     
     def save_weights(self,filepath, overwrite=True, save_format=None) :
         self.generator.save_weights(filepath, overwrite, save_format) 
