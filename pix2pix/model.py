@@ -1,5 +1,5 @@
 import tensorflow as tf
-from tensorflow.python.keras.engine import data_adapter
+# from tensorflow.python.keras.engine import data_adapter
 from keras.models import Model
 from keras.layers import *
 from keras.optimizers import Adam, SGD
