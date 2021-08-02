@@ -1,8 +1,8 @@
 import tensorflow as tf
 # from tensorflow.python.keras.engine import data_adapter
-from tf.keras.models import Model
-from tf.keras.layers import *
-from tf.keras.optimizers import Adam, SGD
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import *
+from tensorflow.keras.optimizers import Adam, SGD
 
 from losses import dice
 

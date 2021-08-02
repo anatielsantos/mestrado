@@ -9,7 +9,7 @@ import tensorflow as tf
 # config.gpu_options.allow_growth = True
 # session = tf.compat.v1.InteractiveSession(config=config)
 
-from tf.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.callbacks import ModelCheckpoint
 from model import Pix2Pix
 from utils import *
 from losses import *
