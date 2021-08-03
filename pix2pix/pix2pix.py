@@ -23,7 +23,7 @@ import matplotlib.pyplot as plt
 # train settings
 BUFFER_SIZE = 400
 BATCH_SIZE = 1
-EPOCHS = 1
+EPOCHS = 500
 IMG_WIDTH = 640
 IMG_HEIGHT = 640
 INPUT_CHANNELS = 1
@@ -79,21 +79,21 @@ def train(src_images_train, tar_images_train):
     )
 
     # train model
-    checkpoint = ModelCheckpoint(path_weights+'gan_1epc_best.hdf5', monitor='dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
+    checkpoint = ModelCheckpoint(path_weights+'gan_500epc_best.hdf5', monitor='dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
     #checkpoint2 = ModelCheckpoint(path_weights+'best_weights_val_gan_512_masked_lung_blur_500epc.hdf5', monitor='val_dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
     
     #history=model.fit(src_images_train, tar_images_train, batch_size=BATCH_SIZE, epochs=EPOCHS,callbacks=[checkpoint,checkpoint2],validation_data=(src_images_val, tar_images_val))
     
     history = model.fit(src_images_train, tar_images_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[checkpoint])
     
-    model.save(path_weights+'gan_1epc_last.hdf5')
+    model.save(path_weights+'gan_500epc_last.hdf5')
     
     # convert the history.history dict to a pandas DataFrame:     
     hist_df = pd.DataFrame(history.history) 
     
     # save to json:  
     print("Saving history")
-    hist_json_file = path_json+'gan_history_1epc.json' 
+    hist_json_file = path_json+'gan_history_500epc.json' 
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("History saved")
@@ -105,7 +105,7 @@ def train(src_images_train, tar_images_train):
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Val'], loc='upper left')
     # save plot to file
-    plt.savefig(path_plot+'gan_plot_1epc.png')
+    plt.savefig(path_plot+'gan_plot_500epc.png')
     # plt.show()
 
 if __name__=="__main__":
