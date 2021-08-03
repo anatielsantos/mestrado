@@ -3,7 +3,7 @@ from __future__ import print_function
 # GPU
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+os.environ["CUDA_VISIBLE_DEVICES"] = "6"
 
 
 import numpy as np
@@ -202,19 +202,19 @@ def train():
     
     model = unet()
     #Saving the weights and the loss of the best predictions we obtained
-    model_checkpoint = ModelCheckpoint('/home/anatiel/models/dissertacao/unet_500epc_best.h5', monitor='val_loss', save_best_only=True)
+    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/datasets/dissertacao/unet_200epc_best.h5', monitor='val_loss', save_best_only=True)
     
     print('Fitting model...')
     print('-'*30)
     history = model.fit(imgs_train, imgs_mask_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[model_checkpoint])
 
-    model.save('/home/anatiel/models/dissertacao/unet_500epc_last.h5')
+    model.save('/data/flavio/anatiel/datasets/dissertacao/unet_200epc_last.h5')
         
     # convert the history.history dict to a pandas DataFrame:     
     hist_df = pd.DataFrame(history.history) 
     
     # save to json:  
-    hist_json_file = '/home/anatiel/models/dissertacao/unet_history_500epc.json'
+    hist_json_file = '/data/flavio/anatiel/datasets/dissertacao/unet_history_200epc.json'
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("history saved")
@@ -226,7 +226,7 @@ def train():
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Test'], loc='upper left')
     # save plot to file
-    plt.savefig('/home/anatiel/models/dissertacao/unet_plot_500epc.png')
+    plt.savefig('/data/flavio/anatiel/datasets/dissertacao/unet_plot_200epc.png')
     # plt.show()
     
 if __name__ == "__main__":
