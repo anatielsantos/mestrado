@@ -23,7 +23,7 @@ import matplotlib.pyplot as plt
 # train settings
 BUFFER_SIZE = 400
 BATCH_SIZE = 1
-EPOCHS = 300
+EPOCHS = 200
 IMG_WIDTH = 640
 IMG_HEIGHT = 640
 INPUT_CHANNELS = 1
