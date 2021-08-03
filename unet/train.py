@@ -224,7 +224,7 @@ def train():
     plt.title('Model dice coeff')
     plt.ylabel('Dice coeff')
     plt.xlabel('Epoch')
-    plt.legend(['Train', 'Test'], loc='upper left')
+    plt.legend(['Train', 'Val'], loc='upper left')
     # save plot to file
     plt.savefig('/data/flavio/anatiel/datasets/dissertacao/unet_plot_200epc.png')
     # plt.show()
