@@ -15,13 +15,13 @@ IMG_HEIGHT = 512
 INPUT_CHANNELS = 1
 OUTPUT_CHANNELS = 1
 BATCH_SIZE = 1
-w_lung = '/data/flavio/anatiel/models/new/pix2pix/best_weights_train_gan_512_masked_lung_500epc_gen2.hdf5'
+w_lung_best = '/data/flavio/anatiel/models/new/pix2pix/best_weights_train_gan_512_masked_lung_500epc_gen2.hdf5'
 w_lung_last = '/data/flavio/anatiel/models/new/pix2pix/best_weights_train_gan_512_masked_lung_500epc_gen2_last.hdf5'
 
-w_lung_clahe = '/data/flavio/anatiel/models/new/pix2pix/best_weights_train_gan_512_masked_lung_clahe_500epc_gen2.hdf5'
+w_lung_clahe_best = '/data/flavio/anatiel/models/new/pix2pix/best_weights_train_gan_512_masked_lung_clahe_500epc_gen2.hdf5'
 w_lung_clahe_last = '/data/flavio/anatiel/models/new/pix2pix/best_weights_train_gan_512_masked_lung_clahe_500epc_gen2_last.hdf5'
 
-w_lung_blur = '/data/flavio/anatiel/models/new/pix2pix/best_weights_train_gan_512_masked_lung_blur_500epc_gen2.hdf5'
+w_lung_blur_best = '/data/flavio/anatiel/models/new/pix2pix/best_weights_train_gan_512_masked_lung_blur_500epc_gen2.hdf5'
 w_lung_blur_last = '/data/flavio/anatiel/models/new/pix2pix/best_weights_train_gan_512_masked_lung_blur_500epc_gen2_last.hdf5'
 
 
