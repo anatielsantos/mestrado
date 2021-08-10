@@ -75,7 +75,7 @@ def train(src_images_train, tar_images_train):
         generator_optimizer = tf.keras.optimizers.Adam(2e-4, beta_1=0.5),
         discriminator_loss = discriminator_loss,
         generator_loss = generator_loss,
-        metrics=['accuracy', dice]
+        metrics=['accuracy', dice_bce_loss]
     )
 
     # train model
