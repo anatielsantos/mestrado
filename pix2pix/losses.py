@@ -9,7 +9,8 @@ def generator_loss(disc_generated_output, gen_output, target,LAMBDA=100):
 
     # mean absolute error
     #l1_loss = tf.reduce_mean(tf.abs(target - gen_output))
-    l1_loss = dice_loss(target, gen_output)
+    # l1_loss = dice_loss(target, gen_output)
+    l1_loss = dice_bce_loss(target, gen_output)
 
     total_gen_loss = gan_loss + (LAMBDA * l1_loss)
 
@@ -35,6 +36,15 @@ def dice(y_true, y_pred, smooth=1):
 
 def dice_loss(y_true, y_pred, smooth=1):
     return 1-dice(y_true, y_pred)
+
+def dice_bce_loss(y_true, y_pred):
+    dice_loss = 1-dice(y_true, y_pred)
+    bce = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+    bce_ = bce(y_true, y_pred).numpy()
+    
+    dice_bce_loss = (dice_loss + bce_) / 2
+    
+    return dice_bce_loss
 
 # IoU
 def iou(y_true, y_pred):
