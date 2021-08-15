@@ -41,7 +41,7 @@ mpp.Pool.istarmap = istarmap
 
 np.random.seed(1337)
 
-project_name = 'Unet LungSeg'
+project_name = 'Unet CovidSeg'
 img_rows = 640
 img_cols = 640
 img_depth = 1
@@ -128,7 +128,7 @@ def execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_lungMask' + ext
+        output_path = dst_dir + '/' + exam_id + '_lesionMask' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -152,13 +152,13 @@ def execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse
 def main():
     ext = '.nii.gz'
     search_pattern = '*'
-    dataset = 'dataset2'
+    dataset = 'test'
 
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding'
-    model_path = '/home/anatielsantos/mestrado/models/extractlung/weights_unet_201epc_last.h5'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
+    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_200epc_last.h5'
 
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/PredsUnetLast'.format(main_dir)
+    dst_dir = '{}/UnetPredsLast'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
