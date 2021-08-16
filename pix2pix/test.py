@@ -1,7 +1,7 @@
 # GPU
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "4"
+os.environ["CUDA_VISIBLE_DEVICES"] = "6"
 
 from model import Pix2Pix
 from utils import *
@@ -25,13 +25,13 @@ BATCH_SIZE = 1
 # w_lung_blur_last = '/data/flavio/anatiel/models/new/pix2pix/best_weights_train_gan_512_masked_lung_blur_500epc_gen2_last.hdf5'
 
 
-w = '/home/anatielsantos/mestrado/models/dissertacao/gan/gan_500epc_best.hdf5'
+w = '/data/flavio/anatiel/models/dissertacao/gan_500epc_best.hdf5'
 
 # load dataset
 print('-'*30)
 print('Loading and preprocessing test data...')
-path_src_test = '/home/anatielsantos/mestrado/datasets/dissertacao/test_images.npz'
-path_mask_test = '/home/anatielsantos/mestrado/datasets/dissertacao/test_masks.npz'
+path_src_test = '/data/flavio/anatiel/datasets/dissertacao/test_images.npz'
+path_mask_test = '/data/flavio/anatiel/datasets/dissertacao/test_masks.npz'
 [src_images_test, tar_images_test] = load_images(path_src_test,path_mask_test)
 
 def test(src_images_test, tar_images_test, weights_path):
@@ -76,7 +76,7 @@ def test(src_images_test, tar_images_test, weights_path):
     
     print('-' * 30)
     print('Saving predicted masks to files...')
-    np.save('/home/anatielsantos/mestrado/datasets/dissertacao/gan_mask_test.npy', output)
+    np.save('/data/flavio/anatiel/datasets/dissertacao/gan_mask_test.npy', output)
     print('-' * 30)
     
 if __name__=="__main__":
