@@ -112,117 +112,6 @@ def dice_coef(y_true, y_pred):
 def dice_coef_loss(y_true, y_pred):
     return 1-dice_coef(y_true, y_pred)
 
-# def get_unet():
-#     inputs = Input((img_rows, img_cols, 1))
-
-#     conv1 = Conv2D(32, (3, 3), padding='same')(inputs)
-#     conv1 = LeakyReLU()(conv1)
-#     conv1 = BatchNormalization()(conv1)
-#     #conv1 = Dropout(0.2)(conv1)
-#     conv1 = Conv2D(32, (3, 3), padding='same')(conv1)
-#     conv1 = LeakyReLU()(conv1)
-#     conv1 = BatchNormalization()(conv1)
-#     conc1 = concatenate([inputs, conv1], axis=3)
-#     pool1 = AveragePooling2D(pool_size=(2, 2))(conc1)
-
-
-#     conv2 = Conv2D(64, (3, 3), padding='same')(pool1)
-#     conv2 = LeakyReLU()(conv2)
-#     conv2 = BatchNormalization()(conv2)
-#     #conv2 = Dropout(0.2)(conv2)
-#     conv2 = Conv2D(64, (3, 3), padding='same')(conv2)
-#     conv2 = LeakyReLU()(conv2)
-#     conv2 = BatchNormalization()(conv2)
-#     conc2 = concatenate([pool1, conv2], axis=3)
-#     pool2 = AveragePooling2D(pool_size=(2, 2))(conc2)
-
-
-#     conv3 = Conv2D(128, (3, 3), padding='same')(pool2)
-#     conv3 = LeakyReLU()(conv3)
-#     conv3 = BatchNormalization()(conv3)
-#     #conv3 = Dropout(0.2)(conv3)
-#     conv3 = Conv2D(128, (3, 3), padding='same')(conv3)
-#     conv3 = LeakyReLU()(conv3)
-#     conv3 = BatchNormalization()(conv3)
-#     conc3 = concatenate([pool2, conv3], axis=3)
-#     pool3 = AveragePooling2D(pool_size=(2, 2))(conc3)
-
-
-#     conv4 = Conv2D(256, (3, 3), padding='same')(pool3)
-#     conv4 = LeakyReLU()(conv4)
-#     conv4 = BatchNormalization()(conv4)
-#     #conv4 = Dropout(0.2)(conv4)
-#     conv4 = Conv2D(256, (3, 3), padding='same')(conv4)
-#     conv4 = LeakyReLU()(conv4)
-#     conv4 = BatchNormalization()(conv4)
-#     conc4 = concatenate([pool3, conv4], axis=3)
-#     pool4 = AveragePooling2D(pool_size=(2, 2))(conc4)
-
-
-#     conv5 = Conv2D(512, (3, 3), padding='same')(pool4)
-#     conv5 = LeakyReLU()(conv5)
-#     conv5 = BatchNormalization()(conv5)
-#     #conv5 = Dropout(0.2)(conv5)
-#     conv5 = Conv2D(512, (3, 3), padding='same')(conv5)
-#     conv5 = LeakyReLU()(conv5)
-#     conv5 = BatchNormalization()(conv5)
-#     conc5 = concatenate([pool4, conv5], axis=3)
-
-
-#     up6 = concatenate([Conv2DTranspose(256, (2, 2), strides=(2, 2), padding='same')(conc5), conv4], axis=3)
-#     conv6 = Conv2D(256, (3, 3), padding='same')(up6)
-#     conv6 = LeakyReLU()(conv6)
-#     conv6 = BatchNormalization()(conv6)
-#     #conv6 = Dropout(0.2)(conv6)
-#     conv6 = Conv2D(256, (3, 3), padding='same')(conv6)
-#     conv6 = LeakyReLU()(conv6)
-#     conv6 = BatchNormalization()(conv6)
-#     conc6 = concatenate([up6, conv6], axis=3)
-
-
-#     up7 = concatenate([Conv2DTranspose(128, (2, 2), strides=(2, 2), padding='same')(conc6), conv3], axis=3)
-#     conv7 = Conv2D(128, (3, 3), padding='same')(up7)
-#     conv7 = LeakyReLU()(conv7)
-#     conv7 = BatchNormalization()(conv7)
-#     #conv7 = Dropout(0.2)(conv7)
-#     conv7 = Conv2D(128, (3, 3), padding='same')(conv7)
-#     conv7 = LeakyReLU()(conv7)
-#     conv7 = BatchNormalization()(conv7)
-#     conc7 = concatenate([up7, conv7], axis=3)
-
-
-#     up8 = concatenate([Conv2DTranspose(64, (2, 2), strides=(2, 2), padding='same')(conc7), conv2], axis=3)
-#     conv8 = Conv2D(64, (3, 3), padding='same')(up8)
-#     conv8 = LeakyReLU()(conv8)
-#     conv8 = BatchNormalization()(conv8)
-#     #conv8 = Dropout(0.2)(conv8)
-#     conv8 = Conv2D(64, (3, 3), padding='same')(conv8)
-#     conv8 = LeakyReLU()(conv8)
-#     conv8 = BatchNormalization()(conv8)
-#     conc8 = concatenate([up8, conv8], axis=3)
-
-
-#     up9 = concatenate([Conv2DTranspose(32, (2, 2), strides=(2, 2), padding='same')(conc8), conv1], axis=3)
-#     conv9 = Conv2D(32, (3, 3), padding='same')(up9)
-#     conv9 = LeakyReLU()(conv9)
-#     #conv9 = Dropout(0.2)(conv9)
-#     conv9 = Conv2D(32, (3, 3), padding='same')(conv9)
-#     conv9 = LeakyReLU()(conv9)
-#     conc9 = concatenate([up9, conv9], axis=3)
-
-
-#     conv10 = Conv2D(1, (1, 1), activation='sigmoid')(conc9)
-
-#     model = Model(inputs=[inputs], outputs=[conv10])
-
-#     #model.summary()
-#     #plot_model(model, to_file='model.png')
-
-#     model.compile(optimizer=Adam(lr=1e-5, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.000000199), loss=dice_coef_loss, metrics=['accuracy', dice_coef])
-
-#     return model
-
-
 def load_patient(image):
     # imgs_train = np.load(normalize_path)
     # imgs_train = imgs_train['arr_0']
@@ -240,11 +129,6 @@ def load_patient(image):
     itkImage = sitk.ReadImage(image)
     npyImage = sitk.GetArrayFromImage(itkImage)
     npyImage = np.expand_dims(npyImage, axis=-1)
-
-    # for (X,_) in datagen_images_train.flow(npyImage,[1]*npyImage.shape[0],batch_size=npyImage.shape[0], shuffle=False, seed=seed):
-
-    #     return X
-    #     break
 
     return npyImage
 
@@ -303,20 +187,10 @@ def execExtractLungs(exam_id, input_path, output_path, model):
         # print(itkImage.GetSpacing())
         # print(itkImage.GetPixelIDTypeAsString())    
 
-        depth = image.GetDepth()
-        step = depth//10
-        min = depth//2 + step
-        max = depth - step  
-
-        # if(IN_NOTEBOOK):        
-        #     myshow3d(img = sitk.LabelOverlay(sitk.RescaleIntensity(image), sitk.LabelContour(
-        #         itkImage)), title='Mascara Pulmões(Unet)({})'.format(exam_id), zslices=range(min, max, step), dpi=80)  
-
-        # save2d(output_path + '_2d.png', img = sitk.LabelOverlay(sitk.RescaleIntensity(image), sitk.LabelContour(
-        #         itkImage)), title='Mascara Pulmões(Unet)({})'.format(exam_id), zslice=362)
-
-        # save3d(output_path + '.png', img = sitk.LabelOverlay(sitk.RescaleIntensity(image), sitk.LabelContour(
-        #     itkImage)), title='Mascara Pulmões(Unet)({})'.format(exam_id), zslices=range(min, max, step), dpi=80)    
+        # depth = image.GetDepth()
+        # step = depth//10
+        # min = depth//2 + step
+        # max = depth - step 
         
         sitk.WriteImage(itkImage, output_path)
 
@@ -372,14 +246,13 @@ def main():
 
     ext = '.nii.gz'
     search_pattern = '*'
-    dataset = 'dataset1'
+    dataset = 'test'
 
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/test/image/'
-    model_path = '/home/anatielsantos/mestrado/models/dissertacao/gan/gan_500epc_best.hdf5'
-    # normalize_path = '/home/anatielsantos/mestrado/models/extractlung/images_test_lungs.npz'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
+    model_path = '/home/anatielsantos/mestrado/models/dissertacao/gan/gan_500epc_last.hdf5'
 
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/Predicoes'.format(main_dir)
+    dst_dir = '{}/GanPredsLast'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))

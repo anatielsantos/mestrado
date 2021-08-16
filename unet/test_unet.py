@@ -74,7 +74,7 @@ def predictPatient(model, image):
     
     npyImagePredict = preprocess_squeeze(npyImagePredict)
     npyImagePredict = np.around(npyImagePredict, decimals=0)
-    npyImagePredict = (npyImagePredict>0.5)*1
+    # npyImagePredict = (npyImagePredict>0.5)*1
 
     return npyImagePredict
 
@@ -155,7 +155,7 @@ def main():
     dataset = 'test'
 
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
-    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_200epc_last.h5'
+    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_500epc_last.h5'
 
     src_dir = '{}'.format(main_dir)
     dst_dir = '{}/UnetPredsLast'.format(main_dir)
