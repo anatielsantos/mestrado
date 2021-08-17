@@ -9,22 +9,22 @@ import numpy as np
 output_path = '/data/flavio/anatiel/datasets/dissertacao'
 
 # load dataset
-def load_images(path_mask):
-    # tar_npz = np.load(path_mask)
-    # tar = tar_npz['arr_0']
-    # print(tar_npz)
-    # return tar
-    tar_npz = np.load(path_mask, allow_pickle=True)
+def load_images(path_pred, path_image):
+    src_npz = np.load(path_image)
+    tar_npz = np.load(path_pred)
+    src = src_npz['arr_0']
     tar = tar_npz['arr_0']
     
-    return np.float32(np.expand_dims(np.concatenate(tar), axis=-1))
+    return [src, tar]
 
 # load dataset
 print('-'*30)
 print('Loading and preprocessing test data...')
 path_mask_test = '/data/flavio/anatiel/datasets/dissertacao/gan_mask_test.npz'
-tar_images_test = load_images(path_mask_test)
+path_mask_test = '/data/flavio/anatiel/datasets/dissertacao/images_test.npz'
+[src_images_test, tar_images_test] = load_images(path_mask_test)
 
+print(src_images_test.shape)
 print(tar_images_test.shape)
 
 # itkImage = sitk.GetImageFromArray(tar_images_test)
