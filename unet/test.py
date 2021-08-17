@@ -18,8 +18,8 @@ from losses import calc_metric
 # w_lung_clahe = '/data/flavio/anatiel/models/new/unet2d/weights_unet_masked_lung_clahe_500epc.h5'
 # w_lung_clahe_last = '/data/flavio/anatiel/models/new/unet2d/weights_unet_masked_lung_clahe_500epc_last.h5'
 
-w_covid_best = '/data/flavio/anatiel/models/dissertacao/unet_500epc_best.hd5'
-w_covid_last = '/data/flavio/anatiel/models/dissertacao/unet_500epc_last.hd5'
+w_covid_best = '/data/flavio/anatiel/models/dissertacao/unet_500epc_best.h5'
+w_covid_last = '/data/flavio/anatiel/models/dissertacao/unet_500epc_last.h5'
 
 def test(w):
     print('Loading and preprocessing test data...')
