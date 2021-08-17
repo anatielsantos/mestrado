@@ -3,7 +3,7 @@ import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
-import SimpleITK as sitk
+# import SimpleITK as sitk
 import numpy as np
 
 output_path = '/data/flavio/anatiel/datasets/dissertacao'
