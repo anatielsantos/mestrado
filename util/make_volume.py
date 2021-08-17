@@ -19,7 +19,7 @@ def load_images(path_mask):
 print('-'*30)
 print('Loading and preprocessing test data...')
 path_mask_test = '/data/flavio/anatiel/datasets/dissertacao/test_masks.npz'
-[tar_images_test] = load_images(path_mask_test)
+tar_images_test = load_images(path_mask_test)
 
 print(tar_images_test.shape)
 
