@@ -21,7 +21,7 @@ def load_images(path_image, path_pred):
     src = src_npz['arr_0']
     tar = tar_npz['arr_0']
     
-    return np.float32(np.expand_dims(np.concatenate(src), axis=-1)), np.float32(np.expand_dims(np.concatenate(tar), axis=-1))
+    return np.float32(np.expand_dims(np.concatenate(src), axis=-1)), np.float32(tar)
 
 # load dataset
 print('-'*30)
