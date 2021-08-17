@@ -77,13 +77,13 @@ def test(src_images_test, tar_images_test, weights_path):
     
     print('-' * 30)
     print('Saving predicted masks to files...')
-    np.save('/data/flavio/anatiel/datasets/dissertacao/gan_mask_test.npy', output)
+    # np.save('/data/flavio/anatiel/datasets/dissertacao/gan_mask_test.npy', output)
+    np.savez_compressed('/data/flavio/anatiel/datasets/dissertacao/gan_mask_test.npz', output)
     print('-' * 30)
     
 if __name__=="__main__":
     # predict
-    weights_path = w
-    test(src_images_test, tar_images_test, weights_path)
+    test(src_images_test, tar_images_test, w_covid_best)
     
     # train results
     #results = pd.read_json("/home/flavio/anatiel/pix2pix/results/new_tests/history_masked_lung_500epc_gen2.json")
