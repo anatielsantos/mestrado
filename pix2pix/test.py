@@ -37,16 +37,16 @@ def test(src_images_test, path_mask_test, weights_path):
 
     [imgs_test, imgs_maskt] = load_images(src_images_test,path_mask_test)
 
-    #Normalization of the test set
-    imgs_test = imgs_test.astype('float32')
-    mean = np.mean(imgs_test)  # mean for data centering
-    std = np.std(imgs_test)  # std for data normalization
+    # #Normalization of the test set
+    # imgs_test = imgs_test.astype('float32')
+    # mean = np.mean(imgs_test)  # mean for data centering
+    # std = np.std(imgs_test)  # std for data normalization
     
-    #to float
-    imgs_test = imgs_test.astype('float32')
-    imgs_test -= mean
-    imgs_test /= std
-    imgs_maskt = imgs_maskt.astype('float32')
+    # #to float
+    # imgs_test = imgs_test.astype('float32')
+    # imgs_test -= mean
+    # imgs_test /= std
+    # imgs_maskt = imgs_maskt.astype('float32')
 
     # predict
     print('-'*30)
