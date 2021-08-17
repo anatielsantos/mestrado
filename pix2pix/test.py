@@ -56,7 +56,7 @@ def test(src_images_test, path_mask_test, weights_path):
     print('Predicting data...')
     output=None
     for i in range(imgs_test.shape[0]):
-        pred = model.generator(imgs_test[i:i+1],training=False).numpy()
+        pred = model.generator(imgs_test[i:i+1],training=False)#.numpy()
         if output is None:
             output=pred
         else:
