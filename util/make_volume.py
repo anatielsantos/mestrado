@@ -20,7 +20,7 @@ def load_images(path_pred, path_image):
 # load dataset
 print('-'*30)
 print('Loading and preprocessing test data...')
-path_image_test = '/data/flavio/anatiel/datasets/dissertacao/images_test.npz'
+path_image_test = '/data/flavio/anatiel/datasets/dissertacao/test_images.npz'
 path_mask_test = '/data/flavio/anatiel/datasets/dissertacao/gan_mask_test.npz'
 [src_images_test, tar_images_test] = load_images(path_image_test, path_mask_test)
 
