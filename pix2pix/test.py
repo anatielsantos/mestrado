@@ -25,17 +25,7 @@ BATCH_SIZE = 1
 # w_lung_blur_last = '/data/flavio/anatiel/models/new/pix2pix/best_weights_train_gan_512_masked_lung_blur_500epc_gen2_last.hdf5'
 
 
-w_covid_best = '/data/flavio/anatiel/models/dissertacao/gan_500epc_best.hdf5'
-w_covid_last = '/data/flavio/anatiel/models/dissertacao/gan_500epc_last.hdf5'
-
-# load dataset
-print('-'*30)
-print('Loading and preprocessing test data...')
-path_src_test = '/data/flavio/anatiel/datasets/dissertacao/test_images.npz'
-path_mask_test = '/data/flavio/anatiel/datasets/dissertacao/test_masks.npz'
-[src_images_test, tar_images_test] = load_images(path_src_test,path_mask_test)
-
-def test(src_images_test, tar_images_test, weights_path):
+def test(src_images_test, path_mask_test, weights_path):
     # load model
     model = Pix2Pix(IMG_HEIGHT, IMG_WIDTH, INPUT_CHANNELS, OUTPUT_CHANNELS)
     model.compile(
@@ -45,6 +35,19 @@ def test(src_images_test, tar_images_test, weights_path):
         generator_loss = generator_loss
     )
 
+    [imgs_test, imgs_maskt] = load_images(path_src_test,path_mask_test)
+
+    #Normalization of the test set
+    imgs_test = imgs_test.astype('float32')
+    mean = np.mean(imgs_test)  # mean for data centering
+    std = np.std(imgs_test)  # std for data normalization
+    
+    #to float
+    imgs_test = imgs_test.astype('float32')
+    imgs_test -= mean
+    imgs_test /= std
+    imgs_maskt = imgs_maskt.astype('float32')
+
     # predict
     print('-'*30)
     print('Loading saved weights...')
@@ -53,7 +56,7 @@ def test(src_images_test, tar_images_test, weights_path):
     print('Predicting data...')
     output=None
     for i in range(src_images_test.shape[0]):
-        pred = model.generator(src_images_test[i:i+1],training=False).numpy()
+        pred = model.generator(imgs_test[i:i+1],training=False).numpy()
         if output is None:
             output=pred
         else:
@@ -64,7 +67,7 @@ def test(src_images_test, tar_images_test, weights_path):
     print('Calculating metrics...')
     #print("DICE Test: ", dice(tar_images_test, output).numpy())
     
-    dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(output.astype(int), tar_images_test.astype(int))
+    dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(output.astype(int), imgs_test.astype(int))
     print("DICE: ", dice)
     print("IoU:", jaccard)
     print("Sensitivity: ", sensitivity)
@@ -83,7 +86,16 @@ def test(src_images_test, tar_images_test, weights_path):
     
 if __name__=="__main__":
     # predict
-    test(src_images_test, tar_images_test, w_covid_best)
+    w_covid_best = '/data/flavio/anatiel/models/dissertacao/gan_500epc_best.hdf5'
+    w_covid_last = '/data/flavio/anatiel/models/dissertacao/gan_500epc_last.hdf5'
+
+    # load dataset
+    print('-'*30)
+    print('Loading and preprocessing test data...')
+    path_src_test = '/data/flavio/anatiel/datasets/dissertacao/test_images.npz'
+    path_mask_test = '/data/flavio/anatiel/datasets/dissertacao/test_masks.npz'
+    
+    test(path_src_test, path_mask_test, w_covid_best)
     
     # train results
     #results = pd.read_json("/home/flavio/anatiel/pix2pix/results/new_tests/history_masked_lung_500epc_gen2.json")
