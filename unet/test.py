@@ -1,7 +1,7 @@
 # GPU
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "6"
 
 import numpy as np
 import pandas as pd
@@ -18,7 +18,8 @@ from losses import calc_metric
 # w_lung_clahe = '/data/flavio/anatiel/models/new/unet2d/weights_unet_masked_lung_clahe_500epc.h5'
 # w_lung_clahe_last = '/data/flavio/anatiel/models/new/unet2d/weights_unet_masked_lung_clahe_500epc_last.h5'
 
-w = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_200epc_last.h5'
+w_covid_best = '/data/flavio/anatiel/models/dissertacao/unet_500epc_best.hdf5'
+w_covid_last = '/data/flavio/anatiel/models/dissertacao/unet_500epc_last.hdf5'
 
 def test(w):
     print('Loading and preprocessing test data...')
@@ -48,10 +49,10 @@ def test(w):
     print('Saving predicted masks to files...')
     print('-' * 30)
     np.save('imgs_mask_test.npy', imgs_mask_test)
-    mask_pred = np.load('imgs_mask_test.npy')
+    mask_pred = np.load('/data/flavio/anatiel/datasets/dissertacao/unet_mask_test.npy')
     
-    dice_test = dice_coef(imgs_maskt, mask_pred)
-    print("DICE Test: ", dice_test.numpy())
+    # dice_test = dice_coef(imgs_maskt, mask_pred)
+    # print("DICE Test: ", dice_test.numpy())
 
     # calculate metrics
     print('-'*30)
@@ -97,7 +98,7 @@ def show_preds(path_pred, fatia):
 
 if __name__ == "__main__":
     # predict
-    test(w)
+    test(w_covid_best)
     
     # show
     # show_preds('imgs_mask_test.npy', 130)
