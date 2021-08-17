@@ -13,7 +13,7 @@ def load_images(path_mask):
     tar_npz = np.load(path_mask, allow_pickle=True)
     tar = tar_npz['arr_0']
     
-    return np.float32(np.expand_dims(np.concatenate(tar), axis=-1))
+    return np.float32(np.expand_dims(tar, axis=-1))
 
 # load dataset
 print('-'*30)
