@@ -11,9 +11,9 @@ output_path = '/data/flavio/anatiel/datasets/dissertacao'
 # load dataset
 def load_images(path_mask):
     tar_npz = np.load(path_mask)
-    # tar = tar_npz['arr_0']
+    tar = tar_npz['arr_0']
     
-    return tar_npz
+    return tar
 
 # load dataset
 print('-'*30)
