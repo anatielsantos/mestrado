@@ -25,7 +25,8 @@ BATCH_SIZE = 1
 # w_lung_blur_last = '/data/flavio/anatiel/models/new/pix2pix/best_weights_train_gan_512_masked_lung_blur_500epc_gen2_last.hdf5'
 
 
-w = '/data/flavio/anatiel/models/dissertacao/gan_500epc_best.hdf5'
+w_covid_best = '/data/flavio/anatiel/models/dissertacao/gan_500epc_best.hdf5'
+w_covid_last = '/data/flavio/anatiel/models/dissertacao/gan_500epc_last.hdf5'
 
 # load dataset
 print('-'*30)
