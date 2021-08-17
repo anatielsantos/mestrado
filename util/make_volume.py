@@ -9,13 +9,19 @@ import numpy as np
 output_path = '/data/flavio/anatiel/datasets/dissertacao'
 
 # load dataset
-def load_images(path_pred, path_image):
-    src_npz = np.load(path_image)
-    tar_npz = np.load(path_pred)
+def load_images(path_image, path_pred):
+    # src_npz = np.load(path_image)
+    # tar_npz = np.load(path_pred)
+    # src = src_npz['arr_0']
+    # tar = tar_npz['arr_0']
+    
+    # return [src, tar]
+    src_npz = np.load(path_image, allow_pickle=True)
+    tar_npz = np.load(path_pred, allow_pickle=True)
     src = src_npz['arr_0']
     tar = tar_npz['arr_0']
     
-    return [src, tar]
+    return np.float32(np.expand_dims(np.concatenate(src), axis=-1)), np.float32(np.expand_dims(np.concatenate(tar), axis=-1))
 
 # load dataset
 print('-'*30)
