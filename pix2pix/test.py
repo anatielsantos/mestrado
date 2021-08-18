@@ -35,7 +35,7 @@ def test(src_images_test, path_mask_test, weights_path):
         generator_loss = generator_loss
     )
 
-    [imgs_test, imgs_maskt] = load_images(src_images_test,path_mask_test)
+    imgs_test, imgs_maskt = load_images(src_images_test,path_mask_test)
 
     # #Normalization of the test set
     # imgs_test = imgs_test.astype('float32')
@@ -80,7 +80,7 @@ def test(src_images_test, path_mask_test, weights_path):
     
     print('-' * 30)
     print('Saving predicted masks to files...')
-    np.save('/data/flavio/anatiel/datasets/dissertacao/gan_mask_test.npy', output)
+    # np.save('/data/flavio/anatiel/datasets/dissertacao/gan_mask_test.npy', output)
     # np.savez_compressed('/data/flavio/anatiel/datasets/dissertacao/gan_mask_test.npz', output)
     print('-' * 30)
     
@@ -95,7 +95,7 @@ if __name__=="__main__":
     path_src_test = '/data/flavio/anatiel/datasets/dissertacao/test_images.npz'
     path_mask_test = '/data/flavio/anatiel/datasets/dissertacao/test_masks.npz'
     
-    test(path_src_test, path_mask_test, w_covid_best)
+    test(path_src_test, path_mask_test, w_covid_last)
     
     # train results
     #results = pd.read_json("/home/flavio/anatiel/pix2pix/results/new_tests/history_masked_lung_500epc_gen2.json")
