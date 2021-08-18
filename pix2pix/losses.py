@@ -9,8 +9,8 @@ def generator_loss(disc_generated_output, gen_output, target,LAMBDA=100):
 
     # mean absolute error
     #l1_loss = tf.reduce_mean(tf.abs(target - gen_output)) # default
-    # l1_loss = dice_loss(target, gen_output) # train 3
-    l1_loss = dice_bce_loss(target, gen_output) # train 2
+    l1_loss = dice_loss(target, gen_output) # train 3
+    # l1_loss = dice_bce_loss(target, gen_output) # train 2
 
     total_gen_loss = gan_loss + (LAMBDA * l1_loss)
 
