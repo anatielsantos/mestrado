@@ -81,7 +81,7 @@ def test(src_images_test, path_mask_test, weights_path):
     print('-' * 30)
     print('Saving predicted masks to files...')
     # np.save('/data/flavio/anatiel/datasets/dissertacao/gan_mask_test.npy', output)
-    np.savez_compressed('/data/flavio/anatiel/datasets/dissertacao/gan_mask_test_last.npz', output)
+    np.savez_compressed('/data/flavio/anatiel/datasets/dissertacao/test/image/teste/gan_mask_test_last_teste.npz', output)
     print('-' * 30)
     
 if __name__=="__main__":
@@ -92,7 +92,7 @@ if __name__=="__main__":
     # load dataset
     print('-'*30)
     print('Loading and preprocessing test data...')
-    path_src_test = '/data/flavio/anatiel/datasets/dissertacao/test_images.npz'
+    path_src_test = '/data/flavio/anatiel/datasets/dissertacao/test/image/teste/test_images_teste.npz'
     path_mask_test = '/data/flavio/anatiel/datasets/dissertacao/test_masks.npz'
     
     test(path_src_test, path_mask_test, w_covid_last)
