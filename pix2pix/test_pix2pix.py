@@ -225,7 +225,7 @@ def execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_Pred' + ext
+        output_path = dst_dir + '/' + exam_id + '_Pred_teste' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -260,7 +260,7 @@ def main():
     # model_path = '/home/anatielsantos/mestrado/models/dissertacao/gan/gan_500epc_last.hdf5'
 
     # remote
-    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
+    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image/teste'
     model_path = '/data/flavio/anatiel/models/dissertacao/gan_500epc_last.hdf5'
 
     src_dir = '{}'.format(main_dir)
