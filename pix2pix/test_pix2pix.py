@@ -144,8 +144,15 @@ def predictPatient(model, image):
     print('Predicting test data...')
     print('-'*30)
 
-    npyImagePredict = model.predict(npyImage, batch_size=1)
+    # npyImagePredict = model.predict(npyImage, batch_size=1)
     # npyImagePredict = model.generator(npyImage,training=False).numpy()
+    npyImagePredict=None
+    for i in range(npyImage.shape[0]):
+        pred = model.generator(npyImage[i:i+1],training=False).numpy()
+        if npyImagePredict is None:
+            npyImagePredict=pred
+        else:
+            npyImagePredict = np.concatenate([npyImagePredict,pred],axis=0)
     
     npyImagePredict = preprocess_squeeze(npyImagePredict)
     npyImagePredict = np.around(npyImagePredict, decimals=0)
@@ -248,8 +255,13 @@ def main():
     search_pattern = '*'
     dataset = 'test'
 
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
-    model_path = '/home/anatielsantos/mestrado/models/dissertacao/gan/gan_500epc_last.hdf5'
+    # local
+    # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
+    # model_path = '/home/anatielsantos/mestrado/models/dissertacao/gan/gan_500epc_last.hdf5'
+
+    # remote
+    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
+    model_path = '/data/flavio/anatiel/models/dissertacao/gan_500epc_last.hdf5'
 
     src_dir = '{}'.format(main_dir)
     dst_dir = '{}/GanPredsLast'.format(main_dir)
