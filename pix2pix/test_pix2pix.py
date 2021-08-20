@@ -81,12 +81,7 @@ def predictPatient(model, image):
 
     print('-'*30)
     print("Saving npz file...")
-    list_image = list()
-    for i in range(npyImage.shape[0]):
-        # images, masks = load_image(input_src_paths[i], input_mask_paths[i], remove_no_lesion=remove_no_lesion)
-        list_image.append(npyImage[i])
-
-    np.savez_compressed("/home/anatielsantos/mestrado/datasets/dissertacao/test/image/GanPredsLast/exam", list_image)
+    np.savez_compressed("/home/anatielsantos/mestrado/datasets/dissertacao/test/image/GanPredsLast/exam", npyImage)
 
     print('-'*30)
     print("Loading npz file...")
