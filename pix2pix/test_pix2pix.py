@@ -3,31 +3,15 @@ import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
-# import tensorflow.compat.v1 as tf
-# tf.disable_v2_behavior()
 import tensorflow as tf
 
-import sys
 import SimpleITK as sitk
 import numpy as np
 import glob, os, time
-# import statistics as stat
-# import threading
-# from scipy.ndimage import morphology
-# from scipy import signal
-# from matplotlib import pyplot
 import multiprocessing as mp
 from itertools import repeat
 import traceback
-import time
 
-# from scipy import ndimage as ndi
-# from skimage.segmentation import watershed
-from skimage.feature import peak_local_max
-
-# if IN_NOTEBOOK:
-#     from tqdm.notebook import tqdm
-# else:
 from tqdm import tqdm
 
 from model import Pix2Pix
@@ -62,36 +46,8 @@ def istarmap(self, func, iterable, chunksize=1):
 
 mpp.Pool.istarmap = istarmap
 
-
-import keras.models as models
-from skimage.transform import resize
-from skimage.io import imsave
-import numpy as np
-import SimpleITK as sitk
-import glob
-
 np.random.seed(1337)
-# tf.set_random_seed(1337)
 tf.random.set_seed(1337)
-
-from keras.models import Model
-from keras.layers import Input, concatenate, Conv2D, MaxPooling2D, Conv2DTranspose, AveragePooling2D, ZeroPadding3D
-from keras.optimizers import RMSprop, Adam, SGD
-from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, CSVLogger
-from keras.layers import Dense,Flatten, Dropout,BatchNormalization, ZeroPadding2D,Lambda
-from keras import backend as K
-from keras.regularizers import l2
-# from keras.utils import plot_model
-from keras.layers.advanced_activations import LeakyReLU
-from keras.preprocessing.image import ImageDataGenerator
-
-from skimage.transform import resize
-from skimage.io import imsave
-from sklearn.metrics import confusion_matrix
-
-# from data import load_train_data, load_test_data, load_val_data
-
-K.set_image_data_format('channels_last')
 
 project_name = 'Pix2pix'
 img_rows = 640
@@ -104,73 +60,61 @@ def preprocess_squeeze(imgs):
     print(' ---------------- preprocessed squeezed -----------------')
     return imgs
 
-def dice_coef(y_true, y_pred):
-    im_sum = K.sum(y_pred) + K.sum(y_true)
-    intersection = y_true * y_pred
-    return 2.*K.sum(intersection)/im_sum
-
-def dice_coef_loss(y_true, y_pred):
-    return 1-dice_coef(y_true, y_pred)
+def load_images(path_src):
+    src_npz = np.load(path_src, allow_pickle=True)
+    src = src_npz['arr_0']
+    
+    return np.float32(src)
 
 def load_patient(image):
-    # imgs_train = np.load(normalize_path)
-    # imgs_train = imgs_train['arr_0']
-
-    # seed=1    
-    # datagen_images_train = ImageDataGenerator(
-    #     featurewise_center=True,
-    #     featurewise_std_normalization=True,
-    #     )
-    # datagen_images_train.fit(imgs_train)
-
-    
-    # del imgs_train
-
     itkImage = sitk.ReadImage(image)
     npyImage = sitk.GetArrayFromImage(itkImage)
-    npyImage = np.expand_dims(npyImage, axis=-1)
+    # npyImage = np.expand_dims(npyImage, axis=-1)
 
     return npyImage
-
 
 def predictPatient(model, image):
 
     print('-'*30)
-    print('Loading and preprocessing test data...')
-    print('-'*30)
+    print('Loading test data...')
     npyImage = load_patient(image)
+
+    print('-'*30)
+    print("Saving npz file...")
+    list_image = list()
+    for i in range(npyImage.shape[0]):
+        # images, masks = load_image(input_src_paths[i], input_mask_paths[i], remove_no_lesion=remove_no_lesion)
+        list_image.append(npyImage[i])
+
+    np.savez_compressed("/home/anatielsantos/mestrado/datasets/dissertacao/test/image/GanPredsLast/exam", list_image)
+
+    print('-'*30)
+    print("Loading npz file...")
+    npzImage = load_images("/home/anatielsantos/mestrado/datasets/dissertacao/test/image/GanPredsLast/exam.npz")
 
     print('-'*30)
     print('Predicting test data...')
     print('-'*30)
 
-    # npyImagePredict = model.predict(npyImage, batch_size=1)
-    # npyImagePredict = model.generator(npyImage,training=False).numpy()
-    npyImagePredict=None
-    for i in range(npyImage.shape[0]):
-        pred = model.generator(npyImage[i:i+1],training=False).numpy()
-        if npyImagePredict is None:
-            npyImagePredict=pred
+    npzImagePredict=None
+    for i in range(npzImage.shape[0]):
+        pred = model.generator(npzImage[i:i+1], training=False).numpy()
+        if npzImagePredict is None:
+            npzImagePredict=pred
         else:
-            npyImagePredict = np.concatenate([npyImagePredict,pred],axis=0)
+            npzImagePredict = np.concatenate([npzImagePredict,pred],axis=0)
     
-    npyImagePredict = preprocess_squeeze(npyImagePredict)
-    npyImagePredict = np.around(npyImagePredict, decimals=0)
-    npyImagePredict = (npyImagePredict>0.5)*1
+    # npyImagePredict = preprocess_squeeze(npyImagePredict)
+    # npyImagePredict = np.around(npyImagePredict, decimals=0)
+    # npyImagePredict = (npyImagePredict>0.5)*1
 
-    return npyImagePredict
+    return np.asarray(npzImagePredict)
 
-def execExtractLungs(exam_id, input_path, output_path, model):
+def execPredict(exam_id, input_path, output_path, model):
     try:
         print(exam_id + ':')
 
         binary_masks = predictPatient(model, input_path)
-
-        # binary_masks = morphology.binary_fill_holes(
-        #     morphology.binary_dilation(
-        #         morphology.binary_fill_holes(binary_masks > 0),
-        #         iterations=1)
-        #     )
 
         # binary_masks.dtype='uint16'
         itkImage = sitk.GetImageFromArray(binary_masks)
@@ -186,18 +130,13 @@ def execExtractLungs(exam_id, input_path, output_path, model):
         # print(itkImage.GetPixelIDTypeAsString())
 
         # corrige o tipo da imagem pois no Colab está saindo 64 bits
-        itkImage = sitk.Cast(itkImage,image.GetPixelIDValue())    
+        # itkImage = sitk.Cast(itkImage,image.GetPixelIDValue())    
         
         itkImage.CopyInformation(image)
 
         # print(itkImage.GetSize())
         # print(itkImage.GetSpacing())
         # print(itkImage.GetPixelIDTypeAsString())    
-
-        # depth = image.GetDepth()
-        # step = depth//10
-        # min = depth//2 + step
-        # max = depth - step 
         
         sitk.WriteImage(itkImage, output_path)
 
@@ -210,7 +149,7 @@ def execExtractLungs(exam_id, input_path, output_path, model):
 
 """# Main"""
 
-def execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = None, parallel = True):
+def execExecPredictByGan(src_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = None, parallel = True):
     try:
         os.stat(dst_dir)
     except:
@@ -239,15 +178,15 @@ def execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse
 
     if(parallel):
         # p = mp.Pool(mp.cpu_count())
-        # for i in tqdm(p.starmap(execExtractLungs, zip(exam_ids, input_paths, output_paths, repeat(model), repeat(normalize_path))),desc=desc):
+        # for i in tqdm(p.starmap(execPredict, zip(exam_ids, input_paths, output_paths, repeat(model), repeat(normalize_path))),desc=desc):
         #     pass
         with mp.Pool(mp.cpu_count()) as pool:
-            for _ in tqdm(pool.istarmap(execExtractLungs, zip(exam_ids, input_paths, output_paths, repeat(model))),
+            for _ in tqdm(pool.istarmap(execPredict, zip(exam_ids, input_paths, output_paths, repeat(model))),
                           total=len(exam_ids)):
                 pass
     else:
         for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
-            execExtractLungs(exam_id, input_paths[i], output_paths[i], model)
+            execPredict(exam_id, input_paths[i], output_paths[i], model)
 
 def main():
 
@@ -256,12 +195,12 @@ def main():
     dataset = 'test'
 
     # local
-    # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
-    # model_path = '/home/anatielsantos/mestrado/models/dissertacao/gan/gan_500epc_last.hdf5'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
+    model_path = '/home/anatielsantos/mestrado/models/dissertacao/gan/gan_500epc_last.hdf5'
 
     # remote
-    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image/teste'
-    model_path = '/data/flavio/anatiel/models/dissertacao/gan_500epc_last.hdf5'
+    # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image/teste'
+    # model_path = '/data/flavio/anatiel/models/dissertacao/gan_500epc_last.hdf5'
 
     src_dir = '{}'.format(main_dir)
     dst_dir = '{}/GanPredsLast'.format(main_dir)
@@ -270,9 +209,15 @@ def main():
     print('Num Processadores = ' + str(nproc))
 
     model = Pix2Pix(img_rows, img_cols, img_depth, img_depth)
+    model.compile(
+        discriminator_optimizer = tf.keras.optimizers.Adam(2e-4, beta_1=0.5),
+        generator_optimizer = tf.keras.optimizers.Adam(2e-4, beta_1=0.5),
+        discriminator_loss = discriminator_loss,
+        generator_loss = generator_loss
+    )
     model.load_weights(model_path)
 
-    execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = 'Predicting (Pix2pix)', parallel=False)
+    execExecPredictByGan(src_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = 'Predicting (Pix2pix)', parallel=False)
 
 if __name__ == '__main__':
     start = time.time()
