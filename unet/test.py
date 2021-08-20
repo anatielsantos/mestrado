@@ -25,6 +25,11 @@ def test(w):
     print('Loading and preprocessing test data...')
     print('-'*30)
     imgs_test, imgs_maskt = load_test_data()
+
+    print(np.amin(imgs_test))
+    print(np.amax(imgs_test))
+    print(imgs_test.dtype)
+    print(imgs_test.shape)
     
     #Normalization of the test set
     imgs_test = imgs_test.astype('float32')

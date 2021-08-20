@@ -74,7 +74,7 @@ def predictPatient(model, image):
     
     npyImagePredict = preprocess_squeeze(npyImagePredict)
     npyImagePredict = np.around(npyImagePredict, decimals=0)
-    # npyImagePredict = (npyImagePredict>0.5)*1
+    npyImagePredict = (npyImagePredict>0.5)*1
 
     return npyImagePredict
 

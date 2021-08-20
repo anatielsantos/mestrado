@@ -46,15 +46,14 @@ def load_val_data():
     return imgs_val, masks_val
 
 def load_test_data():
-    # imgs_test_npz = np.load('/data/flavio/anatiel/datasets/A/512x512/test_lung.npz')
-    # masks_test_npz = np.load('/data/flavio/anatiel/datasets/B_lesion/512x512/test.npz')
-    # imgs_test = imgs_test_npz['arr_0']
-    # masks_test = masks_test_npz['arr_0']
+    # remote
+    # imgs_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/train_images.npz', allow_pickle=True)
+    # masks_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/train_masks.npz', allow_pickle=True)
+    
+    # local
+    imgs_train_npz = np.load('/home/anatielsantos/mestrado/datasets/dissertacao/test_images.npz', allow_pickle=True)
+    masks_train_npz = np.load('/home/anatielsantos/mestrado/datasets/dissertacao/test_masks.npz', allow_pickle=True)
 
-    # return imgs_test, masks_test
-
-    imgs_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/train_images.npz', allow_pickle=True)
-    masks_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/train_masks.npz', allow_pickle=True)
     imgs_train = imgs_train_npz['arr_0']
     masks_train = masks_train_npz['arr_0']
     
