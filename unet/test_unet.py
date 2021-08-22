@@ -58,13 +58,23 @@ def load_patient(image):
     npyImage = np.expand_dims(npyImage, axis=-1)
 
     return npyImage
-
+    
 def predictPatient(model, image):
 
     print('-'*30)
     print('Loading and preprocessing test data...')
     print('-'*30)
     npyImage = load_patient(image)
+
+    #Normalization of the test set
+    npyImage = npyImage.astype('float32')
+    mean = np.mean(npyImage)  # mean for data centering
+    std = np.std(npyImage)  # std for data normalization
+    
+    #to float
+    npyImage = npyImage.astype('float32')
+    npyImage -= mean
+    npyImage /= std
 
     print('-'*30)
     print('Predicting test data...')
@@ -128,7 +138,7 @@ def execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_lesionMask' + ext
+        output_path = dst_dir + '/' + exam_id + '_PredBest' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -155,10 +165,10 @@ def main():
     dataset = 'test'
 
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
-    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_500epc_last.h5'
+    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_500epc_best.h5'
 
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/UnetPredsLast'.format(main_dir)
+    dst_dir = '{}/UnetPredsBest'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))

@@ -97,7 +97,7 @@ def show_preds(path_pred, fatia):
     ax[1].set_title('Máscara Médico')
 
     ax[2].imshow(data[fatia,:,:,0], cmap="gray")
-    ax[2].set_title('Máscara GAN')
+    ax[2].set_title('Máscara Unet')
 
     plt.show()
 

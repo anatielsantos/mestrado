@@ -47,8 +47,8 @@ def load_val_data():
 
 def load_test_data():
     # remote
-    # imgs_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/train_images.npz', allow_pickle=True)
-    # masks_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/train_masks.npz', allow_pickle=True)
+    # imgs_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/test_images.npz', allow_pickle=True)
+    # masks_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/test_masks.npz', allow_pickle=True)
     
     # local
     imgs_train_npz = np.load('/home/anatielsantos/mestrado/datasets/dissertacao/test_images.npz', allow_pickle=True)
@@ -66,5 +66,5 @@ def results_train(history):
     return result
 
 if __name__ == '__main__':
-    load_train_data()
-    # load_test_data()
+    # load_train_data()
+    load_test_data()
