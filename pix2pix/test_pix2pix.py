@@ -69,7 +69,7 @@ def load_images(path_src):
 def load_patient(image):
     itkImage = sitk.ReadImage(image)
     npyImage = sitk.GetArrayFromImage(itkImage)
-    # npyImage = np.expand_dims(npyImage, axis=-1)
+    npyImage = np.expand_dims(npyImage, axis=-1)
 
     return npyImage
 
@@ -80,30 +80,22 @@ def predictPatient(model, image):
     npyImage = load_patient(image)
 
     print('-'*30)
-    print("Saving npz file...")
-    np.savez_compressed("/home/anatielsantos/mestrado/datasets/dissertacao/test/image/GanPredsLast/exam", npyImage)
-
-    print('-'*30)
-    print("Loading npz file...")
-    npzImage = load_images("/home/anatielsantos/mestrado/datasets/dissertacao/test/image/GanPredsLast/exam.npz")
-
-    print('-'*30)
     print('Predicting test data...')
     print('-'*30)
 
-    npzImagePredict=None
-    for i in range(npzImage.shape[0]):
-        pred = model.generator(npzImage[i:i+1], training=False).numpy()
-        if npzImagePredict is None:
-            npzImagePredict=pred
+    npyImagePredict=None
+    for i in range(npyImage.shape[0]):
+        pred = model.generator(npyImage[i:i+1], training=False).numpy()
+        if npyImagePredict is None:
+            npyImagePredict=pred
         else:
-            npzImagePredict = np.concatenate([npzImagePredict,pred],axis=0)
+            npyImagePredict = np.concatenate([npyImagePredict,pred],axis=0)
     
-    # npyImagePredict = preprocess_squeeze(npyImagePredict)
-    # npyImagePredict = np.around(npyImagePredict, decimals=0)
-    # npyImagePredict = (npyImagePredict>0.5)*1
+    npyImagePredict = preprocess_squeeze(npyImagePredict)
+    npyImagePredict = np.around(npyImagePredict, decimals=0)
+    npyImagePredict = (npyImagePredict>0.5)*1
 
-    return np.asarray(npzImagePredict)
+    return np.float32(npyImagePredict)
 
 def execPredict(exam_id, input_path, output_path, model):
     try:
@@ -159,7 +151,7 @@ def execExecPredictByGan(src_dir, dst_dir, ext, search_pattern, model, reverse =
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_Pred_teste' + ext
+        output_path = dst_dir + '/' + exam_id + '_PredBest' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -191,14 +183,14 @@ def main():
 
     # local
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
-    model_path = '/home/anatielsantos/mestrado/models/dissertacao/gan/gan_500epc_last.hdf5'
+    model_path = '/home/anatielsantos/mestrado/models/dissertacao/gan/gan_500epc_best.hdf5'
 
     # remote
     # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image/teste'
     # model_path = '/data/flavio/anatiel/models/dissertacao/gan_500epc_last.hdf5'
 
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/GanPredsLast'.format(main_dir)
+    dst_dir = '{}/GanPredsBest'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
