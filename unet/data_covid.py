@@ -47,12 +47,12 @@ def load_val_data():
 
 def load_test_data():
     # remote
-    # imgs_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/test_images.npz', allow_pickle=True)
-    # masks_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/test_masks.npz', allow_pickle=True)
+    imgs_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/test_images.npz', allow_pickle=True)
+    masks_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/test_masks.npz', allow_pickle=True)
     
     # local
-    imgs_train_npz = np.load('/home/anatielsantos/mestrado/datasets/dissertacao/test_images.npz', allow_pickle=True)
-    masks_train_npz = np.load('/home/anatielsantos/mestrado/datasets/dissertacao/test_masks.npz', allow_pickle=True)
+    # imgs_train_npz = np.load('/home/anatielsantos/mestrado/datasets/dissertacao/test_images.npz', allow_pickle=True)
+    # masks_train_npz = np.load('/home/anatielsantos/mestrado/datasets/dissertacao/test_masks.npz', allow_pickle=True)
 
     imgs_train = imgs_train_npz['arr_0']
     masks_train = masks_train_npz['arr_0']
