@@ -68,7 +68,6 @@ def test(src_images_test, path_mask_test, weights_path):
     print("Prec: ", prec)
     print("FScore: ", fscore)
     
-    
     print('-' * 30)
     print('Saving predicted masks to files...')
     
@@ -104,15 +103,4 @@ if __name__=="__main__":
     # path_src_test = '/home/anatielsantos/mestrado/datasets/dissertacao/test/image/GanPredsLast/exam.npz'
     # path_mask_test = '/home/anatielsantos/mestrado/datasets/dissertacao/test_masks_teste.npz'
     
-    test(path_src_test, path_mask_test, w_covid_best)
-    
-    # train results
-    #results = pd.read_json("/home/flavio/anatiel/pix2pix/results/new_tests/history_masked_lung_500epc_gen2.json")
-    
-    #print("D-Loss: ", results_train(results['d_loss']))
-    #print("G-Total: ", results_train(results['g_total']))
-    #print("G-Gan: ", results_train(results['g_gan']))
-    #print("G-L1: ", results_train(results['g_l1']))
-    #print("DICE: ", results_train(results['dice']))
-    #print("Val-DICE: ", results_train(results['val_dice']))
-    
+    test(path_src_test, path_mask_test, w_covid_last)
