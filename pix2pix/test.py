@@ -61,12 +61,15 @@ def test(src_images_test, path_mask_test, weights_path):
     print(np.amin(imgs_maskt))
     print(np.amax(imgs_maskt))
     print(imgs_maskt.dtype)
-    print(np.amin(output))
-    print(np.amax(output))
-    print(output.dtype)
+
+    outputPredict = np.around(output, decimals=0)
+    outputPredict = (outputPredict>0.5)*1
+    print(np.amin(outputPredict))
+    print(np.amax(outputPredict))
+    print(outputPredict.dtype)
 
     
-    dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(output.astype(int), imgs_maskt.astype(int))
+    dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(outputPredict.astype(int), imgs_maskt.astype(int))
     print("DICE: ", dice)
     print("IoU:", jaccard)
     print("Sensitivity: ", sensitivity)
