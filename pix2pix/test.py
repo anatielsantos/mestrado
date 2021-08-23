@@ -8,7 +8,6 @@ from utils import *
 from losses import *
 import numpy as np
 import pandas as pd
-from skimage.filters import threshold_otsu
 
 # test settings
 IMG_WIDTH = 640
@@ -67,7 +66,7 @@ def test(src_images_test, path_mask_test, weights_path):
     print(output.dtype)
 
     
-    dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(img_otsu.astype(int), imgs_maskt.astype(int))
+    dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(output.astype(int), imgs_maskt.astype(int))
     print("DICE: ", dice)
     print("IoU:", jaccard)
     print("Sensitivity: ", sensitivity)
