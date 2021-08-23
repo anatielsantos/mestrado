@@ -29,15 +29,15 @@ def test(src_images_test, path_mask_test, weights_path):
     imgs_test, imgs_maskt = load_images(src_images_test,path_mask_test)
 
     # # #Normalization of the test set
-    # imgs_test = imgs_test.astype('float32')
-    # mean = np.mean(imgs_test)  # mean for data centering
-    # std = np.std(imgs_test)  # std for data normalization
+    imgs_test = imgs_test.astype('float32')
+    mean = np.mean(imgs_test)  # mean for data centering
+    std = np.std(imgs_test)  # std for data normalization
     
     # #to float
-    # imgs_test = imgs_test.astype('float32')
-    # imgs_test -= mean
-    # imgs_test /= std
-    # imgs_maskt = imgs_maskt.astype('float32')
+    imgs_test = imgs_test.astype('float32')
+    imgs_test -= mean
+    imgs_test /= std
+    imgs_maskt = imgs_maskt.astype('float32')
 
     # predict
     print('-'*30)
@@ -57,6 +57,14 @@ def test(src_images_test, path_mask_test, weights_path):
     print('-'*30)
     print('Calculating metrics...')
     #print("DICE Test: ", dice(tar_images_test, output).numpy())
+
+    print(np.amin(imgs_maskt))
+    print(np.amax(imgs_maskt))
+    print(imgs_maskt.dtype)
+    print(np.amin(output))
+    print(np.amax(output))
+    print(output.dtype)
+
     
     dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(output.astype(int), imgs_maskt.astype(int))
     print("DICE: ", dice)
@@ -77,6 +85,7 @@ def test(src_images_test, path_mask_test, weights_path):
 
     # local
     # np.savez_compressed('/home/anatielsantos/mestrado/datasets/dissertacao/test/image/GanPredsLast/exam_test.npz', output)
+    # np.save('/home/anatielsantos/mestrado/datasets/dissertacao/test/image/GanPredsLast/gan_preds_best.npy', output)
     
     print('-' * 30)
     
@@ -100,7 +109,7 @@ if __name__=="__main__":
     # path_mask_test = '/data/flavio/anatiel/datasets/dissertacao/test/image/teste/test_masks_teste.npz'
 
     # local
-    # path_src_test = '/home/anatielsantos/mestrado/datasets/dissertacao/test/image/GanPredsLast/exam.npz'
-    # path_mask_test = '/home/anatielsantos/mestrado/datasets/dissertacao/test_masks_teste.npz'
+    # path_src_test = '/home/anatielsantos/mestrado/datasets/dissertacao/test_images.npz'
+    # path_mask_test = '/home/anatielsantos/mestrado/datasets/dissertacao/test_masks.npz'
     
-    test(path_src_test, path_mask_test, w_covid_last)
+    test(path_src_test, path_mask_test, w_covid_best)
