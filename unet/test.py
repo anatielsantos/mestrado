@@ -53,7 +53,7 @@ def test(w):
     
     print('Saving predicted masks to files...')
     print('-' * 30)
-    np.save('/data/flavio/anatiel/datasets/dissertacao/unet_mask_test_best.npy', imgs_mask_test)
+    np.save('/data/flavio/anatiel/datasets/dissertacao/unet_preds_best.npy', imgs_mask_test)
     # mask_pred = np.load('/data/flavio/anatiel/datasets/dissertacao/unet_mask_test.npy')
     
     # dice_test = dice_coef(imgs_maskt, mask_pred)
