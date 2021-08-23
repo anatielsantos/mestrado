@@ -50,9 +50,6 @@ def test(w):
     print('Predicting masks on test data...')
     print('-'*30)
     imgs_mask_test = model.predict(imgs_test, batch_size=1, verbose=1)
-
-    print(np.amin(imgs_mask_test))
-    print(np.amax(imgs_mask_test))
     
     print('Saving predicted masks to files...')
     print('-' * 30)
@@ -67,7 +64,7 @@ def test(w):
     print('Calculating metrics...')
     #print("DICE Test: ", dice(tar_images_test, output).numpy())
     
-    dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(imgs_mask_test.astype(int), imgs_maskt.astype(int))
+    dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(imgs_mask_test, imgs_maskt)
     print("DICE: ", dice)
     print("IoU:", jaccard)
     print("Sensitivity: ", sensitivity)

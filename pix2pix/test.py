@@ -58,7 +58,7 @@ def test(src_images_test, path_mask_test, weights_path):
     print('Calculating metrics...')
     #print("DICE Test: ", dice(tar_images_test, output).numpy())
     
-    dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(output.astype(int), imgs_maskt.astype(int))
+    dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(output, imgs_maskt)
     print("DICE: ", dice)
     print("IoU:", jaccard)
     print("Sensitivity: ", sensitivity)
