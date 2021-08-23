@@ -16,8 +16,8 @@ def load_images(path_src, path_mask):
     src = src_npz['arr_0']
     tar = tar_npz['arr_0']
     
-    # return np.float32(np.expand_dims(np.concatenate(src), axis=-1)), np.float32(np.expand_dims(np.concatenate(tar), axis=-1))
-    return src, tar
+    return np.float32(np.expand_dims(np.concatenate(src), axis=-1)), np.float32(np.expand_dims(np.concatenate(tar), axis=-1))
+    # return src, tar
 
 def resize(input_image, real_image, height, width):
     input_image = tf.image.resize(input_image, [height, width],
