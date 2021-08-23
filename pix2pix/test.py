@@ -63,7 +63,7 @@ def test(src_images_test, path_mask_test, weights_path):
     print(imgs_maskt.dtype)
 
     outputPredict = np.around(output, decimals=0)
-    outputPredict = (outputPredict>0.5)*1
+    # outputPredict = (outputPredict>0.5)*1
     print(np.amin(outputPredict))
     print(np.amax(outputPredict))
     print(outputPredict.dtype)
