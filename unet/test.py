@@ -50,6 +50,9 @@ def test(w):
     print('Predicting masks on test data...')
     print('-'*30)
     imgs_mask_test = model.predict(imgs_test, batch_size=1, verbose=1)
+
+    print(np.amin(imgs_mask_test))
+    print(np.amax(imgs_mask_test))
     
     print('Saving predicted masks to files...')
     print('-' * 30)
