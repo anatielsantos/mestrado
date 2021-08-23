@@ -1,7 +1,7 @@
 # GPU
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "5"
 
 from model import Pix2Pix
 from utils import *
@@ -58,7 +58,7 @@ def test(src_images_test, path_mask_test, weights_path):
     print('Calculating metrics...')
     #print("DICE Test: ", dice(tar_images_test, output).numpy())
     
-    dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(output, imgs_maskt)
+    dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(output.astype(int), imgs_maskt.astype(int))
     print("DICE: ", dice)
     print("IoU:", jaccard)
     print("Sensitivity: ", sensitivity)
@@ -95,16 +95,16 @@ if __name__=="__main__":
     print('Loading and preprocessing test data...')
 
     # remote
-    # path_src_test = '/data/flavio/anatiel/datasets/dissertacao/test_images.npz'
-    # path_mask_test = '/data/flavio/anatiel/datasets/dissertacao/test_masks.npz'
-    path_src_test = '/data/flavio/anatiel/datasets/dissertacao/test/image/teste/test_images_teste.npz'
-    path_mask_test = '/data/flavio/anatiel/datasets/dissertacao/test/image/teste/test_masks_teste.npz'
+    path_src_test = '/data/flavio/anatiel/datasets/dissertacao/test_images.npz'
+    path_mask_test = '/data/flavio/anatiel/datasets/dissertacao/test_masks.npz'
+    # path_src_test = '/data/flavio/anatiel/datasets/dissertacao/test/image/teste/test_images_teste.npz'
+    # path_mask_test = '/data/flavio/anatiel/datasets/dissertacao/test/image/teste/test_masks_teste.npz'
 
     # local
-    path_src_test = '/home/anatielsantos/mestrado/datasets/dissertacao/test/image/GanPredsLast/exam.npz'
-    path_mask_test = '/home/anatielsantos/mestrado/datasets/dissertacao/test_masks_teste.npz'
+    # path_src_test = '/home/anatielsantos/mestrado/datasets/dissertacao/test/image/GanPredsLast/exam.npz'
+    # path_mask_test = '/home/anatielsantos/mestrado/datasets/dissertacao/test_masks_teste.npz'
     
-    test(path_src_test, path_mask_test, w_covid_last)
+    test(path_src_test, path_mask_test, w_covid_best)
     
     # train results
     #results = pd.read_json("/home/flavio/anatiel/pix2pix/results/new_tests/history_masked_lung_500epc_gen2.json")
