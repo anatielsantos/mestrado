@@ -64,7 +64,7 @@ def predictPatient(model, image):
     print('-'*30)
     print('Loading and preprocessing test data...')
     print('-'*30)
-    npyImage = load_patient(image)
+    npyImage = load_patient(image)[i:i+1]
 
     #Normalization of the test set
     npyImage = npyImage.astype('float32')
@@ -80,7 +80,15 @@ def predictPatient(model, image):
     print('Predicting test data...')
     print('-'*30)
 
-    npyImagePredict = model.predict(npyImage, batch_size=1, verbose=1)
+    # npyImagePredict = model.predict(npyImage, batch_size=1, verbose=1)
+
+    npyImagePredict=None
+    for i in range(npyImage.shape[0]):
+        pred = model.predict(npyImage[i:i+1], batch_size=1, verbose=1)
+        if npyImagePredict is None:
+            npyImagePredict=pred
+        else:
+            npyImagePredict = np.concatenate([npyImagePredict,pred],axis=0)
     
     npyImagePredict = preprocess_squeeze(npyImagePredict)
     npyImagePredict = np.around(npyImagePredict, decimals=0)
@@ -106,7 +114,6 @@ def execPredictPatient(exam_id, input_path, output_path, model):
         image = sitk.ReadImage(input_path)
         
         itkImage = sitk.Cast(itkImage,image.GetPixelIDValue())
-        
         itkImage.CopyInformation(image)
 
         depth = image.GetDepth()
