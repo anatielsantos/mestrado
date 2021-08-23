@@ -74,21 +74,21 @@ def test(src_images_test, path_mask_test, weights_path):
     
     # remote
     # np.savez_compressed('/data/flavio/anatiel/datasets/dissertacao/test/image/teste/gan_mask_test_last_teste.npz', output)
-    # np.save('/data/flavio/anatiel/datasets/dissertacao/gan_mask_test.npy', output)
+    np.save('/data/flavio/anatiel/datasets/dissertacao/gan_preds_best.npy', output)
 
     # local
-    np.savez_compressed('/home/anatielsantos/mestrado/datasets/dissertacao/test/image/GanPredsLast/exam_test.npz', output)
+    # np.savez_compressed('/home/anatielsantos/mestrado/datasets/dissertacao/test/image/GanPredsLast/exam_test.npz', output)
     
     print('-' * 30)
     
 if __name__=="__main__":
     # predict remote
-    # w_covid_best = '/data/flavio/anatiel/models/dissertacao/gan_500epc_best.hdf5'
-    # w_covid_last = '/data/flavio/anatiel/models/dissertacao/gan_500epc_last.hdf5'
+    w_covid_best = '/data/flavio/anatiel/models/dissertacao/gan_500epc_best.hdf5'
+    w_covid_last = '/data/flavio/anatiel/models/dissertacao/gan_500epc_last.hdf5'
 
     # predict local
-    w_covid_best = '/home/anatielsantos/mestrado/models/dissertacao/gan/gan_500epc_best.hdf5'
-    w_covid_last = '/home/anatielsantos/mestrado/models/dissertacao/gan/gan_500epc_last.hdf5'
+    # w_covid_best = '/home/anatielsantos/mestrado/models/dissertacao/gan/gan_500epc_best.hdf5'
+    # w_covid_last = '/home/anatielsantos/mestrado/models/dissertacao/gan/gan_500epc_last.hdf5'
 
     # load dataset
     print('-'*30)
