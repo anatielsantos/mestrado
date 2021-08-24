@@ -18,24 +18,20 @@ from losses import calc_metric
 # w_lung_clahe = '/data/flavio/anatiel/models/new/unet2d/weights_unet_masked_lung_clahe_500epc.h5'
 # w_lung_clahe_last = '/data/flavio/anatiel/models/new/unet2d/weights_unet_masked_lung_clahe_500epc_last.h5'
 
-w_covid_best = '/data/flavio/anatiel/models/dissertacao/unet_500epc_best.h5'
-w_covid_last = '/data/flavio/anatiel/models/dissertacao/unet_500epc_last.h5'
-
-def test(w):
+def test(w, imgs_test, imgs_maskt):
     print('Loading and preprocessing test data...')
     print('-'*30)
-    imgs_test, imgs_maskt = load_test_data()
     
     #Normalization of the test set
-    imgs_test = imgs_test.astype('float32')
-    mean = np.mean(imgs_test)  # mean for data centering
-    std = np.std(imgs_test)  # std for data normalization
+    # imgs_test = imgs_test.astype('float32')
+    # mean = np.mean(imgs_test)  # mean for data centering
+    # std = np.std(imgs_test)  # std for data normalization
     
     #to float
-    imgs_test = imgs_test.astype('float32')
-    imgs_test -= mean
-    imgs_test /= std
-    imgs_maskt = imgs_maskt.astype('float32')
+    # imgs_test = imgs_test.astype('float32')
+    # imgs_test -= mean
+    # imgs_test /= std
+    # imgs_maskt = imgs_maskt.astype('float32')
 
     print('Loading saved weights...')
     print('-'*30)
@@ -105,7 +101,10 @@ def show_preds(path_pred, fatia):
 
 if __name__ == "__main__":
     # predict
-    test(w_covid_last)
+    w_covid_best = '/data/flavio/anatiel/models/dissertacao/unet_500epc_best.h5'
+    w_covid_last = '/data/flavio/anatiel/models/dissertacao/unet_500epc_last.h5'
+    imgs_test, imgs_maskt = load_test_data()
+    test(w_covid_last, imgs_test, imgs_maskt)
     
     # show
     # show_preds('imgs_mask_test.npy', 130)
