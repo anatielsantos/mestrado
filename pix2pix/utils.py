@@ -6,17 +6,17 @@ import cv2
 
 # load dataset
 def load_images(path_src, path_mask):
-    src = np.load(path_src, allow_pickle=True)
-    tar = np.load(path_mask, allow_pickle=True)
+    # src = np.expand_dims(np.load(path_src)['arr_0'], axis=-1)
+    # tar = np.expand_dims(np.load(path_mask)['arr_0'].astype(np.float32), axis=-1)
     
-    return [src,tar]
+    # return [src,tar]
 
-    # src_npz = np.load(path_src, allow_pickle=True)
-    # tar_npz = np.load(path_mask, allow_pickle=True)
-    # src = src_npz['arr_0']
-    # tar = tar_npz['arr_0']
+    src_npz = np.load(path_src, allow_pickle=True)
+    tar_npz = np.load(path_mask, allow_pickle=True)
+    src = src_npz['arr_0']
+    tar = tar_npz['arr_0']
     
-    # return np.float32(np.expand_dims(np.concatenate(src), axis=-1)), np.float32(np.expand_dims(np.concatenate(tar), axis=-1))
+    return np.float32(np.expand_dims(np.concatenate(src), axis=-1)), np.float32(np.expand_dims(np.concatenate(tar), axis=-1))
 
 def resize(input_image, real_image, height, width):
     input_image = tf.image.resize(input_image, [height, width],
