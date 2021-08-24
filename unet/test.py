@@ -27,7 +27,7 @@ def test(w):
     imgs_test, imgs_maskt = load_test_data()
     
     #Normalization of the test set
-    # imgs_test = imgs_test.astype('float32')
+    imgs_test = imgs_test.astype('float32')
     # mean = np.mean(imgs_test)  # mean for data centering
     # std = np.std(imgs_test)  # std for data normalization
     
