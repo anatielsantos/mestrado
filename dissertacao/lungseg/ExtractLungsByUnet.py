@@ -365,8 +365,9 @@ def main():
 
     ext = '.nii.gz'
     search_pattern = '*'
-    dataset = 'dataset1'
+    dataset = 'dataset2'
 
+    # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding'
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding'
     model_path = '/home/anatielsantos/mestrado/models/extractlung/2D-Unet_lungs.h5'
     normalize_path = '/home/anatielsantos/mestrado/models/extractlung/images_test_lungs.npz'
@@ -380,7 +381,7 @@ def main():
     model = get_unet()
     model.load_weights(model_path)
 
-    execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, normalize_path, reverse = False, desc = 'Extraindo pulmões (unet)', parallel=False)
+    execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, normalize_path, reverse = False, desc = 'Segmentando Pulmões (unet)', parallel=False)
 
 if __name__ == '__main__':
     # arquivo = open("anatiel/dissertacao/lungseg/time_execution_lungseg.txt", "a")

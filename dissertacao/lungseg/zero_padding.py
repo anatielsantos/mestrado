@@ -1,7 +1,7 @@
 # GPU
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "5"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 import numpy as np
 import SimpleITK as sitk
@@ -24,8 +24,9 @@ def zero_pad(width, exam_id, input_path, output_path):
             raise ValueError("New width needs to be bigger than current.")    
 
         new_width = (width - npyImage.shape[1]) // 2
+
         # image_pad = np.pad(npyImage, new_width, mode='minimum') # 3D
-        image_pad = np.pad(npyImage, [(0, 0), (new_width, new_width), (new_width, new_width)], mode='minimum') # 2D
+        image_pad = np.pad(npyImage, [(0,0), (new_width, new_width), (new_width, new_width)], 'constant', constant_values=(np.amin(npyImage))) # 2D
         
         # bin
         # image_pad = np.int16((image_pad>0)*1)

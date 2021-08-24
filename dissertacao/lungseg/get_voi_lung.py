@@ -98,7 +98,7 @@ def exec_get_voi_lung(mask_dir, dst_dir, ext, reverse = False, desc = None):
         get_voi_lung(exam_id, input_mask_paths[i], output_paths[i])
 
 def main():
-    dataset = 'dataset1'
+    dataset = 'dataset2'
     ext = '.nii.gz' 
     main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/PulmoesMascara'
     

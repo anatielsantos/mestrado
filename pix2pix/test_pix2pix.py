@@ -125,9 +125,7 @@ def execPredict(exam_id, input_path, output_path, model):
         # print(itkImage.GetSpacing())
         # print(itkImage.GetPixelIDTypeAsString())    
         
-        # sitk.WriteImage(itkImage, output_path)
-
-        np.save('/data/flavio/anatiel/datasets/dissertacao/teste_gan_preds_last.npy', itkImage)
+        sitk.WriteImage(itkImage, output_path)
 
         del image
 

@@ -90,6 +90,9 @@ def compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, de
 
     np.savez_compressed(f"{output_path}/{joint}_images", list_images)
     np.savez_compressed(f"{output_path}/{joint}_masks", list_masks)
+
+    # np.save(f"{output_path}/{joint}_images.npy", list_images)
+    # np.save(f"{output_path}/{joint}_masks.npy", list_masks)
             
 def main():
     ext = '.nii.gz'

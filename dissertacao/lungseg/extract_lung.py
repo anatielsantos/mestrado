@@ -28,7 +28,13 @@ def extract_lung(exam_id, src_path, mask_path, output_path):
         #             if (npyMask[s,l,c] < 1):
         #                 new_image[s,l,c] = 0
         
-        itkImage = sitk.GetImageFromArray((npyImage * npyMask))
+        imgMin = np.amin(npyImage)
+        npyImage_aux = npyImage
+        if (imgMin < 0):
+            imgMin = imgMin * -1
+            npyImage_aux = npyImage + imgMin
+
+        itkImage = sitk.GetImageFromArray((npyImage_aux * npyMask))
         sitk.WriteImage(itkImage, output_path)
 
         del image
@@ -77,9 +83,12 @@ def exec_extract_lung(src_dir, mask_dir, dst_dir, ext, reverse = False, desc = N
             
 def main():
     joint = 'test'
+    dataset = 'dataset2'
     ext = '.nii.gz'
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{joint}/image' 
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{joint}/mask/lung_mask'
+    # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{joint}/image' 
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding'
+    # main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{joint}/mask/lung_mask'
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/PulmoesMascara/PulmoesMascaraFillHoles'
     
     src_dir = '{}'.format(main_dir)
     dst_dir = '{}/lung_extracted'.format(main_dir)
