@@ -91,9 +91,9 @@ def predictPatient(model, image):
         else:
             npyImagePredict = np.concatenate([npyImagePredict,pred],axis=0)
     
-    npyImagePredict = preprocess_squeeze(npyImagePredict)
-    npyImagePredict = np.around(npyImagePredict, decimals=0)
-    npyImagePredict = (npyImagePredict>0.5)*1
+    # npyImagePredict = preprocess_squeeze(npyImagePredict)
+    # npyImagePredict = np.around(npyImagePredict, decimals=0)
+    # npyImagePredict = (npyImagePredict>0.5)*1
 
     return np.float32(npyImagePredict)
 
@@ -125,7 +125,9 @@ def execPredict(exam_id, input_path, output_path, model):
         # print(itkImage.GetSpacing())
         # print(itkImage.GetPixelIDTypeAsString())    
         
-        sitk.WriteImage(itkImage, output_path)
+        # sitk.WriteImage(itkImage, output_path)
+
+        np.save('/data/flavio/anatiel/datasets/dissertacao/teste_gan_preds_last.npy', itkImage)
 
         del image
 
@@ -183,14 +185,14 @@ def main():
 
     # local
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
-    model_path = '/home/anatielsantos/mestrado/models/dissertacao/gan/gan_500epc_best_3.hdf5'
+    model_path = '/home/anatielsantos/mestrado/models/dissertacao/gan/gan_500epc_best.hdf5'
 
     # remote
     # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image/teste'
     # model_path = '/data/flavio/anatiel/models/dissertacao/gan_500epc_last.hdf5'
 
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/GanPredsBest3'.format(main_dir)
+    dst_dir = '{}/GanPredsBest'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
