@@ -59,7 +59,7 @@ if __name__=="__main__":
     # ['_opening_dilate', '_closing_dilate', '_closing_opening']
     op = '_none'
     
-    path = '/data/flavio/anatiel/datasets/dissertacao/gan_mask_test.npy'
+    path = '/data/flavio/anatiel/datasets/dissertacao/gan_preds_best.npy'
     preds = np.load(path)
     
     # preds = np.load('/data/flavio/anatiel/preds/'+net+'/'+model+'/gen2/imgs_mask_test'+pre_set+op+'_gen2.npy')
