@@ -35,7 +35,8 @@ def load_train_data():
     imgs_train = imgs_train_npz['arr_0']
     masks_train = masks_train_npz['arr_0']
     
-    return np.expand_dims(np.concatenate(imgs_train), axis=-1), np.expand_dims(np.concatenate(masks_train), axis=-1)
+    # return np.expand_dims(np.concatenate(imgs_train), axis=-1), np.expand_dims(np.concatenate(masks_train), axis=-1)
+    return imgs_train, masks_train
 
 def load_val_data():
     imgs_val_npz = np.load('/data/flavio/anatiel/datasets/A/512x512/val_masked_lung.npz')

@@ -169,9 +169,10 @@ def unet(pretrained_weights = None,input_size = (640,640,1)):
 
     conv10 = Conv2D(1, (1, 1), activation='sigmoid')(conc9)
 
-    #model = Model(inputs, conv10)
     model = Model(inputs=[inputs], outputs=[conv10])
-    model.compile(optimizer = Adam(lr = 1e-4),  loss=dice_bce_loss, metrics=[dice_coef], run_eagerly=True)
+    otimizador = Adam(lr=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.000000199) # train 2
+    model.compile(optimizer = otimizador,  loss=dice_bce_loss, metrics=[dice_coef], run_eagerly=True)
+    # model.compile(optimizer = Adam(lr = 1e-4),  loss=dice_bce_loss, metrics=[dice_coef], run_eagerly=True)
     #model.summary()
 
     if(pretrained_weights):
@@ -202,19 +203,19 @@ def train():
     
     model = unet()
     #Saving the weights and the loss of the best predictions we obtained
-    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/models/dissertacao/unet_500epc_best.h5', monitor='val_loss', save_best_only=True)
+    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/models/dissertacao/unet_500epc_best_2.h5', monitor='val_loss', save_best_only=True)
     
     print('Fitting model...')
     print('-'*30)
     history = model.fit(imgs_train, imgs_mask_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[model_checkpoint])
 
-    model.save('/data/flavio/anatiel/models/dissertacao/unet_500epc_last.h5')
+    model.save('/data/flavio/anatiel/models/dissertacao/unet_500epc_last_2.h5')
         
     # convert the history.history dict to a pandas DataFrame:     
     hist_df = pd.DataFrame(history.history) 
     
     # save to json:  
-    hist_json_file = '/data/flavio/anatiel/models/dissertacao/unet_history_500epc.json'
+    hist_json_file = '/data/flavio/anatiel/models/dissertacao/unet_history_500epc_2.json'
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("history saved")
@@ -226,7 +227,7 @@ def train():
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Val'], loc='upper left')
     # save plot to file
-    plt.savefig('/data/flavio/anatiel/models/dissertacao/unet_plot_500epc.png')
+    plt.savefig('/data/flavio/anatiel/models/dissertacao/unet_plot_500epc_2.png')
     # plt.show()
     
 if __name__ == "__main__":
