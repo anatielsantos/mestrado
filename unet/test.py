@@ -25,22 +25,17 @@ def test(w):
     print('Loading and preprocessing test data...')
     print('-'*30)
     imgs_test, imgs_maskt = load_test_data()
-
-    print(np.amin(imgs_test))
-    print(np.amax(imgs_test))
-    print(imgs_test.dtype)
-    print(imgs_test.shape)
     
     #Normalization of the test set
-    imgs_test = imgs_test.astype('float32')
-    mean = np.mean(imgs_test)  # mean for data centering
-    std = np.std(imgs_test)  # std for data normalization
+    # imgs_test = imgs_test.astype('float32')
+    # mean = np.mean(imgs_test)  # mean for data centering
+    # std = np.std(imgs_test)  # std for data normalization
     
     #to float
-    imgs_test = imgs_test.astype('float32')
-    imgs_test -= mean
-    imgs_test /= std
-    imgs_maskt = imgs_maskt.astype('float32')
+    # imgs_test = imgs_test.astype('float32')
+    # imgs_test -= mean
+    # imgs_test /= std
+    # imgs_maskt = imgs_maskt.astype('float32')
 
     print('Loading saved weights...')
     print('-'*30)
@@ -49,11 +44,11 @@ def test(w):
 
     print('Predicting masks on test data...')
     print('-'*30)
-    imgs_mask_test = model.predict(imgs_test, batch_size=1, verbose=1)
+    pred = model.predict(imgs_test, batch_size=1, verbose=1)
     
     print('Saving predicted masks to files...')
     print('-' * 30)
-    np.save('/data/flavio/anatiel/datasets/dissertacao/unet_preds_last.npy', imgs_mask_test)
+    np.save('/data/flavio/anatiel/datasets/dissertacao/unet_preds_best.npy', pred)
     # mask_pred = np.load('/data/flavio/anatiel/datasets/dissertacao/unet_mask_test.npy')
     
     # dice_test = dice_coef(imgs_maskt, mask_pred)
@@ -63,8 +58,15 @@ def test(w):
     print('Calculating metrics...')
     print('-'*30)
     #print("DICE Test: ", dice(tar_images_test, output).numpy())
+
+    print(np.amin(imgs_maskt))
+    print(np.amax(imgs_maskt))
+    print(imgs_maskt.dtype)
+    print(np.amin(pred))
+    print(np.amax(pred))
+    print(pred.dtype)
     
-    dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(imgs_mask_test.astype(int), imgs_maskt.astype(int))
+    dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(pred.astype(int), imgs_maskt.astype(int))
     print("DICE: ", dice)
     print("IoU:", jaccard)
     print("Sensitivity: ", sensitivity)
@@ -103,7 +105,7 @@ def show_preds(path_pred, fatia):
 
 if __name__ == "__main__":
     # predict
-    test(w_covid_last)
+    test(w_covid_best)
     
     # show
     # show_preds('imgs_mask_test.npy', 130)
