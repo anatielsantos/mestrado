@@ -6,8 +6,8 @@ import cv2
 
 # load dataset
 def load_images(path_src, path_mask):
-    src = np.expand_dims(np.load(path_src)['arr_0'], axis=-1)
-    tar = np.expand_dims(np.load(path_mask)['arr_0'].astype(np.float32), axis=-1)
+    src = np.expand_dims(np.load(path_src, allow_pickle=True)['arr_0'], axis=-1)
+    tar = np.expand_dims(np.load(path_mask, allow_pickle=True)['arr_0'].astype(np.float32), axis=-1)
     
     return [src,tar]
 
