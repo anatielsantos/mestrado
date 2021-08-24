@@ -81,7 +81,7 @@ def test(src_images_test, path_mask_test, weights_path):
     
     # remote
     # np.savez_compressed('/data/flavio/anatiel/datasets/dissertacao/test/image/teste/gan_mask_test_last_teste.npz', output)
-    np.save('/data/flavio/anatiel/datasets/dissertacao/gan_preds_best.npy', output)
+    np.save('/data/flavio/anatiel/datasets/dissertacao/gan_preds_last.npy', output)
 
     # local
     # np.savez_compressed('/home/anatielsantos/mestrado/datasets/dissertacao/test/image/GanPredsLast/exam_test.npz', output)
@@ -112,4 +112,4 @@ if __name__=="__main__":
     # path_src_test = '/home/anatielsantos/mestrado/datasets/dissertacao/test_images.npz'
     # path_mask_test = '/home/anatielsantos/mestrado/datasets/dissertacao/test_masks.npz'
     
-    test(path_src_test, path_mask_test, w_covid_best)
+    test(path_src_test, path_mask_test, w_covid_last)
