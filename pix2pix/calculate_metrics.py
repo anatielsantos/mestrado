@@ -64,6 +64,13 @@ if __name__=="__main__":
     
     # preds = np.load('/data/flavio/anatiel/preds/'+net+'/'+model+'/gen2/imgs_mask_test'+pre_set+op+'_gen2.npy')
     
+    print(np.amin(tar_images_test))
+    print(np.amax(tar_images_test))
+    print(tar_images_test.dtype)
+    print(np.amin(preds))
+    print(np.amax(preds))
+    print(preds.dtype)
+
     calculate_metrics(preds, tar_images_test)
     # print("="*50)
     # calculate_metrics(preds, tar_images_test, '_dilate')
