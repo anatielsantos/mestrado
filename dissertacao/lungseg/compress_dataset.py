@@ -34,7 +34,7 @@ def load_image(path_image, path_mask, remove_no_lesion = False):
             npyImage = np.delete(npyImage, remove_list_image, axis=0)
             npyMask = np.delete(npyMask, remove_list_mask, axis=0)
             # b = npyImage.shape[0]
-            print(f"Shape depois da remoção de {remove_list_mask}:", npyImage.shape)
+            print(f"Shape depois da remoção de {len(remove_list_mask)} slices:", npyImage.shape)
             # print(f"Slices removidos {(a-b)}")
 
         # del(npyMask[i])
@@ -97,7 +97,7 @@ def compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, de
 def main():
     ext = '.nii.gz'
     joint = 'test' # [train, test]
-    main_dir_image = f'/home/anatielsantos/mestrado/datasets/dissertacao/{joint}/image'
+    main_dir_image = f'/home/anatielsantos/mestrado/datasets/dissertacao/{joint}/image/lung_extracted'
     main_dir_mask = f'/home/anatielsantos/mestrado/datasets/dissertacao/{joint}/mask'
     
     src = main_dir_image
