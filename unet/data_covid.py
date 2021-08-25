@@ -23,15 +23,21 @@ def dice_coef_loss(y_true, y_pred):
 def dice_bce_loss(y_true, y_pred):
     dice_loss = -dice_coef(y_true, y_pred)
     bce = tf.keras.losses.BinaryCrossentropy(from_logits=True)
-    bce_ = bce(y_true, y_pred).numpy()
+    bce_ = bce(y_true, y_pred)#.numpy()
     
     dice_bce_loss = (dice_loss + bce_) / 2
     
     return dice_bce_loss
 
 def load_train_data():
+    # remote
     imgs_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/train_images.npz', allow_pickle=True)
     masks_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/train_masks.npz', allow_pickle=True)
+
+    # local
+    # imgs_train_npz = np.load('/home/anatielsantos/mestrado/datasets/dissertacao/train_images.npz', allow_pickle=True)
+    # masks_train_npz = np.load('/home/anatielsantos/mestrado/datasets/dissertacao/train_masks.npz', allow_pickle=True)
+
     imgs_train = imgs_train_npz['arr_0']
     masks_train = masks_train_npz['arr_0']
     
