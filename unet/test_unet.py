@@ -64,7 +64,7 @@ def predictPatient(model, image):
     print('-'*30)
     print('Loading and preprocessing test data...')
     print('-'*30)
-    npyImage = load_patient(image)[i:i+1]
+    npyImage = load_patient(image)
 
     #Normalization of the test set
     npyImage = npyImage.astype('float32')
@@ -80,15 +80,15 @@ def predictPatient(model, image):
     print('Predicting test data...')
     print('-'*30)
 
-    # npyImagePredict = model.predict(npyImage, batch_size=1, verbose=1)
+    npyImagePredict = model.predict(npyImage, batch_size=1, verbose=1)
 
-    npyImagePredict=None
-    for i in range(npyImage.shape[0]):
-        pred = model.predict(npyImage[i:i+1], batch_size=1, verbose=1)
-        if npyImagePredict is None:
-            npyImagePredict=pred
-        else:
-            npyImagePredict = np.concatenate([npyImagePredict,pred],axis=0)
+    # npyImagePredict=None
+    # for i in range(npyImage.shape[0]):
+    #     pred = model.predict(npyImage[i:i+1], batch_size=1, verbose=1)
+    #     if npyImagePredict is None:
+    #         npyImagePredict=pred
+    #     else:
+    #         npyImagePredict = np.concatenate([npyImagePredict,pred],axis=0)
     
     npyImagePredict = preprocess_squeeze(npyImagePredict)
     npyImagePredict = np.around(npyImagePredict, decimals=0)
@@ -172,7 +172,7 @@ def main():
     dataset = 'test'
 
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
-    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_500epc_best.h5'
+    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_exp1_200epc_best.h5'
 
     src_dir = '{}'.format(main_dir)
     dst_dir = '{}/UnetPredsBest'.format(main_dir)

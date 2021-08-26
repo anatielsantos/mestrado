@@ -105,6 +105,7 @@ if __name__ == "__main__":
     w_covid_last = '/data/flavio/anatiel/models/dissertacao/unet_exp1_200epc_last.h5'
     imgs_test, imgs_maskt = load_test_data()
     test(w_covid_best, imgs_test, imgs_maskt)
+    test(w_covid_last, imgs_test, imgs_maskt)
     
     # show
     # show_preds('imgs_mask_test.npy', 130)
