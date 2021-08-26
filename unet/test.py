@@ -44,7 +44,7 @@ def test(w, imgs_test, imgs_maskt):
     
     print('Saving predicted masks to files...')
     print('-' * 30)
-    np.save('/data/flavio/anatiel/datasets/dissertacao/unet_preds_last.npy', pred)
+    # np.save('/data/flavio/anatiel/datasets/dissertacao/unet_preds_last.npy', pred)
     # mask_pred = np.load('/data/flavio/anatiel/datasets/dissertacao/unet_mask_test.npy')
     
     # dice_test = dice_coef(imgs_maskt, mask_pred)
@@ -101,10 +101,10 @@ def show_preds(path_pred, fatia):
 
 if __name__ == "__main__":
     # predict
-    w_covid_best = '/data/flavio/anatiel/models/dissertacao/unet_500epc_best.h5'
-    w_covid_last = '/data/flavio/anatiel/models/dissertacao/unet_500epc_last.h5'
+    w_covid_best = '/data/flavio/anatiel/models/dissertacao/unet_exp1_200epc_best.h5'
+    w_covid_last = '/data/flavio/anatiel/models/dissertacao/unet_exp1_200epc_last.h5'
     imgs_test, imgs_maskt = load_test_data()
-    test(w_covid_last, imgs_test, imgs_maskt)
+    test(w_covid_best, imgs_test, imgs_maskt)
     
     # show
     # show_preds('imgs_mask_test.npy', 130)
