@@ -185,10 +185,10 @@ def unet(pretrained_weights = None,input_size = (640,640,1)):
     model = Model(inputs=[inputs], outputs=[conv10])
     
     # # 1 loss function
-    model.compile(optimizer=Adam(lr=1e-5, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.000000199), loss=dice_coef_loss, metrics=['accuracy', dice_coef])
+    # model.compile(optimizer=Adam(lr=1e-5, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.000000199), loss=dice_coef_loss, metrics=['accuracy', dice_coef])
 
     # # 2 loss function
-    # model.compile(optimizer=Adam(lr=1e-5, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.000000199), loss=dice_bce_loss, metrics=['accuracy', dice_coef])
+    model.compile(optimizer=Adam(lr=1e-5, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.000000199), loss=dice_bce_loss, metrics=['accuracy', dice_coef])
 
 
     if(pretrained_weights):
