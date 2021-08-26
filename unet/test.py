@@ -76,7 +76,7 @@ def test(w, imgs_test, imgs_maskt):
     print("Prec: ", prec)
     print("FScore: ", fscore)
 
-    return pred
+    # return pred
 
 def show_preds(path_pred, fatia):
     # load array
@@ -110,10 +110,10 @@ if __name__ == "__main__":
     w_covid_best = '/data/flavio/anatiel/models/dissertacao/unet_exp3_200epc_best.h5'
     w_covid_last = '/data/flavio/anatiel/models/dissertacao/unet_exp3_200epc_last.h5'
     imgs_test, imgs_maskt = load_test_data()
-    pred_best = test(w_covid_best, imgs_test, imgs_maskt)
-    np.save('/data/flavio/anatiel/datasets/dissertacao/unet_exp3_preds_best.npy', pred_best)
-    pred_last = test(w_covid_last, imgs_test, imgs_maskt)
-    np.save('/data/flavio/anatiel/datasets/dissertacao/unet_exp3_preds_last.npy', pred_last)
+    test(w_covid_best, imgs_test, imgs_maskt)
+    # np.save('/data/flavio/anatiel/datasets/dissertacao/unet_exp3_preds_best.npy', pred_best)
+    test(w_covid_last, imgs_test, imgs_maskt)
+    # np.save('/data/flavio/anatiel/datasets/dissertacao/unet_exp3_preds_last.npy', pred_last)
 
     # show
     # show_preds('imgs_mask_test.npy', 130)
