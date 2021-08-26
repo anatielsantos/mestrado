@@ -171,11 +171,11 @@ def main():
     search_pattern = '*'
     dataset = 'test'
 
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
-    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_exp1_200epc_best.h5'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/lung_extracted'
+    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_exp2_200epc_last.h5'
 
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/UnetPredsBest'.format(main_dir)
+    dst_dir = '{}/UnetPredsLast'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
