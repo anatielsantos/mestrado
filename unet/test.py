@@ -24,17 +24,17 @@ def test(w, imgs_test, imgs_maskt):
     print('-'*30)
     
     #Normalization of the test set
-    # imgs_test = imgs_test.astype('float32')
-    # mean = np.mean(imgs_test)  # mean for data centering
-    # std = np.std(imgs_test)  # std for data normalization
-
     imgs_test = imgs_test.astype('float32')
-    imgs_test = rescale_intensity(imgs_test, in_range=(0, 1))
+    mean = np.mean(imgs_test)  # mean for data centering
+    std = np.std(imgs_test)  # std for data normalization
+
+    # imgs_test = imgs_test.astype('float32')
+    # imgs_test = rescale_intensity(imgs_test, in_range=(0, 1))
     
     #to float
-    # imgs_test = imgs_test.astype('float32')
-    # imgs_test -= mean
-    # imgs_test /= std
+    imgs_test = imgs_test.astype('float32')
+    imgs_test -= mean
+    imgs_test /= std
     imgs_maskt = imgs_maskt.astype('float32')
 
     print('Loading saved weights...')
@@ -48,7 +48,7 @@ def test(w, imgs_test, imgs_maskt):
     
     print('Saving predicted masks to files...')
     print('-' * 30)
-    np.save('/data/flavio/anatiel/datasets/dissertacao/unet_exp2_preds_last.npy', pred)
+    
     # mask_pred = np.load('/data/flavio/anatiel/datasets/dissertacao/unet_mask_test.npy')
     
     # dice_test = dice_coef(imgs_maskt, mask_pred)
@@ -75,6 +75,8 @@ def test(w, imgs_test, imgs_maskt):
     print("AUC: ", auc)
     print("Prec: ", prec)
     print("FScore: ", fscore)
+
+    return pred
 
 def show_preds(path_pred, fatia):
     # load array
@@ -105,11 +107,13 @@ def show_preds(path_pred, fatia):
 
 if __name__ == "__main__":
     # predict
-    w_covid_best = '/data/flavio/anatiel/models/dissertacao/unet_exp2_200epc_best.h5'
-    w_covid_last = '/data/flavio/anatiel/models/dissertacao/unet_exp2_200epc_last.h5'
+    w_covid_best = '/data/flavio/anatiel/models/dissertacao/unet_exp3_200epc_best.h5'
+    w_covid_last = '/data/flavio/anatiel/models/dissertacao/unet_exp3_200epc_last.h5'
     imgs_test, imgs_maskt = load_test_data()
-    # test(w_covid_best, imgs_test, imgs_maskt)
-    test(w_covid_last, imgs_test, imgs_maskt)
-    
+    pred_best = test(w_covid_best, imgs_test, imgs_maskt)
+    np.save('/data/flavio/anatiel/datasets/dissertacao/unet_exp3_preds_best.npy', pred_best)
+    pred_last = test(w_covid_last, imgs_test, imgs_maskt)
+    np.save('/data/flavio/anatiel/datasets/dissertacao/unet_exp3_preds_last.npy', pred_last)
+
     # show
     # show_preds('imgs_mask_test.npy', 130)
