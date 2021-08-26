@@ -101,8 +101,8 @@ def show_preds(path_pred, fatia):
 
 if __name__ == "__main__":
     # predict
-    w_covid_best = '/data/flavio/anatiel/models/dissertacao/unet_exp1_200epc_best.h5'
-    w_covid_last = '/data/flavio/anatiel/models/dissertacao/unet_exp1_200epc_last.h5'
+    w_covid_best = '/data/flavio/anatiel/models/dissertacao/unet_exp2_200epc_best.h5'
+    w_covid_last = '/data/flavio/anatiel/models/dissertacao/unet_exp2_200epc_last.h5'
     imgs_test, imgs_maskt = load_test_data()
     test(w_covid_best, imgs_test, imgs_maskt)
     test(w_covid_last, imgs_test, imgs_maskt)
