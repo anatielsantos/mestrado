@@ -24,7 +24,7 @@ import matplotlib.pyplot as plt
 # train settings
 BUFFER_SIZE = 400
 BATCH_SIZE = 1
-EPOCHS = 500
+EPOCHS = 200
 IMG_WIDTH = 640
 IMG_HEIGHT = 640
 INPUT_CHANNELS = 1
@@ -75,19 +75,20 @@ def train(path_weights, src_images_train, tar_images_train):
     
     # save to json:  
     print("Saving history")
-    hist_json_file = path_json+'gan_exp1_history_500epc.json' 
+    hist_json_file = path_json+'gan_exp1_history_200epc.json' 
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("History saved")
     
     plt.plot(history.history['dice'])
     plt.plot(history.history['val_dice'])
+    plt.plot(history.history['g_l1'])
     plt.title('Model dice coeff')
     plt.ylabel('Dice coeff')
     plt.xlabel('Epoch')
-    plt.legend(['Train', 'Val'], loc='upper left')
+    plt.legend(['Train', 'Val', 'Loss'], loc='upper left')
     # save plot to file
-    plt.savefig(path_plot+'gan_exp1_plot_500epc.png')
+    plt.savefig(path_plot+'gan_exp1_plot_200epc.png')
     # plt.show()
 
 if __name__=="__main__":
