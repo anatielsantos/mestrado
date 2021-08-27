@@ -38,10 +38,10 @@ def generator_loss(disc_generated_output, gen_output, target,LAMBDA=100):
     #l1_loss = tf.reduce_mean(tf.abs(target - gen_output)) # default
     
     # 1 loss function
-    l1_loss = dice_loss(target, gen_output)
+    # l1_loss = dice_loss(target, gen_output)
 
     # 2 loss function
-    # l1_loss = dice_bce_loss(target, gen_output)
+    l1_loss = dice_bce_loss(target, gen_output)
 
     total_gen_loss = gan_loss + (LAMBDA * l1_loss)
 
@@ -75,8 +75,8 @@ def train(path_weights, src_images_train, tar_images_train):
     )
 
     # Normalization of the train set (Exp 2)
-    # src_images_train = src_images_train.astype('float32')
-    # src_images_train = rescale_intensity(src_images_train, in_range=(-1, 1))
+    src_images_train = src_images_train.astype('float32')
+    src_images_train = rescale_intensity(src_images_train, in_range=(-1, 1))
 
     # train model
     checkpoint = ModelCheckpoint(path_weights+'gan_exp1_200epc_best.hdf5', monitor='dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')

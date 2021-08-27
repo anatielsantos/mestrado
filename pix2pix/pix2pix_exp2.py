@@ -38,10 +38,10 @@ def generator_loss(disc_generated_output, gen_output, target,LAMBDA=100):
     #l1_loss = tf.reduce_mean(tf.abs(target - gen_output)) # default
     
     # 1 loss function
-    l1_loss = dice_loss(target, gen_output)
+    # l1_loss = dice_loss(target, gen_output)
 
-    # 2 loss function
-    # l1_loss = dice_bce_loss(target, gen_output)
+    # 2 loss functions
+    l1_loss = dice_bce_loss(target, gen_output)
 
     total_gen_loss = gan_loss + (LAMBDA * l1_loss)
 

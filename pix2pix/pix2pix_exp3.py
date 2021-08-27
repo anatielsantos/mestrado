@@ -75,8 +75,8 @@ def train(path_weights, src_images_train, tar_images_train):
     )
 
     # Normalization of the train set (Exp 2)
-    # src_images_train = src_images_train.astype('float32')
-    # src_images_train = rescale_intensity(src_images_train, in_range=(-1, 1))
+    src_images_train = src_images_train.astype('float32')
+    src_images_train = rescale_intensity(src_images_train, in_range=(-1, 1))
 
     # train model
     checkpoint = ModelCheckpoint(path_weights+'gan_exp1_200epc_best.hdf5', monitor='dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
