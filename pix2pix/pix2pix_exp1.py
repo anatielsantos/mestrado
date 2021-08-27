@@ -1,7 +1,7 @@
 # GPU
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "7"
+os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 
 #configuração necessária nas GPU's RTX 
 import tensorflow as tf
@@ -14,6 +14,7 @@ from tensorflow.keras.callbacks import ModelCheckpoint
 from model import Pix2Pix
 from utils import *
 from losses import *
+from skimage.exposure import rescale_intensity
 
 import numpy as np
 import pandas as pd
@@ -43,20 +44,7 @@ def load_images(path_src, path_mask):
     
     return np.float32(np.expand_dims(np.concatenate(src), axis=-1)), np.float32(np.expand_dims(np.concatenate(tar), axis=-1))
 
-# dataset path
-path_src_train = '/data/flavio/anatiel/datasets/dissertacao/train_images.npz'
-path_mask_train = '/data/flavio/anatiel/datasets/dissertacao/train_masks.npz'
-
-# paths save
-path_weights = '/data/flavio/anatiel/models/dissertacao/'
-path_json = '/data/flavio/anatiel/models/dissertacao/'
-path_plot = '/data/flavio/anatiel/models/dissertacao/'
-
-# load dataset
-[src_images_train, tar_images_train] = load_images(path_src_train, path_mask_train)
-print('Loaded train images: ', src_images_train.shape, tar_images_train.shape)
-
-def train(src_images_train, tar_images_train):    
+def train(path_weights, src_images_train, tar_images_train):    
     # dataset = [src_images_train, tar_images_train]
 
     # createing pix2pix
@@ -69,21 +57,25 @@ def train(src_images_train, tar_images_train):
         metrics=['accuracy', dice]
     )
 
+    # Normalization of the train set (Exp 2)
+    # src_images_train = src_images_train.astype('float32')
+    # src_images_train = rescale_intensity(src_images_train, in_range=(-1, 1))
+
     # train model
-    checkpoint = ModelCheckpoint(path_weights+'gan_500epc_best_3.hdf5', monitor='dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
+    checkpoint = ModelCheckpoint(path_weights+'gan_exp1_200epc_best.hdf5', monitor='dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
     #checkpoint2 = ModelCheckpoint(path_weights+'best_weights_val_gan_512_masked_lung_blur_500epc.hdf5', monitor='val_dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
     
     history = model.fit(src_images_train, tar_images_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[checkpoint])
     #history=model.fit(src_images_train, tar_images_train, batch_size=BATCH_SIZE, epochs=EPOCHS,callbacks=[checkpoint,checkpoint2],validation_data=(src_images_val, tar_images_val))
     
-    model.save(path_weights+'gan_500epc_last_3.hdf5')
+    model.save(path_weights+'gan_exp1_200epc_last.hdf5')
     
     # convert the history.history dict to a pandas DataFrame:     
     hist_df = pd.DataFrame(history.history) 
     
     # save to json:  
     print("Saving history")
-    hist_json_file = path_json+'gan_history_500epc_3.json' 
+    hist_json_file = path_json+'gan_exp1_history_500epc.json' 
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("History saved")
@@ -95,9 +87,22 @@ def train(src_images_train, tar_images_train):
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Val'], loc='upper left')
     # save plot to file
-    plt.savefig(path_plot+'gan_plot_500epc_3.png')
+    plt.savefig(path_plot+'gan_exp1_plot_500epc.png')
     # plt.show()
 
 if __name__=="__main__":
+    # dataset path
+    path_src_train = '/data/flavio/anatiel/datasets/dissertacao/train_images.npz'
+    path_mask_train = '/data/flavio/anatiel/datasets/dissertacao/train_masks.npz'
+
+    # paths save
+    path_weights = '/data/flavio/anatiel/models/dissertacao/'
+    path_json = '/data/flavio/anatiel/models/dissertacao/'
+    path_plot = '/data/flavio/anatiel/models/dissertacao/'
+
+    # load dataset
+    [src_images_train, tar_images_train] = load_images(path_src_train, path_mask_train)
+    print('Loaded train images: ', src_images_train.shape, tar_images_train.shape)
+
     # model training
-    train(src_images_train, tar_images_train)
+    train(path_weights, src_images_train, tar_images_train)
