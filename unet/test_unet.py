@@ -14,6 +14,9 @@ from itertools import repeat
 
 from tqdm import tqdm
 from train import unet
+from losses import calc_metric
+from data_covid import load_test_data
+from skimage.exposure import rescale_intensity
 
 def istarmap(self, func, iterable, chunksize=1):
     """starmap-version of imap
@@ -67,14 +70,17 @@ def predictPatient(model, image):
     npyImage = load_patient(image)
 
     #Normalization of the test set
+    # npyImage = npyImage.astype('float32')
+    # mean = np.mean(npyImage)  # mean for data centering
+    # std = np.std(npyImage)  # std for data normalization
+
     npyImage = npyImage.astype('float32')
-    mean = np.mean(npyImage)  # mean for data centering
-    std = np.std(npyImage)  # std for data normalization
+    npyImage = rescale_intensity(npyImage, in_range=(0, 1))
     
     #to float
     npyImage = npyImage.astype('float32')
-    npyImage -= mean
-    npyImage /= std
+    # npyImage -= mean
+    # npyImage /= std
 
     print('-'*30)
     print('Predicting test data...')
@@ -100,7 +106,19 @@ def execPredictPatient(exam_id, input_path, output_path, model):
     try:
         print(exam_id + ':')
 
+        # mask_med = load_patient(mask_path)
+
         binary_masks = predictPatient(model, input_path)
+
+        # dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(binary_masks.astype(int), mask_med.astype(int))
+        # print("DICE: ", dice)
+        # print("IoU:", jaccard)
+        # print("Sensitivity: ", sensitivity)
+        # print("Specificity", specificity)
+        # print("ACC: ", accuracy)
+        # print("AUC: ", auc)
+        # print("Prec: ", prec)
+        # print("FScore: ", fscore)
 
         # binary_masks = morphology.binary_fill_holes(
         #     morphology.binary_dilation(
@@ -157,6 +175,45 @@ def execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse
         input_paths.append(input_path)
         output_paths.append(output_path)
 
+# ---------------------------------------CARREGAR MÁSCARA E IMAGEM----------------------------------------------------
+    # try:
+    #     os.stat(dst_dir)
+    # except:
+    #     os.mkdir(dst_dir)    
+
+    # input_src_pathAll = glob.glob(src_dir + '/*' + ext)
+    # input_src_pathAll.sort(reverse=reverse)
+
+    # input_mask_pathAll = glob.glob(mask_dir + '/*' + ext)
+    # input_mask_pathAll.sort(reverse=reverse) 
+
+    # exam_ids = []
+    # input_src_paths = []
+    # input_mask_paths = []
+    # output_paths = []
+
+    # output_path = dst_dir
+
+    # for input_mask_path in input_mask_pathAll:
+    #     input_mask_paths.append(input_mask_path)
+    
+    # for input_path in input_src_pathAll:
+    #     exam_id = os.path.basename(input_path.replace(ext, ''))
+    #     output_path = dst_dir + '/' + exam_id + '_PredBest' + ext
+
+    #     # verifica se o arquivo ja existe
+    #     if os.path.isfile(output_path):
+    #         print('Arquivo ' + output_path + ' ja existe')
+    #         # os.remove(output_path)
+    #         continue
+
+    #     exam_ids.append(exam_id)
+    #     input_src_paths.append(input_path)
+    #     output_paths.append(output_path)
+
+# --------------------------------------------------------------------------------------------------------------------
+
+
     if(parallel):
         with mp.Pool(mp.cpu_count()) as pool:
             for _ in tqdm(pool.istarmap(execPredictPatient, zip(exam_ids, input_paths, output_paths, repeat(model))),
@@ -172,10 +229,11 @@ def main():
     dataset = 'test'
 
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/lung_extracted'
-    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_exp2_200epc_last.h5'
+    # main_mask = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/mask'
+    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_exp4_200epc_best.h5'
 
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/UnetPredsLast'.format(main_dir)
+    dst_dir = '{}/UnetExp4PredsBest'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
