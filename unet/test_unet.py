@@ -69,18 +69,18 @@ def predictPatient(model, image):
     print('-'*30)
     npyImage = load_patient(image)
 
-    #Normalization of the test set
-    # npyImage = npyImage.astype('float32')
-    # mean = np.mean(npyImage)  # mean for data centering
-    # std = np.std(npyImage)  # std for data normalization
+    # Normalization of the train set (Exp 1)
+    npyImage = npyImage.astype('float32')
+    mean = np.mean(npyImage)  # mean for data centering
+    std = np.std(npyImage)  # std for data normalization
 
-    npyImage = npyImage.astype('float32')
-    npyImage = rescale_intensity(npyImage, in_range=(0, 1))
-    
     #to float
-    npyImage = npyImage.astype('float32')
-    # npyImage -= mean
-    # npyImage /= std
+    # npyImage = npyImage.astype('float32')
+    npyImage -= mean
+    npyImage /= std
+
+    # npyImage = npyImage.astype('float32')
+    # npyImage = rescale_intensity(npyImage, in_range=(0, 1))
 
     print('-'*30)
     print('Predicting test data...')
@@ -102,44 +102,53 @@ def predictPatient(model, image):
 
     return npyImagePredict
 
-def execPredictPatient(exam_id, input_path, output_path, model):
+def execPredict(exam_id, input_path, input_mask_path, output_path, model):
     try:
         print(exam_id + ':')
 
-        # mask_med = load_patient(mask_path)
-
         binary_masks = predictPatient(model, input_path)
+        # npyMedMask = load_patient(input_mask_path)
+        itkMask = sitk.ReadImage(input_mask_path)
+        npyMedMask = sitk.GetArrayFromImage(itkMask)
+        npyMedMask = np.expand_dims(npyMedMask, axis=-1)
 
-        # dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(binary_masks.astype(int), mask_med.astype(int))
-        # print("DICE: ", dice)
-        # print("IoU:", jaccard)
-        # print("Sensitivity: ", sensitivity)
-        # print("Specificity", specificity)
-        # print("ACC: ", accuracy)
-        # print("AUC: ", auc)
-        # print("Prec: ", prec)
-        # print("FScore: ", fscore)
+        # calc metrics
+        print('-'*30)
+        print('Calculating metrics...')
+        dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(binary_masks.astype(int), npyMedMask.astype(int))
+        print("DICE: ", dice)
+        print("IoU:", jaccard)
+        print("Sensitivity: ", sensitivity)
+        print("Specificity", specificity)
+        print("ACC: ", accuracy)
+        print("AUC: ", auc)
+        print("Prec: ", prec)
+        print("FScore: ", fscore)
 
-        # binary_masks = morphology.binary_fill_holes(
-        #     morphology.binary_dilation(
-        #         morphology.binary_fill_holes(binary_masks > 0),
-        #         iterations=1)
-        #     )
 
-        # binary_masks.dtype='uint16'
+        # binary_masks.dtype='float32'
         itkImage = sitk.GetImageFromArray(binary_masks)
 
         image = sitk.ReadImage(input_path)
+        #npyImage = sitk.GetArrayFromImage(image)
+
+        # print(image.GetSize())
+        # print(image.GetSpacing())
+        # print(image.GetPixelIDTypeAsString())
+        # print(itkImage.GetSize())
+        # print(itkImage.GetSpacing())
+        # print(itkImage.GetPixelIDTypeAsString())
+
+        # corrige o tipo da imagem pois no Colab está saindo 64 bits
+        # itkImage = sitk.Cast(itkImage,image.GetPixelIDValue())    
         
-        itkImage = sitk.Cast(itkImage,image.GetPixelIDValue())
         itkImage.CopyInformation(image)
 
-        depth = image.GetDepth()
-        step = depth//10
-        min = depth//2 + step
-        max = depth - step
+        # print(itkImage.GetSize())
+        # print(itkImage.GetSpacing())
+        # print(itkImage.GetPixelIDTypeAsString())    
         
-        sitk.WriteImage(itkImage, output_path)
+        # sitk.WriteImage(itkImage, output_path)
 
         del image
 
@@ -148,7 +157,7 @@ def execPredictPatient(exam_id, input_path, output_path, model):
         print(traceback.format_exc())
         return
 
-def execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = None, parallel = True):
+def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = None, parallel = True):
     try:
         os.stat(dst_dir)
     except:
@@ -157,8 +166,12 @@ def execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse
     input_pathAll = glob.glob(src_dir + '/' + search_pattern + ext)
     input_pathAll.sort(reverse=reverse)
 
+    input_mask_pathAll = glob.glob(mask_dir + '/' + search_pattern + ext)
+    input_mask_pathAll.sort(reverse=reverse)
+
     exam_ids = []
     input_paths = []
+    input_mask_paths = []
     output_paths = []
 
     for input_path in input_pathAll:
@@ -175,65 +188,40 @@ def execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse
         input_paths.append(input_path)
         output_paths.append(output_path)
 
-# ---------------------------------------CARREGAR MÁSCARA E IMAGEM----------------------------------------------------
-    # try:
-    #     os.stat(dst_dir)
-    # except:
-    #     os.mkdir(dst_dir)    
-
-    # input_src_pathAll = glob.glob(src_dir + '/*' + ext)
-    # input_src_pathAll.sort(reverse=reverse)
-
-    # input_mask_pathAll = glob.glob(mask_dir + '/*' + ext)
-    # input_mask_pathAll.sort(reverse=reverse) 
-
-    # exam_ids = []
-    # input_src_paths = []
-    # input_mask_paths = []
-    # output_paths = []
-
-    # output_path = dst_dir
-
-    # for input_mask_path in input_mask_pathAll:
-    #     input_mask_paths.append(input_mask_path)
-    
-    # for input_path in input_src_pathAll:
-    #     exam_id = os.path.basename(input_path.replace(ext, ''))
-    #     output_path = dst_dir + '/' + exam_id + '_PredBest' + ext
-
-    #     # verifica se o arquivo ja existe
-    #     if os.path.isfile(output_path):
-    #         print('Arquivo ' + output_path + ' ja existe')
-    #         # os.remove(output_path)
-    #         continue
-
-    #     exam_ids.append(exam_id)
-    #     input_src_paths.append(input_path)
-    #     output_paths.append(output_path)
-
-# --------------------------------------------------------------------------------------------------------------------
-
+    for input_mask_path in input_mask_pathAll:
+        input_mask_paths.append(input_mask_path)
 
     if(parallel):
+        # p = mp.Pool(mp.cpu_count())
+        # for i in tqdm(p.starmap(execPredict, zip(exam_ids, input_paths, output_paths, repeat(model), repeat(normalize_path))),desc=desc):
+        #     pass
         with mp.Pool(mp.cpu_count()) as pool:
-            for _ in tqdm(pool.istarmap(execPredictPatient, zip(exam_ids, input_paths, output_paths, repeat(model))),
+            for _ in tqdm(pool.istarmap(execPredict, zip(exam_ids, input_paths, output_paths, output_paths, repeat(model))),
                           total=len(exam_ids)):
                 pass
     else:
         for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
-            execPredictPatient(exam_id, input_paths[i], output_paths[i], model)
+            execPredict(exam_id, input_paths[i], input_mask_paths[i], output_paths[i], model)
 
 def main():
+
     ext = '.nii.gz'
     search_pattern = '*'
     dataset = 'test'
 
+    # local
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/lung_extracted'
-    # main_mask = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/mask'
-    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_exp4_200epc_best.h5'
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/mask'
+    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_exp1_200epc_best.h5'
+
+    # remote
+    # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
+    # main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/mask'
+    # model_path = '/data/flavio/anatiel/models/dissertacao/unet_500epc_last.h5'
 
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/UnetExp4PredsBest'.format(main_dir)
+    mask_dir = '{}'.format(main_mask_dir)
+    dst_dir = '{}/UnetExp1PredsBest'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
@@ -241,7 +229,7 @@ def main():
     model = unet()
     model.load_weights(model_path)
 
-    execExtractLungsByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = 'Predicting (Unet)', parallel=False)
+    execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = 'Predicting (UNet)', parallel=False)
 
 if __name__ == '__main__':
     start = time.time()
