@@ -95,20 +95,20 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         print(exam_id + ':')
 
         binary_masks = predictPatient(model, input_path)
-        # npyMedMask = load_patient(input_mask_path)
+        npyMedMask = load_patient(input_mask_path)
 
-        # # calc metrics
-        # print('-'*30)
-        # print('Calculating metrics...')
-        # dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(binary_masks.astype(int), npyMedMask.astype(int))
-        # print("DICE:", dice)
-        # print("IoU:", jaccard)
-        # print("Sensitivity:", sensitivity)
-        # print("Specificity:", specificity)
-        # print("ACC:", accuracy)
-        # print("AUC:", auc)
-        # print("Prec:", prec)
-        # print("FScore:", fscore)
+        # calc metrics
+        print('-'*30)
+        print('Calculating metrics...')
+        dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(binary_masks.astype(int), npyMedMask.astype(int))
+        print("DICE:", dice)
+        print("IoU:", jaccard)
+        print("Sensitivity:", sensitivity)
+        print("Specificity:", specificity)
+        print("ACC:", accuracy)
+        print("AUC:", auc)
+        print("Prec:", prec)
+        print("FScore:", fscore)
 
 
         # binary_masks.dtype='float32'
