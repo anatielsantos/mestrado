@@ -15,7 +15,6 @@ from itertools import repeat
 from tqdm import tqdm
 from train import unet
 from losses import calc_metric
-from data_covid import load_test_data
 from skimage.exposure import rescale_intensity
 
 def istarmap(self, func, iterable, chunksize=1):
@@ -70,57 +69,46 @@ def predictPatient(model, image):
     npyImage = load_patient(image)
 
     # Normalization of the train set (Exp 1)
-    # npyImage = npyImage.astype('float32')
-    # mean = np.mean(npyImage)  # mean for data centering
-    # std = np.std(npyImage)  # std for data normalization
-    # npyImage -= mean
-    # npyImage /= std
-
-    #to float
-    # npyImage = npyImage.astype('float32')
-
     npyImage = npyImage.astype('float32')
-    npyImage = rescale_intensity(npyImage, in_range=(0, 1))
+    mean = np.mean(npyImage)  # mean for data centering
+    std = np.std(npyImage)  # std for data normalization
+    npyImage -= mean
+    npyImage /= std
+
+    # npyImage = npyImage.astype('float32')
+    # npyImage = rescale_intensity(npyImage, in_range=(0, 1))
 
     print('-'*30)
     print('Predicting test data...')
     print('-'*30)
 
     npyImagePredict = model.predict(npyImage, batch_size=1, verbose=1)
-
-    # npyImagePredict=None
-    # for i in range(npyImage.shape[0]):
-    #     pred = model.predict(npyImage[i:i+1], batch_size=1, verbose=1)
-    #     if npyImagePredict is None:
-    #         npyImagePredict=pred
-    #     else:
-    #         npyImagePredict = np.concatenate([npyImagePredict,pred],axis=0)
     
     npyImagePredict = preprocess_squeeze(npyImagePredict)
     npyImagePredict = np.around(npyImagePredict, decimals=0)
     npyImagePredict = (npyImagePredict>0.5)*1
 
-    return npyImagePredict
+    return np.float32(npyImagePredict)
 
 def execPredict(exam_id, input_path, input_mask_path, output_path, model):
     try:
         print(exam_id + ':')
 
         binary_masks = predictPatient(model, input_path)
-        npyMedMask = load_patient(input_mask_path)
+        # npyMedMask = load_patient(input_mask_path)
 
-        # calc metrics
-        print('-'*30)
-        print('Calculating metrics...')
-        dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(binary_masks.astype(int), npyMedMask.astype(int))
-        print("DICE: ", dice)
-        print("IoU:", jaccard)
-        print("Sensitivity: ", sensitivity)
-        print("Specificity", specificity)
-        print("ACC: ", accuracy)
-        print("AUC: ", auc)
-        print("Prec: ", prec)
-        print("FScore: ", fscore)
+        # # calc metrics
+        # print('-'*30)
+        # print('Calculating metrics...')
+        # dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(binary_masks.astype(int), npyMedMask.astype(int))
+        # print("DICE:", dice)
+        # print("IoU:", jaccard)
+        # print("Sensitivity:", sensitivity)
+        # print("Specificity:", specificity)
+        # print("ACC:", accuracy)
+        # print("AUC:", auc)
+        # print("Prec:", prec)
+        # print("FScore:", fscore)
 
 
         # binary_masks.dtype='float32'
@@ -145,7 +133,7 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         # print(itkImage.GetSpacing())
         # print(itkImage.GetPixelIDTypeAsString())    
         
-        # sitk.WriteImage(itkImage, output_path)
+        sitk.WriteImage(itkImage, output_path)
 
         del image
 
@@ -209,7 +197,7 @@ def main():
     # local
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/lung_extracted'
     main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/mask'
-    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_exp2_200epc_best.h5'
+    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_exp1_200epc_best.h5'
 
     # remote
     # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
@@ -218,7 +206,7 @@ def main():
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = '{}/UnetExp2PredsBest'.format(main_dir)
+    dst_dir = '{}/UnetExp1PredsBest'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
