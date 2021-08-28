@@ -3,7 +3,7 @@ from __future__ import print_function
 # GPU
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "3"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 
 import numpy as np
@@ -204,33 +204,33 @@ def train():
     print('Loaded train images: ', imgs_train.shape, imgs_mask_train.shape)
     print('-'*30)
 
-    imgs_train = imgs_train.astype('float32')
+    imgs_train = imgs_train.astype('int16')
     mean = np.mean(imgs_train)  # mean for data centering
     std = np.std(imgs_train)  # std for data normalization
 
     # Normalization of the train set (Exp 1)
     imgs_train -= mean
     imgs_train /= std
-    imgs_mask_train = imgs_mask_train.astype('float32')
+    imgs_mask_train = imgs_mask_train.astype('int16')
 
     print('Creating and compiling model...')
     print('-'*30)
     
     model = unet()
     #Saving the weights and the loss of the best predictions we obtained
-    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/models/dissertacao/unet_exp1_200epc_best.h5', monitor='val_loss', save_best_only=True, mode="min")
+    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/models/dissertacao/unet_exp1_200epc_best_int16.h5', monitor='val_loss', save_best_only=True, mode="min")
     
     print('Fitting model...')
     print('-'*30)
     history = model.fit(imgs_train, imgs_mask_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[model_checkpoint])
 
-    model.save('/data/flavio/anatiel/models/dissertacao/unet_exp1_200epc_last.h5')
+    model.save('/data/flavio/anatiel/models/dissertacao/unet_exp1_200epc_last_int16.h5')
         
     # convert the history.history dict to a pandas DataFrame:     
-    hist_df = pd.DataFrame(history.history) 
+    hist_df = pd.DataFrame(history.history)
     
     # save to json:  
-    hist_json_file = '/data/flavio/anatiel/models/dissertacao/unet_exp1_history_200epc.json'
+    hist_json_file = '/data/flavio/anatiel/models/dissertacao/unet_exp1_history_200epc_int16.json'
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("history saved")
@@ -242,7 +242,7 @@ def train():
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Val'], loc='upper left')
     # save plot to file
-    plt.savefig('/data/flavio/anatiel/models/dissertacao/unet_exp1_plot_200epc.png')
+    plt.savefig('/data/flavio/anatiel/models/dissertacao/unet_exp1_plot_200epc_int16.png')
     # plt.show()
     
 if __name__ == "__main__":
