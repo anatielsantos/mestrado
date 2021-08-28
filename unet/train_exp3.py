@@ -204,13 +204,15 @@ def train():
     print('Loaded train images: ', imgs_train.shape, imgs_mask_train.shape)
     print('-'*30)
 
-    imgs_train = imgs_train.astype('int16')
+    imgs_train = imgs_train.astype('float32')
     mean = np.mean(imgs_train)  # mean for data centering
     std = np.std(imgs_train)  # std for data normalization
 
     # Normalization of the train set (Exp 3)
     imgs_train -= mean
     imgs_train /= std
+
+    imgs_train = imgs_train.astype('int16')
     imgs_mask_train = imgs_mask_train.astype('int16')
 
     print('Creating and compiling model...')
@@ -218,7 +220,7 @@ def train():
     
     model = unet()
     #Saving the weights and the loss of the best predictions we obtained
-    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/models/dissertacao/unet_exp3_500epc_best_int16.h5', monitor='val_loss', save_best_only=True)
+    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/models/dissertacao/unet_exp3_500epc_best_int16.h5', monitor='val_loss', save_best_only=True, mode="min")
     
     print('Fitting model...')
     print('-'*30)

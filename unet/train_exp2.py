@@ -217,7 +217,7 @@ def train():
     
     model = unet()
     #Saving the weights and the loss of the best predictions we obtained
-    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/models/dissertacao/unet_exp2_500epc_best_int16.h5', monitor='val_loss', save_best_only=True)
+    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/models/dissertacao/unet_exp2_500epc_best_int16.h5', monitor='val_loss', save_best_only=True, mode="min")
     
     print('Fitting model...')
     print('-'*30)
