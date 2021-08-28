@@ -14,8 +14,6 @@ from itertools import repeat
 
 from tqdm import tqdm
 from train import unet
-from losses import calc_metric
-from data_covid import load_test_data
 from skimage.exposure import rescale_intensity
 
 def istarmap(self, func, iterable, chunksize=1):
@@ -69,60 +67,38 @@ def predictPatient(model, image):
     print('-'*30)
     npyImage = load_patient(image)
 
-    # Normalization of the train set (Exp 1)
-    # npyImage = npyImage.astype('float32')
-    # mean = np.mean(npyImage)  # mean for data centering
-    # std = np.std(npyImage)  # std for data normalization
-    # npyImage -= mean
-    # npyImage /= std
-
-    #to float
-    # npyImage = npyImage.astype('float32')
-
+    # Normalization of the test set (Exp 1)
     npyImage = npyImage.astype('float32')
-    npyImage = rescale_intensity(npyImage, in_range=(0, 1))
+    mean = np.mean(npyImage)  # mean for data centering
+    std = np.std(npyImage)  # std for data normalization
+    npyImage -= mean
+    npyImage /= std
+
+
+    # npyImage = npyImage.astype('float32')
+    # npyImage = rescale_intensity(npyImage, in_range=(0, 1))
+    
+    # to float
+    # npyImage = npyImage.astype('float32')
 
     print('-'*30)
     print('Predicting test data...')
     print('-'*30)
 
     npyImagePredict = model.predict(npyImage, batch_size=1, verbose=1)
-
-    # npyImagePredict=None
-    # for i in range(npyImage.shape[0]):
-    #     pred = model.predict(npyImage[i:i+1], batch_size=1, verbose=1)
-    #     if npyImagePredict is None:
-    #         npyImagePredict=pred
-    #     else:
-    #         npyImagePredict = np.concatenate([npyImagePredict,pred],axis=0)
     
     npyImagePredict = preprocess_squeeze(npyImagePredict)
     npyImagePredict = np.around(npyImagePredict, decimals=0)
     npyImagePredict = (npyImagePredict>0.5)*1
 
-    return npyImagePredict
+    return np.float32(npyImagePredict)
 
-def execPredict(exam_id, input_path, input_mask_path, output_path, model):
+def execPredict(exam_id, input_path, output_path, model):
     try:
         print(exam_id + ':')
 
         binary_masks = predictPatient(model, input_path)
-        npyMedMask = load_patient(input_mask_path)
-
-        # calc metrics
-        print('-'*30)
-        print('Calculating metrics...')
-        dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(binary_masks.astype(int), npyMedMask.astype(int))
-        print("DICE: ", dice)
-        print("IoU:", jaccard)
-        print("Sensitivity: ", sensitivity)
-        print("Specificity", specificity)
-        print("ACC: ", accuracy)
-        print("AUC: ", auc)
-        print("Prec: ", prec)
-        print("FScore: ", fscore)
-
-
+        
         # binary_masks.dtype='float32'
         itkImage = sitk.GetImageFromArray(binary_masks)
 
@@ -145,7 +121,7 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         # print(itkImage.GetSpacing())
         # print(itkImage.GetPixelIDTypeAsString())    
         
-        # sitk.WriteImage(itkImage, output_path)
+        sitk.WriteImage(itkImage, output_path)
 
         del image
 
@@ -154,7 +130,7 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         print(traceback.format_exc())
         return
 
-def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = None, parallel = True):
+def execExecPredictByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = None, parallel = True):
     try:
         os.stat(dst_dir)
     except:
@@ -163,17 +139,13 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
     input_pathAll = glob.glob(src_dir + '/' + search_pattern + ext)
     input_pathAll.sort(reverse=reverse)
 
-    input_mask_pathAll = glob.glob(mask_dir + '/' + search_pattern + ext)
-    input_mask_pathAll.sort(reverse=reverse)
-
     exam_ids = []
     input_paths = []
-    input_mask_paths = []
     output_paths = []
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_PredBest' + ext
+        output_path = dst_dir + '/' + exam_id + '_PredLast' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -185,20 +157,17 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
         input_paths.append(input_path)
         output_paths.append(output_path)
 
-    for input_mask_path in input_mask_pathAll:
-        input_mask_paths.append(input_mask_path)
-
     if(parallel):
         # p = mp.Pool(mp.cpu_count())
         # for i in tqdm(p.starmap(execPredict, zip(exam_ids, input_paths, output_paths, repeat(model), repeat(normalize_path))),desc=desc):
         #     pass
         with mp.Pool(mp.cpu_count()) as pool:
-            for _ in tqdm(pool.istarmap(execPredict, zip(exam_ids, input_paths, output_paths, output_paths, repeat(model))),
+            for _ in tqdm(pool.istarmap(execPredict, zip(exam_ids, input_paths, output_paths, repeat(model))),
                           total=len(exam_ids)):
                 pass
     else:
         for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
-            execPredict(exam_id, input_paths[i], input_mask_paths[i], output_paths[i], model)
+            execPredict(exam_id, input_paths[i], output_paths[i], model)
 
 def main():
 
@@ -208,17 +177,14 @@ def main():
 
     # local
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/lung_extracted'
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/mask'
-    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_exp2_200epc_best.h5'
+    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_exp1_200epc_last.h5'
 
     # remote
     # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
-    # main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/mask'
     # model_path = '/data/flavio/anatiel/models/dissertacao/unet_500epc_last.h5'
 
     src_dir = '{}'.format(main_dir)
-    mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = '{}/UnetExp2PredsBest'.format(main_dir)
+    dst_dir = '{}/UnetExp1PredsLast'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
@@ -226,7 +192,7 @@ def main():
     model = unet()
     model.load_weights(model_path)
 
-    execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = 'Predicting (UNet)', parallel=False)
+    execExecPredictByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = 'Predicting (UNet)', parallel=False)
 
 if __name__ == '__main__':
     start = time.time()
