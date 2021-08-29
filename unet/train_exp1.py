@@ -215,6 +215,9 @@ def train():
     imgs_train = imgs_train.astype(np.int16)
     imgs_mask_train = imgs_mask_train.astype(np.int16)
 
+    print(imgs_train.dtype)
+    print(imgs_mask_train.dtype)
+
     print('Creating and compiling model...')
     print('-'*30)
     
