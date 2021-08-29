@@ -207,10 +207,10 @@ def train():
 
 
     # Normalization of the train set (Exp 4)
-    imgs_train = imgs_train.astype('int16')
     imgs_train = rescale_intensity(imgs_train, in_range=(0, 1))
 
-    imgs_mask_train = imgs_mask_train.astype('int16')
+    imgs_train = imgs_train.astype(np.float32)
+    imgs_mask_train = imgs_mask_train.astype(np.float32)
 
     print('Creating and compiling model...')
     print('-'*30)
