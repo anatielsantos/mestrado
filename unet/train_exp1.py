@@ -212,8 +212,8 @@ def train():
     imgs_train -= mean
     imgs_train /= std
 
-    imgs_train = imgs_train.astype('int16')
-    imgs_mask_train = imgs_mask_train.astype('int16')
+    imgs_train = imgs_train.astype(np.int16)
+    imgs_mask_train = imgs_mask_train.astype(np.int16)
 
     print('Creating and compiling model...')
     print('-'*30)
