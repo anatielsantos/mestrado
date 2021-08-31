@@ -29,7 +29,7 @@ def zero_pad(width, exam_id, input_path, output_path):
         image_pad = np.pad(npyImage, [(0,0), (new_width, new_width), (new_width, new_width)], 'constant', constant_values=(np.amin(npyImage))) # 2D
         
         # bin
-        # image_pad = np.int16((image_pad>0)*1)
+        image_pad = np.int16((image_pad>0)*1)
         
         itkImage = sitk.GetImageFromArray(image_pad)
         sitk.WriteImage(itkImage, output_path)
@@ -74,7 +74,7 @@ def main():
     ext = '.nii.gz'
     width = 640 # new width
     dataset = 'dataset1'
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/lung_mask'
     
     src_dir = '{}'.format(main_dir)
     dst_dir = '{}/ZeroPedding'.format(main_dir)
