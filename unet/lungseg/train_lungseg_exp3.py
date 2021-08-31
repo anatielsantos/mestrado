@@ -3,7 +3,7 @@ from __future__ import print_function
 # GPU
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "4"
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
 
 import numpy as np
@@ -25,10 +25,10 @@ from data_covid import load_train_data, load_test_data, dice_coef, dice_coef_los
 
 
 BATCH_SIZE = 1
-EPOCHS = 500
+EPOCHS = 100
 
 # model
-def unet(pretrained_weights = None,input_size = (512,512,1)):
+def unet(pretrained_weights = None,input_size = (640,640,1)):
 #     inputs = Input(input_size)
 #     conv1 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(inputs)
 #     conv1 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(conv1)
@@ -171,6 +171,10 @@ def unet(pretrained_weights = None,input_size = (512,512,1)):
 
     #model = Model(inputs, conv10)
     model = Model(inputs=[inputs], outputs=[conv10])
+    #1 and #3
+    # model.compile(optimizer = Adam(lr = 1e-4),  loss=dice_coef_loss, metrics=[dice_coef], run_eagerly=True)
+
+    #2 and #4
     model.compile(optimizer = Adam(lr = 1e-4),  loss=dice_bce_loss, metrics=[dice_coef], run_eagerly=True)
     #model.summary()
 
@@ -188,45 +192,53 @@ def train():
     print('Loaded train images: ', imgs_train.shape, imgs_mask_train.shape)
     print('-'*30)
 
+    # Normalization of the train set #1 and #3
     imgs_train = imgs_train.astype('float32')
     mean = np.mean(imgs_train)  # mean for data centering
     std = np.std(imgs_train)  # std for data normalization
 
-    # Normalization of the train set
     imgs_train -= mean
     imgs_train /= std
     imgs_mask_train = imgs_mask_train.astype('float32')
+
+    # Normalization of the train set #2 and #4
+    # imgs_train = rescale_intensity(imgs_train, in_range=(0, 1))
+
+    # imgs_train = imgs_train.astype(np.float32)
+    # imgs_mask_train = imgs_mask_train.astype(np.float32)
 
     print('Creating and compiling model...')
     print('-'*30)
     
     model = unet()
     #Saving the weights and the loss of the best predictions we obtained
-    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/datasets/dissertacao/unet_lungseg_500epc_best.h5', monitor='val_loss', save_best_only=True)
+    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/datasets/dissertacao/unet_lungseg_100epc_exp3_best.h5', monitor='dice', save_best_only=True, mode="max")
     
     print('Fitting model...')
     print('-'*30)
     history = model.fit(imgs_train, imgs_mask_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[model_checkpoint])
 
-    model.save('/data/flavio/anatiel/datasets/dissertacao/unet_lungseg_500epc_last.h5')
+    model.save('/data/flavio/anatiel/datasets/dissertacao/unet_lungseg_100epc_exp3_last.h5')
         
     # convert the history.history dict to a pandas DataFrame:     
     hist_df = pd.DataFrame(history.history) 
     
     # save to json:  
-    hist_json_file = '/data/flavio/anatiel/datasets/dissertacao/unet_lungseg_history_500epc.json'
+    hist_json_file = '/data/flavio/anatiel/datasets/dissertacao/unet_lungseg_history_exp3_100epc.json'
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("history saved")
     
     plt.plot(history.history['dice_coef'])
     plt.plot(history.history['val_dice_coef'])
+    plt.plot(history.history['loss'])
+    plt.plot(history.history['val_loss'])
     plt.title('Model dice coeff')
     plt.ylabel('Dice coeff')
     plt.xlabel('Epoch')
-    plt.legend(['Train', 'Test'], loc='upper left')
+    plt.legend(['Train', 'Val', 'Loss', 'Val Loss'], loc='upper left')
     # save plot to file
-    plt.savefig('/data/flavio/anatiel/datasets/dissertacao/unet_lungseg_plot_500epc.png')
+    plt.savefig('/data/flavio/anatiel/datasets/dissertacao/unet_lungseg_plot_exp3_100epc.png')
     # plt.show()
     
 if __name__ == "__main__":

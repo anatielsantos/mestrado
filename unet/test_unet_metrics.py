@@ -69,14 +69,14 @@ def predictPatient(model, image):
     npyImage = load_patient(image)
 
     # Normalization of the train set (Exp 1)
-    npyImage = npyImage.astype('float32')
-    mean = np.mean(npyImage)  # mean for data centering
-    std = np.std(npyImage)  # std for data normalization
-    npyImage -= mean
-    npyImage /= std
-
     # npyImage = npyImage.astype('float32')
-    # npyImage = rescale_intensity(npyImage, in_range=(0, 1))
+    # mean = np.mean(npyImage)  # mean for data centering
+    # std = np.std(npyImage)  # std for data normalization
+    # npyImage -= mean
+    # npyImage /= std
+
+    npyImage = rescale_intensity(npyImage, in_range=(0, 1))
+    npyImage = npyImage.astype('float32')
 
     print('-'*30)
     print('Predicting test data...')
@@ -161,7 +161,7 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_PredBest' + ext
+        output_path = dst_dir + '/' + exam_id + '_PredLastInt16' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -195,9 +195,9 @@ def main():
     dataset = 'test'
 
     # local
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/lung_extracted'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/lung_extracted/int16'
     main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/mask'
-    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_exp1_200epc_best.h5'
+    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_exp4_200epc_last_int16.h5'
 
     # remote
     # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
@@ -206,7 +206,7 @@ def main():
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = '{}/UnetExp1PredsBest'.format(main_dir)
+    dst_dir = '{}/UnetExp4PredsLast_Int16'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
