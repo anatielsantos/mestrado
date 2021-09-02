@@ -212,19 +212,19 @@ def train():
     
     model = unet()
     #Saving the weights and the loss of the best predictions we obtained
-    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/datasets/dissertacao/unet_lungseg_100epc_exp2_best.h5', monitor='dice', save_best_only=True, mode="max")
+    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/datasets/dissertacao/unet_exp2_100epc_lungseg_best.h5', monitor='val_loss', save_best_only=True, mode="min")
     
     print('Fitting model...')
     print('-'*30)
     history = model.fit(imgs_train, imgs_mask_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[model_checkpoint])
 
-    model.save('/data/flavio/anatiel/datasets/dissertacao/unet_lungseg_100epc_exp2_last.h5')
+    model.save('/data/flavio/anatiel/datasets/dissertacao/unet_exp2_100epc_lungseg_last.h5')
         
     # convert the history.history dict to a pandas DataFrame:     
     hist_df = pd.DataFrame(history.history) 
     
     # save to json:  
-    hist_json_file = '/data/flavio/anatiel/datasets/dissertacao/unet_lungseg_history_exp2_100epc.json'
+    hist_json_file = '/data/flavio/anatiel/datasets/dissertacao/unet_exp2_100epc_lungseg_history.json'
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("history saved")
@@ -238,7 +238,7 @@ def train():
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Val', 'Loss', 'Val Loss'], loc='upper left')
     # save plot to file
-    plt.savefig('/data/flavio/anatiel/datasets/dissertacao/unet_lungseg_plot_exp2_100epc.png')
+    plt.savefig('/data/flavio/anatiel/datasets/dissertacao/unet_exp2_100epc_lungseg_plot.png')
     # plt.show()
     
 if __name__ == "__main__":
