@@ -19,14 +19,14 @@ def equalize_clahe(images, npyMask):
         imgClahe = equalize_adapthist(imgClahe, clip_limit=0.02)
         final_img[i][:,:,0] = imgClahe * np.amax(images[i][:,:,0])
     
-    
+    # setting 0 to background image
     new_final_img = final_img * npyMask
 
     # final_img = images[35][:,:,0] / np.amax(images[35][:,:,0])
     # final_img = equalize_adapthist(final_img, clip_limit=0.02)
     # final_img = np.int16(final_img * np.amax(images[35][:,:,0]))
                                  
-    return new_final_img
+    return new_final_img.astype(np.float32)
 
 def saveClahe(exam_id, input_path, mask_path, output_path):
     print(exam_id + ':')
@@ -65,7 +65,7 @@ def execSaveClahe(src_dir, mask_dir, dst_dir, ext, search_pattern, reverse = Fal
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_clahe' + ext
+        output_path = dst_dir + '/' + exam_id + '_clahe32bits' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -98,7 +98,7 @@ def main():
     # model_path = '/data/flavio/anatiel/models/dissertacao/unet_500epc_last.h5'
 
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/Clahe'.format(main_dir)
+    dst_dir = '{}/Clahe32Bits'.format(main_dir)
 
     mask_dir = '{}'.format(main_mask_dir)
 
