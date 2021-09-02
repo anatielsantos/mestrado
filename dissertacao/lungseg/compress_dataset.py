@@ -47,7 +47,7 @@ def load_image(path_image, path_mask, remove_no_lesion = False):
         # itkImage = sitk.GetImageFromArray(npyImage)
         # sitk.WriteImage(itkImage, '/home/anatielsantos/mestrado/datasets/dissertacao/train/image/train_images.nii.gz')
 
-        return [np.int16(npyImage), np.int16(npyMask)]
+        return npyImage, npyMask
 
     except Exception as e:
         print("type error: " + str(e))
@@ -97,7 +97,7 @@ def compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, de
             
 def main():
     ext = '.nii.gz'
-    joint = 'test' # [train, test]
+    joint = 'train' # [train, test]
     main_dir_image = f'/home/anatielsantos/mestrado/datasets/dissertacao/{joint}/image/lung_extracted/clahe_dataset1'
     main_dir_mask = f'/home/anatielsantos/mestrado/datasets/dissertacao/{joint}/mask'
     
@@ -108,7 +108,7 @@ def main():
     
     dst_dir = '/home/anatielsantos/mestrado/datasets/dissertacao'
 
-    compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, desc = f'Compressing {joint} datasets', remove_no_lesion=False)
+    compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, desc = f'Compressing {joint} datasets', remove_no_lesion=True)
 
 if __name__=="__main__":    
     start = time.time()
