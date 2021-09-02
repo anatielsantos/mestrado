@@ -19,6 +19,7 @@ def load_image(path_image, path_mask, remove_no_lesion = False):
 
         # bin mask
         npyMask = (npyMask>0)*1
+        npyMask = npyMask.astype(np.float32)
 
         # no lesion image remover
         if remove_no_lesion:
@@ -88,17 +89,17 @@ def compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, de
         list_images.append(images)
         list_masks.append(masks)
 
-    np.savez_compressed(f"{output_path}/{joint}_images_dataset1_lung_extract", list_images)
-    np.savez_compressed(f"{output_path}/{joint}_masks_dataset1_lung_extract", list_masks)
+    np.savez_compressed(f"{output_path}/{joint}_images_clahe_ds1", list_images)
+    np.savez_compressed(f"{output_path}/{joint}_masks_clahe_ds1", list_masks)
 
     # np.save(f"{output_path}/{joint}_images.npy", list_images)
     # np.save(f"{output_path}/{joint}_masks.npy", list_masks)
             
 def main():
     ext = '.nii.gz'
-    joint = 'train' # [train, test]
-    main_dir_image = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/image/ZeroPedding'
-    main_dir_mask = f'/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/lung_mask/ZeroPedding'
+    joint = 'test' # [train, test]
+    main_dir_image = f'/home/anatielsantos/mestrado/datasets/dissertacao/{joint}/image/lung_extracted/clahe_dataset1'
+    main_dir_mask = f'/home/anatielsantos/mestrado/datasets/dissertacao/{joint}/mask'
     
     src = main_dir_image
     tar = main_dir_mask
@@ -107,7 +108,7 @@ def main():
     
     dst_dir = '/home/anatielsantos/mestrado/datasets/dissertacao'
 
-    compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, desc = f'Compressing datasets', remove_no_lesion=False)
+    compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, desc = f'Compressing {joint} datasets', remove_no_lesion=False)
 
 if __name__=="__main__":    
     start = time.time()
