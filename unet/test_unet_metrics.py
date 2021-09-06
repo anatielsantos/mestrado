@@ -88,7 +88,7 @@ def predictPatient(model, image):
     npyImagePredict = np.around(npyImagePredict, decimals=0)
     npyImagePredict = (npyImagePredict>0.5)*1
 
-    return np.float32(npyImagePredict)
+    return npyImagePredict.astype(np.float32)
 
 def execPredict(exam_id, input_path, input_mask_path, output_path, model):
     try:
@@ -161,7 +161,7 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_PredLastClaheInt16' + ext
+        output_path = dst_dir + '/' + exam_id + '_PredLungseg' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -192,12 +192,12 @@ def main():
 
     ext = '.nii.gz'
     search_pattern = '*'
-    dataset = 'test'
+    dataset = 'dataset2'
 
     # local
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/lung_extracted/int16/clahe'
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/mask'
-    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_exp4_200epc_last_int16_clahe.h5'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding'
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/PulmoesMascara/PulmoesMascaraFillHoles'
+    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_exp4_100epc_lungseg_last.h5'
 
     # remote
     # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
@@ -206,7 +206,7 @@ def main():
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = '{}/UnetExp4PredsLast_chale_Int16'.format(main_dir)
+    dst_dir = '{}/UnetLungsegExp4PredsLast'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
