@@ -62,7 +62,7 @@ def exec_zero_padding(src_dir, dst_dir, ext, width, reverse = False, desc = None
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_zeroPedding' + ext
+        output_path = dst_dir + '/' + exam_id + '_Positive' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -79,11 +79,11 @@ def exec_zero_padding(src_dir, dst_dir, ext, width, reverse = False, desc = None
 def main():
     ext = '.nii.gz'
     width = 640 # new width
-    dataset = 'dataset1'
+    dataset = 'dataset2'
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
     
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/ZeroPedding'.format(main_dir)
+    dst_dir = '{}/imagePositive'.format(main_dir)
 
     exec_zero_padding(src_dir, dst_dir, ext, width, reverse = False, desc = 'Making zero padding')
 

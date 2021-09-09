@@ -69,14 +69,14 @@ def predictPatient(model, image):
     npyImage = load_patient(image)
 
     # Normalization of the train set (Exp 1)
-    # npyImage = npyImage.astype('float32')
-    # mean = np.mean(npyImage)  # mean for data centering
-    # std = np.std(npyImage)  # std for data normalization
-    # npyImage -= mean
-    # npyImage /= std
-
-    npyImage = rescale_intensity(npyImage, in_range=(0, 1))
     npyImage = npyImage.astype('float32')
+    mean = np.mean(npyImage)  # mean for data centering
+    std = np.std(npyImage)  # std for data normalization
+    npyImage -= mean
+    npyImage /= std
+
+    # npyImage = rescale_intensity(npyImage, in_range=(0, 1))
+    # npyImage = npyImage.astype('float32')
 
     print('-'*30)
     print('Predicting test data...')
@@ -96,6 +96,9 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
 
         binary_masks = predictPatient(model, input_path)
         npyMedMask = load_patient(input_mask_path)
+
+        print(binary_masks.shape)
+        print(npyMedMask.shape)
 
         # calc metrics
         print('-'*30)
@@ -155,6 +158,7 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
     input_mask_pathAll.sort(reverse=reverse)
 
     exam_ids = []
+    mask_ids = []
     input_paths = []
     input_mask_paths = []
     output_paths = []
@@ -195,9 +199,9 @@ def main():
     dataset = 'dataset2'
 
     # local
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/Equal32Bits'
     main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/PulmoesMascara/PulmoesMascaraFillHoles'
-    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_exp4_100epc_lungseg_last.h5'
+    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_exp1_100epc_lungseg_best.h5'
 
     # remote
     # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
@@ -206,7 +210,7 @@ def main():
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = '{}/UnetLungsegExp4PredsLast'.format(main_dir)
+    dst_dir = '{}/UnetLungsegExp1PredsBest'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))

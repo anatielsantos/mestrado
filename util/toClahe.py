@@ -6,27 +6,37 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import SimpleITK as sitk
 import numpy as np
 import glob
-from skimage.exposure import equalize_adapthist
+from skimage.exposure import equalize_adapthist, equalize_hist
 from skimage.exposure import rescale_intensity
 from tqdm import tqdm
 
 # clahe equalization
 def equalize_clahe(images, npyMask):
     print("Clahe equalization...")
-    final_img = np.int16(images)
+    # final_img = np.int16(images)
+    final_img = images
     for i in range(images.shape[0]):
-        imgClahe = images[i][:,:,0] / np.amax(images[i][:,:,0])
-        imgClahe = equalize_adapthist(imgClahe, clip_limit=0.02)
-        final_img[i][:,:,0] = imgClahe * np.amax(images[i][:,:,0])
+        # clahe_equalization
+        # imgClahe = images[i][:,:,0] / np.amax(images[i][:,:,0])
+        # imgClahe = equalize_adapthist(imgClahe, clip_limit=0.01)
+        # final_img[i][:,:,0] = imgClahe * np.amax(images[i][:,:,0])
+        
+        # hist_equalization
+        # final_img[i][:,:,0] = equalize_hist(images[i][:,:,0])
+
+        # contrast_stretching
+        p2, p98 = np.percentile(images[i][:,:,0], (2, 98))
+        final_img[i][:,:,0] = rescale_intensity(images[i][:,:,0], in_range=(p2, p98))
+        
     
     # setting 0 to background image
-    new_final_img = final_img * npyMask
+    # final_img = final_img * npyMask
 
     # final_img = images[35][:,:,0] / np.amax(images[35][:,:,0])
     # final_img = equalize_adapthist(final_img, clip_limit=0.02)
     # final_img = np.int16(final_img * np.amax(images[35][:,:,0]))
                                  
-    return new_final_img.astype(np.float32)
+    return final_img.astype(np.float32)
 
 def saveClahe(exam_id, input_path, mask_path, output_path):
     print(exam_id + ':')
@@ -65,7 +75,7 @@ def execSaveClahe(src_dir, mask_dir, dst_dir, ext, search_pattern, reverse = Fal
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_clahe32bits' + ext
+        output_path = dst_dir + '/' + exam_id + '_Stretch32bits' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -87,22 +97,22 @@ def main():
 
     ext = '.nii.gz'
     search_pattern = '*'
-    dataset = 'test'
+    dataset = 'dataset2'
 
     # local
-    main_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/image/ZeroPedding/lung_extracted'
-    main_mask_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/image/ZeroPedding/PulmoesMascara/PulmoesMascaraFillHoles'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive'
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/PulmoesMascara/PulmoesMascaraFillHoles'
 
     # remote
     # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
     # model_path = '/data/flavio/anatiel/models/dissertacao/unet_500epc_last.h5'
 
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/Clahe32Bits'.format(main_dir)
+    dst_dir = '{}/Stretch32Bits'.format(main_dir)
 
     mask_dir = '{}'.format(main_mask_dir)
 
-    execSaveClahe(src_dir, mask_dir, dst_dir, ext, search_pattern, reverse = False, desc = 'To Clahe')
+    execSaveClahe(src_dir, mask_dir, dst_dir, ext, search_pattern, reverse = False, desc = 'Equalization')
 
 if __name__ == '__main__':
     main()

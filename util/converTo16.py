@@ -48,8 +48,8 @@ def execSave16(src_dir, dst_dir, ext, search_pattern, reverse = False, desc = No
         input_paths.append(input_path)
         output_paths.append(output_path)
 
-        for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
-            save16(exam_id, input_paths[i], output_paths[i])
+    for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
+        save16(exam_id, input_paths[i], output_paths[i])
 
 def main():
 
@@ -58,14 +58,14 @@ def main():
     dataset = 'test'
 
     # local
-    main_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/image/ZeroPedding/lung_extracted'
+    main_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/image/ZeroPedding'
 
     # remote
     # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
     # model_path = '/data/flavio/anatiel/models/dissertacao/unet_500epc_last.h5'
 
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/Image16'.format(main_dir)
+    dst_dir = '{}/16bits'.format(main_dir)
 
     execSave16(src_dir, dst_dir, ext, search_pattern, reverse = False, desc = 'To 16 bits')
 

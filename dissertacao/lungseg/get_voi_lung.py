@@ -40,6 +40,7 @@ def getLargestCC(segmentation):
     
     label_max_1=(labels == largest_1).astype(int)
     label_max_2=(labels == largest_2).astype(int)
+
     return (label_max_1 + label_max_2)
 
 def get_voi_lung(exam_id, path_mask, output_path):
@@ -51,9 +52,9 @@ def get_voi_lung(exam_id, path_mask, output_path):
 
         voi = getLargestCC(image_array)
 
-        voi_fill_hole = fill_holes(voi)
+        voi = fill_holes(voi)
 
-        itkImage = sitk.GetImageFromArray(voi_fill_hole.astype(np.int16))
+        itkImage = sitk.GetImageFromArray(voi.astype(np.int16))
         sitk.WriteImage(itkImage, output_path)
 
         del image_mask
@@ -100,10 +101,10 @@ def exec_get_voi_lung(mask_dir, dst_dir, ext, reverse = False, desc = None):
 def main():
     dataset = 'dataset2'
     ext = '.nii.gz' 
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/PulmoesMascara'
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/UnetLungsegExp1PredsBest'
     
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = '{}/PulmoesMascaraFillHoles'.format(main_mask_dir)
+    dst_dir = '{}/VoiPulmoesMascara'.format(main_mask_dir)
 
     exec_get_voi_lung(mask_dir, dst_dir, ext, reverse = False, desc = f'Getting VOI from {dataset}')
 
