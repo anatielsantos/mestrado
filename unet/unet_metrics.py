@@ -60,41 +60,12 @@ def load_patient(image):
     npyImage = np.expand_dims(npyImage, axis=-1)
 
     return npyImage
-    
-def predictPatient(model, image):
 
-    print('-'*30)
-    print('Loading and preprocessing test data...')
-    print('-'*30)
-    npyImage = load_patient(image)
-
-    # Normalization of the train set (Exp 1)
-    npyImage = npyImage.astype('float32')
-    mean = np.mean(npyImage)  # mean for data centering
-    std = np.std(npyImage)  # std for data normalization
-    npyImage -= mean
-    npyImage /= std
-
-    # npyImage = rescale_intensity(npyImage, in_range=(0, 1))
-    # npyImage = npyImage.astype('float32')
-
-    print('-'*30)
-    print('Predicting test data...')
-    print('-'*30)
-
-    npyImagePredict = model.predict(npyImage, batch_size=1, verbose=1)
-    
-    npyImagePredict = preprocess_squeeze(npyImagePredict)
-    npyImagePredict = np.around(npyImagePredict, decimals=0)
-    npyImagePredict = (npyImagePredict>0.5)*1
-
-    return npyImagePredict.astype(np.float32)
-
-def execPredict(exam_id, input_path, input_mask_path, output_path, model):
+def execMetrics(exam_id, input_path, input_mask_path, output_path, model):
     try:
         print(exam_id + ':')
 
-        binary_masks = predictPatient(model, input_path)
+        binary_masks = load_patient(input_path)
         npyMedMask = load_patient(input_mask_path)
 
         print(binary_masks.shape)
@@ -113,43 +84,12 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         print("Prec:", prec)
         print("FScore:", fscore)
 
-
-        # binary_masks.dtype='float32'
-        itkImage = sitk.GetImageFromArray(binary_masks)
-
-        image = sitk.ReadImage(input_path)
-        #npyImage = sitk.GetArrayFromImage(image)
-
-        # print(image.GetSize())
-        # print(image.GetSpacing())
-        # print(image.GetPixelIDTypeAsString())
-        # print(itkImage.GetSize())
-        # print(itkImage.GetSpacing())
-        # print(itkImage.GetPixelIDTypeAsString())
-
-        # corrige o tipo da imagem pois no Colab está saindo 64 bits
-        # itkImage = sitk.Cast(itkImage,image.GetPixelIDValue())    
-        
-        itkImage.CopyInformation(image)
-
-        # print(itkImage.GetSize())
-        # print(itkImage.GetSpacing())
-        # print(itkImage.GetPixelIDTypeAsString())    
-        
-        sitk.WriteImage(itkImage, output_path)
-
-        del image
-
     except Exception as e:
         print("type error: " + str(e))
         print(traceback.format_exc())
         return
 
-def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = None, parallel = True):
-    try:
-        os.stat(dst_dir)
-    except:
-        os.mkdir(dst_dir)
+def execExecMetricsByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = None, parallel = True):
 
     input_pathAll = glob.glob(src_dir + '/' + search_pattern + ext)
     input_pathAll.sort(reverse=reverse)
@@ -158,7 +98,6 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
     input_mask_pathAll.sort(reverse=reverse)
 
     exam_ids = []
-    mask_ids = []
     input_paths = []
     input_mask_paths = []
     output_paths = []
@@ -185,12 +124,12 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
         # for i in tqdm(p.starmap(execPredict, zip(exam_ids, input_paths, output_paths, repeat(model), repeat(normalize_path))),desc=desc):
         #     pass
         with mp.Pool(mp.cpu_count()) as pool:
-            for _ in tqdm(pool.istarmap(execPredict, zip(exam_ids, input_paths, output_paths, output_paths, repeat(model))),
+            for _ in tqdm(pool.istarmap(execMetrics, zip(exam_ids, input_paths, output_paths, output_paths, repeat(model))),
                           total=len(exam_ids)):
                 pass
     else:
         for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
-            execPredict(exam_id, input_paths[i], input_mask_paths[i], output_paths[i], model)
+            execMetrics(exam_id, input_paths[i], input_mask_paths[i], output_paths[i], model)
 
 def main():
 
@@ -199,7 +138,7 @@ def main():
     dataset = 'dataset2'
 
     # local
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/UnetLungsegExp1PredsBest/VoiPulmoesMascara'
     main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/PulmoesMascara/PulmoesMascaraFillHoles'
     model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_exp1_100epc_lungseg_best.h5'
 
@@ -218,7 +157,7 @@ def main():
     model = unet()
     model.load_weights(model_path)
 
-    execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = 'Predicting (UNet)', parallel=False)
+    execExecMetricsByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = 'Metrics (UNet)', parallel=False)
 
 if __name__ == '__main__':
     start = time.time()

@@ -11,6 +11,7 @@ from tqdm import tqdm
 from scipy.ndimage import morphology
 
 from skimage.measure import label
+from imageDivide import imageDivide
 
 def fill_holes(binary_masks):
     # with structure element
@@ -35,13 +36,14 @@ def getLargestCC(segmentation):
     list_seg=list(zip(unique, counts))[1:] # the 0 label is by default background so take the rest
     
     largest_1=max(list_seg, key=lambda x:x[1])[0]
-    del(list_seg[largest_1 - 1])
-    largest_2=max(list_seg, key=lambda x:x[1])[0]
+    # del(list_seg[largest_1 - 1])
+    # largest_2=max(list_seg, key=lambda x:x[1])[0]
     
     label_max_1=(labels == largest_1).astype(int)
-    label_max_2=(labels == largest_2).astype(int)
+    # label_max_2=(labels == largest_2).astype(int)
 
-    return (label_max_1 + label_max_2)
+    # return (label_max_1 + label_max_2)
+    return (label_max_1)
 
 def get_voi_lung(exam_id, path_mask, output_path):
     try:
@@ -50,7 +52,11 @@ def get_voi_lung(exam_id, path_mask, output_path):
         image_mask = sitk.ReadImage(path_mask)
         image_array = sitk.GetArrayFromImage(image_mask).astype(np.int16)
 
-        voi = getLargestCC(image_array)
+        reg1, reg2 = imageDivide(image_array)
+
+        voi1 = getLargestCC(reg1)
+        voi2 = getLargestCC(reg2)
+        voi = np.concatenate([voi1, voi2], axis=2)
 
         voi = fill_holes(voi)
 
@@ -80,7 +86,7 @@ def exec_get_voi_lung(mask_dir, dst_dir, ext, reverse = False, desc = None):
 
     for input_path in input_mask_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_FillHoles' + ext
+        output_path = dst_dir + '/' + exam_id + '_voi' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -108,5 +114,5 @@ def main():
 
     exec_get_voi_lung(mask_dir, dst_dir, ext, reverse = False, desc = f'Getting VOI from {dataset}')
 
-if __name__=="__main__":    
+if __name__=="__main__":
     main()

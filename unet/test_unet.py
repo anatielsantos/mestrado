@@ -39,14 +39,9 @@ def istarmap(self, func, iterable, chunksize=1):
     return (item for chunk in result for item in chunk)
 
 mpp.Pool.istarmap = istarmap
-
 np.random.seed(1337)
 
 project_name = 'Unet CovidSeg'
-img_rows = 640
-img_cols = 640
-img_depth = 1
-smooth = 1.
 
 def preprocess_squeeze(imgs):
     imgs = np.squeeze(imgs, axis=3)
@@ -192,7 +187,7 @@ def main():
     model = unet()
     model.load_weights(model_path)
 
-    execExecPredictByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = 'Predicting (UNet)', parallel=False)
+    execExecPredictByUnet(src_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = project_name, parallel=False)
 
 if __name__ == '__main__':
     start = time.time()

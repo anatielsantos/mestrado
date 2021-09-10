@@ -10,25 +10,25 @@ from skimage.exposure import equalize_adapthist, equalize_hist
 from skimage.exposure import rescale_intensity
 from tqdm import tqdm
 
-# clahe equalization
-def equalize(images, npyMask):
-    print("Clahe equalization...")
-    # final_img = np.int16(images)
+# qualization [clahe, hist, stretch]
+def equalize(images, npyMask, esqualization):
     final_img = images
     for i in range(images.shape[0]):
-        # clahe_equalization
-        # imgClahe = images[i][:,:,0] / np.amax(images[i][:,:,0])
-        # imgClahe = equalize_adapthist(imgClahe, clip_limit=0.01)
-        # final_img[i][:,:,0] = imgClahe * np.amax(images[i][:,:,0])
-        
-        # hist_equalization
-        final_img[i][:,:,0] = equalize_hist(images[i][:,:,0])
 
-        # contrast_stretching
-        # p2, p98 = np.percentile(images[i][:,:,0], (2, 98))
-        # final_img[i][:,:,0] = rescale_intensity(images[i][:,:,0], in_range=(p2, p98))
+        if esqualization == 'clahe':
+            # clahe_equalization
+            imgClahe = images[i][:,:,0] / np.amax(images[i][:,:,0])
+            imgClahe = equalize_adapthist(imgClahe, clip_limit=0.01)
+            final_img[i][:,:,0] = imgClahe * np.amax(images[i][:,:,0])
+        elif esqualization == "hist":
+            # hist_equalization
+            final_img[i][:,:,0] = equalize_hist(images[i][:,:,0])
+        elif esqualization == "stretch":
+            # contrast_stretching
+            p2, p98 = np.percentile(images[i][:,:,0], (2, 98))
+            final_img[i][:,:,0] = rescale_intensity(images[i][:,:,0], in_range=(p2, p98))
 
-        
+    # making values positive
     imgMin = np.amin(final_img)
     npyImage_aux = final_img
     npyImage_aux = final_img + imgMin
@@ -48,7 +48,7 @@ def saveEqualize(exam_id, input_path, mask_path, output_path):
     npyMask = sitk.GetArrayFromImage(mask)
     npyMask = np.expand_dims(npyMask, axis=-1)
     
-    npyImageClahe = equalize(npyImage.astype(np.float32), npyMask)
+    npyImageClahe = equalize(npyImage.astype(np.float32), npyMask, 'hist')
 
     itkImage = sitk.GetImageFromArray(npyImageClahe)
 
@@ -75,7 +75,7 @@ def execSaveEqualize(src_dir, mask_dir, dst_dir, ext, search_pattern, reverse = 
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_equalizeHist' + ext
+        output_path = dst_dir + '/' + exam_id + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):

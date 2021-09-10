@@ -21,5 +21,5 @@ if img.ndim == 2:
     channels = 1
     print("image has 1 channel")
 else:
-    channels = image.shape[-1]
+    channels = img.shape[-1]
     print("image has", channels, "channels")
