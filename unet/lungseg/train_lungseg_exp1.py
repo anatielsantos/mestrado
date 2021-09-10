@@ -193,13 +193,13 @@ def train():
     print('-'*30)
 
     # Normalization of the train set #1 and #3
-    imgs_train = imgs_train.astype('float32')
+    # imgs_train = imgs_train.astype('float32')
     mean = np.mean(imgs_train)  # mean for data centering
     std = np.std(imgs_train)  # std for data normalization
 
     imgs_train -= mean
     imgs_train /= std
-    imgs_mask_train = imgs_mask_train.astype('float32')
+    # imgs_mask_train = imgs_mask_train.astype('float32')
 
     # Normalization of the train set #2 and #4
     # imgs_train = rescale_intensity(imgs_train, in_range=(0, 1))
@@ -212,19 +212,19 @@ def train():
     
     model = unet()
     #Saving the weights and the loss of the best predictions we obtained
-    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/datasets/dissertacao/unet_exp1_100epc_lungseg_best.h5', monitor='val_loss', save_best_only=True, mode="min")
+    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/models/dissertacao/unet_exp1_100epc_lungseg_equahist_best.h5', monitor='val_loss', save_best_only=True, mode="min")
     
     print('Fitting model...')
     print('-'*30)
     history = model.fit(imgs_train, imgs_mask_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[model_checkpoint])
 
-    model.save('/data/flavio/anatiel/datasets/dissertacao/unet_exp1_100epc_lungseg_last.h5')
+    model.save('/data/flavio/anatiel/models/dissertacao/unet_exp1_100epc_lungseg_equahist_last.h5')
         
     # convert the history.history dict to a pandas DataFrame:     
     hist_df = pd.DataFrame(history.history) 
     
     # save to json:  
-    hist_json_file = '/data/flavio/anatiel/datasets/dissertacao/unet_exp1_100epc_lungseg_history.json'
+    hist_json_file = '/data/flavio/anatiel/models/dissertacao/unet_exp1_100epc_lungseg_equahist_history.json'
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("history saved")
@@ -238,7 +238,7 @@ def train():
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Val', 'Loss', 'Val Loss'], loc='upper left')
     # save plot to file
-    plt.savefig('/data/flavio/anatiel/datasets/dissertacao/unet_exp1_100epc_lungseg_plot.png')
+    plt.savefig('/data/flavio/anatiel/models/dissertacao/unet_exp1_100epc_lungseg_equahist_plot.png')
     # plt.show()
     
 if __name__ == "__main__":
