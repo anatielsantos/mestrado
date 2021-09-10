@@ -11,7 +11,7 @@ from skimage.exposure import rescale_intensity
 from tqdm import tqdm
 
 # clahe equalization
-def equalize_clahe(images, npyMask):
+def equalize(images, npyMask):
     print("Clahe equalization...")
     # final_img = np.int16(images)
     final_img = images
@@ -22,23 +22,23 @@ def equalize_clahe(images, npyMask):
         # final_img[i][:,:,0] = imgClahe * np.amax(images[i][:,:,0])
         
         # hist_equalization
-        # final_img[i][:,:,0] = equalize_hist(images[i][:,:,0])
+        final_img[i][:,:,0] = equalize_hist(images[i][:,:,0])
 
         # contrast_stretching
-        p2, p98 = np.percentile(images[i][:,:,0], (2, 98))
-        final_img[i][:,:,0] = rescale_intensity(images[i][:,:,0], in_range=(p2, p98))
+        # p2, p98 = np.percentile(images[i][:,:,0], (2, 98))
+        # final_img[i][:,:,0] = rescale_intensity(images[i][:,:,0], in_range=(p2, p98))
+
         
+    imgMin = np.amin(final_img)
+    npyImage_aux = final_img
+    npyImage_aux = final_img + imgMin
     
     # setting 0 to background image
     # final_img = final_img * npyMask
-
-    # final_img = images[35][:,:,0] / np.amax(images[35][:,:,0])
-    # final_img = equalize_adapthist(final_img, clip_limit=0.02)
-    # final_img = np.int16(final_img * np.amax(images[35][:,:,0]))
                                  
-    return final_img.astype(np.float32)
+    return npyImage_aux
 
-def saveClahe(exam_id, input_path, mask_path, output_path):
+def saveEqualize(exam_id, input_path, mask_path, output_path):
     print(exam_id + ':')
     itkImage = sitk.ReadImage(input_path)
     npyImage = sitk.GetArrayFromImage(itkImage)
@@ -48,7 +48,7 @@ def saveClahe(exam_id, input_path, mask_path, output_path):
     npyMask = sitk.GetArrayFromImage(mask)
     npyMask = np.expand_dims(npyMask, axis=-1)
     
-    npyImageClahe = equalize_clahe(npyImage, npyMask)
+    npyImageClahe = equalize(npyImage.astype(np.float32), npyMask)
 
     itkImage = sitk.GetImageFromArray(npyImageClahe)
 
@@ -56,7 +56,7 @@ def saveClahe(exam_id, input_path, mask_path, output_path):
 
     del itkImage
 
-def execSaveClahe(src_dir, mask_dir, dst_dir, ext, search_pattern, reverse = False, desc = None):
+def execSaveEqualize(src_dir, mask_dir, dst_dir, ext, search_pattern, reverse = False, desc = None):
     try:
         os.stat(dst_dir)
     except:
@@ -75,7 +75,7 @@ def execSaveClahe(src_dir, mask_dir, dst_dir, ext, search_pattern, reverse = Fal
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_Stretch32bits' + ext
+        output_path = dst_dir + '/' + exam_id + '_equalizeHist' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -91,7 +91,7 @@ def execSaveClahe(src_dir, mask_dir, dst_dir, ext, search_pattern, reverse = Fal
         input_mask_paths.append(input_mask_path)
 
     for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
-        saveClahe(exam_id, input_paths[i], input_mask_paths[i], output_paths[i])
+        saveEqualize(exam_id, input_paths[i], input_mask_paths[i], output_paths[i])
 
 def main():
 
@@ -100,19 +100,19 @@ def main():
     dataset = 'dataset2'
 
     # local
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive'
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/PulmoesMascara/PulmoesMascaraFillHoles'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/lesion_mask'
 
     # remote
     # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
     # model_path = '/data/flavio/anatiel/models/dissertacao/unet_500epc_last.h5'
 
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/Stretch32Bits'.format(main_dir)
+    dst_dir = '{}/equalizeHist'.format(main_dir)
 
     mask_dir = '{}'.format(main_mask_dir)
 
-    execSaveClahe(src_dir, mask_dir, dst_dir, ext, search_pattern, reverse = False, desc = 'Equalization')
+    execSaveEqualize(src_dir, mask_dir, dst_dir, ext, search_pattern, reverse = False, desc = 'Equalization')
 
 if __name__ == '__main__':
     main()

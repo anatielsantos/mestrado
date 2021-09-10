@@ -20,8 +20,8 @@ def zero_pad(width, exam_id, input_path, output_path):
         if npyImage.shape[1] != npyImage.shape[2]:
             raise ValueError("Image needs to be square.")
 
-        if width <= npyImage.shape[1]:
-            raise ValueError("New width needs to be bigger than current.")    
+        # if width <= npyImage.shape[1]:
+        #     raise ValueError("New width needs to be bigger than current.")    
 
         new_width = (width - npyImage.shape[1]) // 2
 
@@ -79,7 +79,7 @@ def exec_zero_padding(src_dir, dst_dir, ext, width, reverse = False, desc = None
 def main():
     ext = '.nii.gz'
     width = 640 # new width
-    dataset = 'dataset2'
+    dataset = 'train'
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
     
     src_dir = '{}'.format(main_dir)

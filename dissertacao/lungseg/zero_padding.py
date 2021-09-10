@@ -28,10 +28,15 @@ def zero_pad(width, exam_id, input_path, output_path):
         # image_pad = np.pad(npyImage, new_width, mode='minimum') # 3D
         image_pad = np.pad(npyImage, [(0,0), (new_width, new_width), (new_width, new_width)], 'constant', constant_values=(np.amin(npyImage))) # 2D
         
+        # zerar padding
+        imgMin = np.amin(image_pad)
+        npyImage_aux = image_pad
+        npyImage_aux = image_pad - imgMin
+
         # bin
-        image_pad = np.int16((image_pad>0)*1)
+        # image_pad = np.int16((image_pad>0)*1)
         
-        itkImage = sitk.GetImageFromArray(image_pad)
+        itkImage = sitk.GetImageFromArray(npyImage_aux)
         sitk.WriteImage(itkImage, output_path)
 
         del image
@@ -73,8 +78,8 @@ def exec_zero_padding(src_dir, dst_dir, ext, width, reverse = False, desc = None
 def main():
     ext = '.nii.gz'
     width = 640 # new width
-    dataset = 'dataset1'
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/lung_mask'
+    dataset = 'dataset2'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/equalizeHist'
     
     src_dir = '{}'.format(main_dir)
     dst_dir = '{}/ZeroPedding'.format(main_dir)
