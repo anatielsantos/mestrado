@@ -109,6 +109,8 @@ def train(path_weights, src_images_train, tar_images_train):
     plt.savefig(path_plot+'gan_lungseg_exp1_100epc_plot.png')
     # plt.show()
 
+    session.close()
+
 if __name__=="__main__":
     # dataset path remote
     path_src_train = '/data/flavio/anatiel/datasets/dissertacao/train_images_ds1_32bits.npz'
