@@ -7,8 +7,8 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "5"
 import tensorflow as tf
 config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth = True
-session = tf.compat.v1.InteractiveSession(config=config)
-session.close()
+# session = tf.compat.v1.InteractiveSession(config=config)
+# session.close()
 
 from tensorflow.keras.callbacks import ModelCheckpoint
 from model import Pix2Pix
