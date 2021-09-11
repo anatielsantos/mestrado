@@ -23,7 +23,7 @@ import matplotlib.pyplot as plt
 # train settings
 BUFFER_SIZE = 400
 BATCH_SIZE = 1
-EPOCHS = 200
+EPOCHS = 100
 IMG_WIDTH = 640
 IMG_HEIGHT = 640
 INPUT_CHANNELS = 1
@@ -36,10 +36,10 @@ def generator_loss(disc_generated_output, gen_output, target,LAMBDA=100):
     # mean absolute error
     #l1_loss = tf.reduce_mean(tf.abs(target - gen_output)) # default
     
-    # 1 loss function
+    # one loss function
     l1_loss = dice_loss(target, gen_output)
 
-    # 2 loss function
+    # two loss function
     # l1_loss = dice_bce_loss(target, gen_output)
 
     total_gen_loss = gan_loss + (LAMBDA * l1_loss)
