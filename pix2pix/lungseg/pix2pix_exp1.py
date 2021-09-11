@@ -12,7 +12,6 @@ session = tf.compat.v1.InteractiveSession(config=config)
 
 from tensorflow.keras.callbacks import ModelCheckpoint
 from model import Pix2Pix
-from utils import *
 from losses import *
 from skimage.exposure import rescale_intensity
 
