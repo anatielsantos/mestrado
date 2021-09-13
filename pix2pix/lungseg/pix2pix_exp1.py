@@ -86,7 +86,7 @@ def train(path_weights, src_images_train, tar_images_train):
     history = model.fit(src_images_train, tar_images_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[checkpoint])
     #history=model.fit(src_images_train, tar_images_train, batch_size=BATCH_SIZE, epochs=EPOCHS,callbacks=[checkpoint,checkpoint2],validation_data=(src_images_val, tar_images_val))
     
-    model.save(path_weights+'gan_lungseg_exp1_100epc_best.hdf5')
+    model.save(path_weights+'gan_lungseg_exp1_100epc_last.hdf5')
     
     # convert the history.history dict to a pandas DataFrame:     
     hist_df = pd.DataFrame(history.history) 
