@@ -58,7 +58,7 @@ def get_voi_lung(exam_id, path_mask, output_path):
         voi2 = getLargestCC(reg2)
         voi = np.concatenate([voi1, voi2], axis=2)
 
-        voi = fill_holes(voi)
+        # voi = fill_holes(voi)
 
         itkImage = sitk.GetImageFromArray(voi.astype(np.int16))
         sitk.WriteImage(itkImage, output_path)
@@ -107,7 +107,7 @@ def exec_get_voi_lung(mask_dir, dst_dir, ext, reverse = False, desc = None):
 def main():
     dataset = 'dataset2'
     ext = '.nii.gz' 
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/UnetLungsegExp1PredsBest'
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/equalizeHist/ZeroPedding/UnetLungsegExp3PredsBest'
     
     mask_dir = '{}'.format(main_mask_dir)
     dst_dir = '{}/VoiPulmoesMascara'.format(main_mask_dir)

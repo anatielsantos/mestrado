@@ -193,13 +193,13 @@ def train():
     print('-'*30)
 
     # Normalization of the train set #1 and #3
-    # imgs_train = imgs_train.astype('float32')
+    imgs_train = imgs_train.astype('float32')
     mean = np.mean(imgs_train)  # mean for data centering
     std = np.std(imgs_train)  # std for data normalization
 
     imgs_train -= mean
     imgs_train /= std
-    # imgs_mask_train = imgs_mask_train.astype('float32')
+    imgs_mask_train = imgs_mask_train.astype('float32')
 
     # Normalization of the train set #2 and #4
     # imgs_train = rescale_intensity(imgs_train, in_range=(0, 1))

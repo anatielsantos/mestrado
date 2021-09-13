@@ -13,7 +13,6 @@ import multiprocessing.pool as mpp
 from itertools import repeat
 
 from tqdm import tqdm
-from train import unet
 from losses import calc_metric
 from skimage.exposure import rescale_intensity
 
@@ -61,7 +60,7 @@ def load_patient(image):
 
     return npyImage
 
-def execMetrics(exam_id, input_path, input_mask_path, output_path, model):
+def execMetrics(exam_id, input_path, input_mask_path):
     try:
         print(exam_id + ':')
 
@@ -89,7 +88,7 @@ def execMetrics(exam_id, input_path, input_mask_path, output_path, model):
         print(traceback.format_exc())
         return
 
-def execExecMetricsByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = None, parallel = True):
+def execExecMetricsByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, reverse = False, desc = None, parallel = True):
 
     input_pathAll = glob.glob(src_dir + '/' + search_pattern + ext)
     input_pathAll.sort(reverse=reverse)
@@ -121,15 +120,15 @@ def execExecMetricsByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
 
     if(parallel):
         # p = mp.Pool(mp.cpu_count())
-        # for i in tqdm(p.starmap(execPredict, zip(exam_ids, input_paths, output_paths, repeat(model), repeat(normalize_path))),desc=desc):
+        # for i in tqdm(p.starmap(execPredict, zip(exam_ids, input_paths, output_paths, repeat(), repeat(normalize_path))),desc=desc):
         #     pass
         with mp.Pool(mp.cpu_count()) as pool:
-            for _ in tqdm(pool.istarmap(execMetrics, zip(exam_ids, input_paths, output_paths, output_paths, repeat(model))),
+            for _ in tqdm(pool.istarmap(execMetrics, zip(exam_ids, input_paths, output_paths, output_paths, repeat())),
                           total=len(exam_ids)):
                 pass
     else:
         for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
-            execMetrics(exam_id, input_paths[i], input_mask_paths[i], output_paths[i], model)
+            execMetrics(exam_id, input_paths[i], input_mask_paths[i])
 
 def main():
 
@@ -138,14 +137,12 @@ def main():
     dataset = 'dataset2'
 
     # local
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/UnetLungsegExp1PredsBest/VoiPulmoesMascara'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/equalizeHist/ZeroPedding/UnetLungsegExp3PredsBest/VoiPulmoesMascara'
     main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/PulmoesMascara/PulmoesMascaraFillHoles'
-    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/unet_exp1_100epc_lungseg_best.h5'
 
     # remote
     # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
     # main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/mask'
-    # model_path = '/data/flavio/anatiel/models/dissertacao/unet_500epc_last.h5'
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
@@ -154,10 +151,7 @@ def main():
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
 
-    model = unet()
-    model.load_weights(model_path)
-
-    execExecMetricsByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = 'Metrics (UNet)', parallel=False)
+    execExecMetricsByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, reverse = False, desc = 'Metrics (UNet)', parallel=False)
 
 if __name__ == '__main__':
     start = time.time()

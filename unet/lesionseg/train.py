@@ -21,7 +21,7 @@ from skimage.transform import resize
 from skimage.io import imsave
 import skimage.transform as trans
 import skimage.io as io
-from data_covid import load_train_data, load_test_data, dice_coef, dice_coef_loss, dice_bce_loss
+from lesionseg.data_covid import load_train_data, load_test_data, dice_coef, dice_coef_loss, dice_bce_loss
 
 
 BATCH_SIZE = 1
