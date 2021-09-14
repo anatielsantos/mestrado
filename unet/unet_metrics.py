@@ -71,7 +71,6 @@ def execMetrics(exam_id, input_path, input_mask_path):
         print(npyMedMask.shape)
 
         # calc metrics
-        print('-'*30)
         print('Calculating metrics...')
         dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(binary_masks.astype(int), npyMedMask.astype(int))
         print("DICE:", dice)
@@ -82,6 +81,7 @@ def execMetrics(exam_id, input_path, input_mask_path):
         print("AUC:", auc)
         print("Prec:", prec)
         print("FScore:", fscore)
+        print('-'*30)
 
     except Exception as e:
         print("type error: " + str(e))
@@ -137,7 +137,7 @@ def main():
     dataset = 'dataset2'
 
     # local
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/equalizeHist/ZeroPedding/UnetLungsegExp3PredsBest/VoiPulmoesMascara'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive/Equal32Bits/UnetLungsegExp1PredsBest'
     main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/PulmoesMascara/PulmoesMascaraFillHoles'
 
     # remote
