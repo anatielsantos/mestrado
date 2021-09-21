@@ -31,8 +31,8 @@ def dice_bce_loss(y_true, y_pred):
 
 def load_train_data():
     # remote
-    imgs_train_npz = np.load('/home/anatiel/datasets/dissertacao/train_images_ds1_32bits.npz', allow_pickle=True)
-    masks_train_npz = np.load('/home/anatiel/datasets/dissertacao/train_masks_ds1_32bits.npz', allow_pickle=True)
+    imgs_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/train_images_ds1_32bits.npz', allow_pickle=True)
+    masks_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/train_masks_ds1_32bits.npz', allow_pickle=True)
 
     # local
     # imgs_train_npz = np.load('/home/anatielsantos/mestrado/datasets/dissertacao/train_images_ds1_equalize_hist.npz', allow_pickle=True)
