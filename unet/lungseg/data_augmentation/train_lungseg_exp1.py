@@ -10,11 +10,11 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import *
-from tensorflow.keras.optimizers import Adam, SGD
-from tensorflow.keras.callbacks import ModelCheckpoint, LearningRateScheduler, History
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from keras.models import Model
+from keras.layers import *
+from keras.optimizers import Adam, SGD
+from keras.callbacks import ModelCheckpoint, LearningRateScheduler, History
+from keras.preprocessing.image import ImageDataGenerator
 
 from skimage.segmentation import mark_boundaries
 from skimage.exposure import rescale_intensity
