@@ -57,7 +57,8 @@ OUTPUT_CHANNELS = 1
 
 def preprocess_squeeze(imgs):
     imgs = np.squeeze(imgs, axis=3)
-    print(' ---------------- preprocessed squeezed -----------------')
+    print('preprocessed squeezed')
+    print('-'*30)
     return imgs
 
 def load_patient(image):
@@ -73,6 +74,8 @@ def predictPatient(model, image):
     print('Loading and preprocessing test data...')
     print('-'*30)
     npyImage = load_patient(image)
+
+    print("Image shape:", npyImage.shape)
 
     # Normalization of the train set (Exp 1)
     npyImage = npyImage.astype('float32')
@@ -110,21 +113,21 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         binary_masks = predictPatient(model, input_path)
         npyMedMask = load_patient(input_mask_path)
 
-        print(binary_masks.shape)
-        print(npyMedMask.shape)
+        print("Pred shape:", binary_masks.shape)
+        print("Mask shape:", npyMedMask.shape)
 
         # calc metrics
         print('-'*30)
         print('Calculating metrics...')
         dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(binary_masks.astype(int), npyMedMask.astype(int))
-        print("DICE:", dice)
-        print("IoU:", jaccard)
-        print("Sensitivity:", sensitivity)
-        print("Specificity:", specificity)
-        print("ACC:", accuracy)
-        print("AUC:", auc)
-        print("Prec:", prec)
-        print("FScore:", fscore)
+        print("DICE:\t", dice)
+        print("IoU:\t", jaccard)
+        print("Sensitivity:\t", sensitivity)
+        print("Specificity:\t", specificity)
+        print("ACC:\t", accuracy)
+        print("AUC:\t", auc)
+        print("Prec:\t", prec)
+        print("FScore:\t", fscore)
 
 
         # binary_masks.dtype='float32'
@@ -214,7 +217,7 @@ def main():
     # local
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive'
     main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/PulmoesMascara/PulmoesMascaraFillHoles'
-    model_path = '/home/anatielsantos/mestrado/models/dissertacao/gan/Lungseg/gan_lungseg_exp2_100epc_last.hdf5'
+    model_path = '/home/anatielsantos/mestrado/models/dissertacao/gan/Lungseg/gan_lungseg_exp1_100epc_last.hdf5'
 
     # remote
     # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
@@ -223,7 +226,7 @@ def main():
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = '{}/GANLungsegExp2PredsLast'.format(main_dir)
+    dst_dir = '{}/GANLungsegExp1PredsLast'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
