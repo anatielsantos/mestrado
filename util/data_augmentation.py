@@ -4,7 +4,7 @@ import numpy as np
 import tensorflow as tf
 import SimpleITK as sitk
 import random
-import glob, time
+import glob
 import traceback
 
 from tqdm import tqdm
