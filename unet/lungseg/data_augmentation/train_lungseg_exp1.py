@@ -24,7 +24,6 @@ import skimage.transform as trans
 import skimage.io as io
 from data_covid_lungseg import load_train_data, load_test_data, dice_coef, dice_coef_loss, dice_bce_loss
 
-
 BATCH_SIZE = 1
 EPOCHS = 100
 
@@ -208,35 +207,6 @@ def train():
     # imgs_train = imgs_train.astype(np.float32)
     # imgs_mask_train = imgs_mask_train.astype(np.float32)
 
-    print("Data Augmentation Start...")
-    print('-'*30)
-    # we create two instances with the same arguments
-    data_gen_args = dict(featurewise_center=True,
-                        featurewise_std_normalization=True,
-                        rotation_range=5,
-                        rescale=5
-                        )
-    image_datagen = ImageDataGenerator(**data_gen_args)
-    mask_datagen = ImageDataGenerator(**data_gen_args)
-    # Provide the same seed and keyword arguments to the fit and flow methods
-    seed = 1
-    image_datagen.fit(imgs_train, augment=True, seed=seed)
-    mask_datagen.fit(imgs_mask_train, augment=True, seed=seed)
-
-    image_generator = image_datagen.flow(
-        imgs_train, y=None, batch_size=32, shuffle=True, sample_weight=None, seed=None,
-        save_to_dir=None, save_prefix='', save_format='png',
-        subset=None
-    )
-    image_generator = np.asarray(image_generator)
-
-    mask_generator = mask_datagen.flow(
-        imgs_mask_train, y=None, batch_size=32, shuffle=True, sample_weight=None, seed=None,
-        save_to_dir=None, save_prefix='', save_format='png',
-        subset=None
-    )
-    mask_generator = np.asarray(mask_generator)
-
     print('Creating and compiling model...')
     print('-'*30)
     
@@ -246,7 +216,7 @@ def train():
     
     print('Fitting model...')
     print('-'*30)
-    history = model.fit(image_generator, mask_generator, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[model_checkpoint])
+    history = model.fit(imgs_train, imgs_mask_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[model_checkpoint])
 
     model.save('/data/flavio/anatiel/models/dissertacao/unet_exp1_100epc_lungseg_32bits_augment_last.h5')
         
