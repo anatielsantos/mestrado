@@ -35,8 +35,8 @@ def load_train_data():
     masks_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/train_masks_ds1_32bits.npz', allow_pickle=True)
 
     # local
-    # imgs_train_npz = np.load('/home/anatielsantos/mestrado/datasets/dissertacao/train_images_ds1_equalize_hist.npz', allow_pickle=True)
-    # masks_train_npz = np.load('/home/anatielsantos/mestrado/datasets/dissertacao/train_masks_ds1_equalize_hist.npz', allow_pickle=True)
+    # imgs_train_npz = np.load('/home/anatielsantos/mestrado/datasets/dissertacao/train_images_ds1_32bits.npz', allow_pickle=True)
+    # masks_train_npz = np.load('/home/anatielsantos/mestrado/datasets/dissertacao/train_masks_ds1_32bits.npz', allow_pickle=True)
 
     imgs_train = imgs_train_npz['arr_0']
     masks_train = masks_train_npz['arr_0']

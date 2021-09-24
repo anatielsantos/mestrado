@@ -38,6 +38,32 @@ def rotate(image, mask):
     augmented_mask = tf.numpy_function(scipy_rotate_mask, [mask], tf.float32)
     return augmented_image, augmented_mask
 
+def zoom(image, mask):
+    """Rotate the volume by a few degrees"""
+    
+    # define some rotation angles
+    z = [-0.2, 0.2]
+    # pick angles at random
+    zoons = random.choice(z)
+
+    def scipy_zoom_image(image):
+        # rotate volume
+        image = ndimage.zoom(image, 1.)
+        image[image < 1] = 0
+        return image
+
+    def scipy_zoom_mask(mask):
+        # rotate volume
+        mask = ndimage.zoom(mask, zoons)
+        otsu = threshold_otsu(mask)/np.amax(mask)
+        mask[mask < otsu] = 0
+        mask[mask > otsu] = 1
+        return mask
+
+    augmented_image = tf.numpy_function(scipy_zoom_image, [image], tf.float32)
+    augmented_mask = tf.numpy_function(scipy_zoom_mask, [mask], tf.float32)
+    return augmented_image, augmented_mask
+
 def augmentation(exam_id, src_path, mask_path, output_path_image, output_path_mask):
     try:
         print(exam_id + ':')
@@ -52,11 +78,17 @@ def augmentation(exam_id, src_path, mask_path, output_path_image, output_path_ma
         del image
         del mask
         
-        # augmentation
         print("Image Augmentation")
+        
+        # augmentation
         volumeImage, volumeMask = rotate(np.transpose(npyImage, (1, 2, 0)), np.transpose(npyMask, (1, 2, 0)))
         volumeImage = np.transpose(volumeImage, (2, 0, 1))
         volumeMask = np.transpose(volumeMask, (2, 0, 1))
+
+        # augmentation zoom
+        # volumeImage, volumeMask = zoom(np.transpose(npyImage, (1, 2, 0)), np.transpose(npyMask, (1, 2, 0)))
+        # volumeImage = np.transpose(volumeImage, (2, 0, 1))
+        # volumeMask = np.transpose(volumeMask, (2, 0, 1))
 
         itkImage = sitk.GetImageFromArray(volumeImage)
         sitk.WriteImage(itkImage, output_path_image)
@@ -94,8 +126,8 @@ def exec_augmentationg(src_dir, mask_dir, dst_dir_image, dst_dir_mask, ext, reve
 
     for input_path in input_src_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path_image = dst_dir_image + '/' + exam_id + '_rotate' + ext
-        output_path_mask = dst_dir_mask + '/' + exam_id + '_rotate' + ext
+        output_path_image = dst_dir_image + '/' + exam_id + '_zoom' + ext
+        output_path_mask = dst_dir_mask + '/' + exam_id + '_zoom' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path_image):
@@ -125,7 +157,7 @@ if __name__ == "__main__":
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
 
-    dst_dir_image = '{}/data_augmentation'.format(main_dir)
-    dst_dir_mask = '{}/data_augmentation'.format(main_mask_dir)
+    dst_dir_image = '{}/data_augmentation_zoom'.format(main_dir)
+    dst_dir_mask = '{}/data_augmentation_zoom'.format(main_mask_dir)
 
     exec_augmentationg(src_dir, mask_dir, dst_dir_image, dst_dir_mask, ext, reverse = False, desc = f'Augmentation from {dataset}')

@@ -207,6 +207,31 @@ def train():
     # imgs_train = imgs_train.astype(np.float32)
     # imgs_mask_train = imgs_mask_train.astype(np.float32)
 
+    print('Data Augmentation Start')
+    # Augmentation
+    # we create two instances with the same arguments
+    data_gen_args = dict(featurewise_center=True,
+                        featurewise_std_normalization=True,
+                        rotation_range=20,
+                        # width_shift_range=0.1,
+                        # height_shift_range=0.1,
+                        zoom_range=0.2)
+    image_datagen = ImageDataGenerator(**data_gen_args)
+    mask_datagen = ImageDataGenerator(**data_gen_args)
+    # Provide the same seed and keyword arguments to the fit and flow methods
+    seed = 1
+    image_datagen.fit(imgs_train, augment=True, seed=seed)
+    mask_datagen.fit(imgs_mask_train, augment=True, seed=seed)
+
+    image_generator = image_datagen.flow(imgs_train)
+    mask_generator = mask_datagen.flow(imgs_mask_train)
+
+    image_generator = np.asarray(image_generator)
+    mask_generator = np.asarray(mask_generator)
+
+    print('-'*30)
+    print('Data Augmentation End')
+    print('-'*30)
     print('Creating and compiling model...')
     print('-'*30)
     
@@ -216,7 +241,16 @@ def train():
     
     print('Fitting model...')
     print('-'*30)
-    history = model.fit(imgs_train, imgs_mask_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[model_checkpoint])
+    history = model.fit(image_generator, mask_generator, 
+                        batch_size=BATCH_SIZE, 
+                        epochs=EPOCHS, 
+                        verbose=1,
+                        shuffle=True, 
+                        validation_split=0.1, 
+                        callbacks=[model_checkpoint]
+                    )
+
+    # history = model.fit(imgs_train, imgs_mask_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[model_checkpoint])
 
     model.save('/data/flavio/anatiel/models/dissertacao/unet_exp1_100epc_lungseg_32bits_augment_last.h5')
         
