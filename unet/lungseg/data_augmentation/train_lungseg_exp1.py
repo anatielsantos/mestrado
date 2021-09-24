@@ -226,8 +226,8 @@ def train():
     image_generator = image_datagen.flow(imgs_train)
     mask_generator = mask_datagen.flow(imgs_mask_train)
 
-    # image_generator = np.asarray(image_generator)
-    # mask_generator = np.asarray(mask_generator)
+    image_generator = np.array(image_generator)
+    mask_generator = np.array(mask_generator)
 
     print('-'*30)
     print('Data Augmentation End')
