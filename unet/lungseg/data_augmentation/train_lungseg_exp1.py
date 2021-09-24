@@ -22,6 +22,7 @@ from skimage.transform import resize
 from skimage.io import imsave
 import skimage.transform as trans
 import skimage.io as io
+from sklearn.model_selection import train_test_split
 from data_covid_lungseg import load_train_data, load_test_data, dice_coef, dice_coef_loss, dice_bce_loss
 
 BATCH_SIZE = 1
@@ -226,8 +227,11 @@ def train():
     image_generator = image_datagen.flow(imgs_train)
     mask_generator = mask_datagen.flow(imgs_mask_train)
 
-    image_generator = np.array(image_generator)
-    mask_generator = np.array(mask_generator)
+    # train/validation
+    X_train, X_test, y_train, y_test = train_test_split(image_generator, mask_generator, test_size=0.1)
+
+    train = zip(X_train, y_train)
+    val = zip(X_test, y_test)
 
     print('-'*30)
     print('Data Augmentation End')
@@ -241,12 +245,12 @@ def train():
     
     print('Fitting model...')
     print('-'*30)
-    history = model.fit(image_generator, mask_generator, 
+    history = model.fit(train, 
                         batch_size=BATCH_SIZE, 
                         epochs=EPOCHS, 
                         verbose=1,
-                        shuffle=True, 
-                        validation_split=0.1, 
+                        shuffle=True,
+                        validation_data=val,
                         callbacks=[model_checkpoint]
                     )
 
