@@ -208,8 +208,11 @@ def train():
     # imgs_train = imgs_train.astype(np.float32)
     # imgs_mask_train = imgs_mask_train.astype(np.float32)
 
-    # train/validation
+    print('Train test split')
     X_train, X_test, y_train, y_test = train_test_split(imgs_train, imgs_mask_train, test_size=0.1)
+    print("X_train:", X_train.shape)
+    print("X_test:", X_test.shape)
+    print('-'*30)
 
     print('Data Augmentation Start')
     data_gen_args = dict(featurewise_center=True,
@@ -225,11 +228,14 @@ def train():
     image_datagen.fit(X_train, augment=True, seed=seed)
     mask_datagen.fit(y_train, augment=True, seed=seed)
 
-    image_generator = image_datagen.flow(X_train, batch_size=1)
-    mask_generator = mask_datagen.flow(y_train, batch_size=1)
+    image_generator = image_datagen.flow(X_train, batch_size=BATCH_SIZE)
+    mask_generator = mask_datagen.flow(y_train, batch_size=BATCH_SIZE)
 
     train = zip(image_generator, mask_generator)
     val = zip(X_test, y_test)
+
+    print("Image DataGen:", image_datagen.shape)
+    print("X_test:", X_test.shape)
 
     print('-'*30)
     print('Data Augmentation End')
