@@ -225,8 +225,8 @@ def train():
     image_datagen.fit(X_train, augment=True, seed=seed)
     mask_datagen.fit(y_train, augment=True, seed=seed)
 
-    image_generator = image_datagen.flow(X_train)
-    mask_generator = mask_datagen.flow(y_train)
+    image_generator = image_datagen.flow(X_train, batch_size=32)
+    mask_generator = mask_datagen.flow(y_train, batch_size=32)
 
     train = zip(image_generator, mask_generator)
     val = zip(X_test, y_test)
@@ -249,7 +249,7 @@ def train():
                         verbose=1,
                         shuffle=True,
                         validation_data=val,
-                        steps_per_epoch=2581,
+                        steps_per_epoch=len(train),
                         callbacks=[model_checkpoint]
                     )
 
