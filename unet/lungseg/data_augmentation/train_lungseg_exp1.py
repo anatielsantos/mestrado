@@ -210,6 +210,9 @@ def train():
 
     # train/validation
     X_train, X_test, y_train, y_test = train_test_split(imgs_train, imgs_mask_train, test_size=0.1)
+    print(X_train.dtype)
+    print(X_train.shape)
+    exit()
 
     print('Data Augmentation Start')
     data_gen_args = dict(featurewise_center=True,
