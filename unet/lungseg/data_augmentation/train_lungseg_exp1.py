@@ -249,7 +249,7 @@ def train():
                         verbose=1,
                         shuffle=True,
                         validation_data=val,
-                        steps_per_epoch=None,
+                        steps_per_epoch=2581,
                         callbacks=[model_checkpoint]
                     )
 
