@@ -231,7 +231,7 @@ def train():
     image_generator = image_datagen.flow(X_train, batch_size = BATCH_SIZE)
     mask_generator = mask_datagen.flow(y_train, batch_size = BATCH_SIZE)
 
-    # train = zip(image_generator, mask_generator)
+    train = zip(image_generator, mask_generator)
     val = zip(X_test, y_test)
 
     # for (X,y) in train:
@@ -253,27 +253,26 @@ def train():
     
     print('Fitting model...')
     print('-'*30)
-    # history = model.fit(image_generator,
-    #                     mask_generator, 
-    #                     # batch_size=BATCH_SIZE, 
-    #                     epochs=EPOCHS, 
-    #                     verbose=1,
-    #                     shuffle=True,
-    #                     validation_data=val,
-    #                     steps_per_epoch=X_train.shape[0],
-    #                     callbacks=[model_checkpoint]
-    #                 )
+    history = model.fit(train, 
+                        # batch_size=BATCH_SIZE, 
+                        epochs=EPOCHS, 
+                        verbose=1,
+                        shuffle=True,
+                        validation_data=val,
+                        steps_per_epoch=X_train.shape[0],
+                        callbacks=[model_checkpoint]
+                    )
 
-    history = model.fit(
-        image_datagen.flow(X_train, batch_size=BATCH_SIZE),
-        mask_datagen.flow(y_train, batch_size=BATCH_SIZE),
-        epochs=EPOCHS,
-        verbose=1,
-        shuffle=True,
-        validation_data=val,
-        steps_per_epoch=X_train.shape[0],
-        callbacks=[model_checkpoint]
-    )
+    # history = model.fit(
+    #     image_datagen.flow(X_train, batch_size=BATCH_SIZE),
+    #     mask_datagen.flow(y_train, batch_size=BATCH_SIZE),
+    #     epochs=EPOCHS,
+    #     verbose=1,
+    #     shuffle=True,
+    #     validation_data=val,
+    #     steps_per_epoch=X_train.shape[0],
+    #     callbacks=[model_checkpoint]
+    # )
 
     # history = model.fit(image_generator, mask_generator, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[model_checkpoint])
 
