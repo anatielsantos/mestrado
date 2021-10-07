@@ -231,13 +231,13 @@ def train():
     image_generator = image_datagen.flow(X_train, batch_size = BATCH_SIZE)
     mask_generator = mask_datagen.flow(y_train, batch_size = BATCH_SIZE)
 
-    train = zip(image_generator, mask_generator)
+    # train = zip(image_generator, mask_generator)
     val = zip(X_test, y_test)
 
-    for (X,y) in train:
-        X_train=X[0]
-        y_train=y[0]
-        break
+    # for (X,y) in train:
+    #     X_train=X[0]
+    #     y_train=y[0]
+    #     break
 
     print("X_test:", X_test.shape)
 
@@ -253,9 +253,9 @@ def train():
     
     print('Fitting model...')
     print('-'*30)
-    history = model.fit(X_train,
-                        y_train, 
-                        batch_size=BATCH_SIZE, 
+    history = model.fit(image_generator,
+                        mask_generator, 
+                        # batch_size=BATCH_SIZE, 
                         epochs=EPOCHS, 
                         verbose=1,
                         shuffle=True,
