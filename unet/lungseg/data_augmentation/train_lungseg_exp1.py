@@ -234,7 +234,6 @@ def train():
     train = zip(image_generator, mask_generator)
     val = zip(X_test, y_test)
 
-    print("Image DataGen:", image_datagen.shape)
     print("X_test:", X_test.shape)
 
     print('-'*30)
