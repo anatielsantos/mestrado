@@ -234,10 +234,10 @@ def train():
     train = zip(image_generator, mask_generator)
     val = zip(X_test, y_test)
 
-    for (X,y) in train:
-        X_train=X[0]
-        y_train=y[0]
-        break
+    # for (X,y) in train:
+    #     X_train=X[0]
+    #     y_train=y[0]
+    #     break
 
     print("X_test:", X_test.shape)
 
@@ -258,7 +258,7 @@ def train():
                         epochs=EPOCHS, 
                         verbose=1,
                         shuffle=True,
-                        validation_data=[X_test, y_test],
+                        validation_data=val,
                         # validation_split=0.1,
                         steps_per_epoch=X_train.shape[0],
                         callbacks=[model_checkpoint]
