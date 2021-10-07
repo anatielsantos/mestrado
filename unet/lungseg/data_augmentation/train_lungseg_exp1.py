@@ -265,8 +265,8 @@ def train():
     #                 )
 
     history = model.fit(
-        image_datagen.flow(X_train, batch_size=32),
-        mask_datagen.flow(y_train, batch_size=32),
+        image_datagen.flow(X_train, batch_size=BATCH_SIZE),
+        mask_datagen.flow(y_train, batch_size=BATCH_SIZE),
         epochs=EPOCHS,
         verbose=1,
         shuffle=True,
