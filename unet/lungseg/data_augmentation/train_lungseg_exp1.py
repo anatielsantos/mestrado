@@ -209,21 +209,22 @@ def train():
     # imgs_mask_train = imgs_mask_train.astype(np.float32)
 
     print('Train test split')
-    X_train, X_test, y_train, y_test = train_test_split(imgs_train, imgs_mask_train, test_size=0.98)
-    print("X_train:", X_train.shape)
-    print("X_test:", X_test.shape)
-    print('-'*30)
+    X_train, X_test, y_train, y_test = train_test_split(imgs_train, imgs_mask_train, test_size=0.1)
 
+    print('-'*30)
     print('Data Augmentation Start')
-    data_gen_args = dict(featurewise_center=True,
-                        featurewise_std_normalization=True,
-                        rotation_range=20,
-                        # width_shift_range=0.1,
-                        # height_shift_range=0.1,
-                        zoom_range=0.2)
+    data_gen_args = dict(shear_range=0.1,
+			rotation_range=20,
+			width_shift_range=0.1, 
+			height_shift_range=0.1,
+			zoom_range=0.3,
+			fill_mode='constant',
+			horizontal_flip=True,
+			vertical_flip=True,
+			cval=0)
     image_datagen = ImageDataGenerator(**data_gen_args)
     mask_datagen = ImageDataGenerator(**data_gen_args)
-    # Provide the same seed and keyword arguments to the fit and flow methods
+
     seed = 1
     image_datagen.fit(X_train, augment=True, seed=seed)
     mask_datagen.fit(y_train, augment=True, seed=seed)
@@ -232,14 +233,7 @@ def train():
     mask_generator = mask_datagen.flow(y_train, batch_size = BATCH_SIZE)
 
     train = zip(image_generator, mask_generator)
-    val = zip(X_test, y_test)
-
-    # for (X,y) in train:
-    #     X_train=X[0]
-    #     y_train=y[0]
-    #     break
-
-    print("X_test:", X_test.shape)
+    # val = zip(X_test, y_test)
 
     print('-'*30)
     print('Data Augmentation End')
@@ -263,19 +257,6 @@ def train():
                         steps_per_epoch=X_train.shape[0],
                         callbacks=[model_checkpoint]
                     )
-
-    # history = model.fit(
-    #     image_datagen.flow(X_train, batch_size=BATCH_SIZE),
-    #     mask_datagen.flow(y_train, batch_size=BATCH_SIZE),
-    #     epochs=EPOCHS,
-    #     verbose=1,
-    #     shuffle=True,
-    #     validation_data=val,
-    #     steps_per_epoch=X_train.shape[0],
-    #     callbacks=[model_checkpoint]
-    # )
-
-    # history = model.fit(image_generator, mask_generator, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[model_checkpoint])
 
     model.save('/data/flavio/anatiel/models/dissertacao/unet_exp1_100epc_lungseg_32bits_augment_last.h5')
         

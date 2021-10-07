@@ -213,8 +213,15 @@ def train():
 
     print('-'*30)
     print('Data Augmentation Start')
-    data_gen_args = dict(rotation_range=20,
-                        zoom_range=0.2)
+    data_gen_args = dict(shear_range=0.1,
+			rotation_range=20,
+			width_shift_range=0.1, 
+			height_shift_range=0.1,
+			zoom_range=0.3,
+			fill_mode='constant',
+			horizontal_flip=True,
+			vertical_flip=True,
+			cval=0)
     image_datagen = ImageDataGenerator(**data_gen_args)
     mask_datagen = ImageDataGenerator(**data_gen_args)
 
