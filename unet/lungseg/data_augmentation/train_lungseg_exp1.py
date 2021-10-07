@@ -209,7 +209,7 @@ def train():
     # imgs_mask_train = imgs_mask_train.astype(np.float32)
 
     print('Train test split')
-    X_train, X_test, y_train, y_test = train_test_split(imgs_train, imgs_mask_train, test_size=0.9)
+    X_train, X_test, y_train, y_test = train_test_split(imgs_train, imgs_mask_train, test_size=0.98)
     print("X_train:", X_train.shape)
     print("X_test:", X_test.shape)
     print('-'*30)
@@ -228,8 +228,8 @@ def train():
     image_datagen.fit(X_train, augment=True, seed=seed)
     mask_datagen.fit(y_train, augment=True, seed=seed)
 
-    image_generator = image_datagen.flow(X_train, batch_size=BATCH_SIZE)
-    mask_generator = mask_datagen.flow(y_train, batch_size=BATCH_SIZE)
+    image_generator = image_datagen.flow(X_train)
+    mask_generator = mask_datagen.flow(y_train)
 
     train = zip(image_generator, mask_generator)
     val = zip(X_test, y_test)
@@ -254,7 +254,7 @@ def train():
                         verbose=1,
                         shuffle=True,
                         validation_data=val,
-                        steps_per_epoch=X_train.shape[0],
+                        steps_per_epoch=258,
                         callbacks=[model_checkpoint]
                     )
 
