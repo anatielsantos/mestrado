@@ -253,16 +253,27 @@ def train():
     
     print('Fitting model...')
     print('-'*30)
-    history = model.fit(image_generator,
-                        mask_generator, 
-                        # batch_size=BATCH_SIZE, 
-                        epochs=EPOCHS, 
-                        verbose=1,
-                        shuffle=True,
-                        validation_data=val,
-                        steps_per_epoch=X_train.shape[0],
-                        callbacks=[model_checkpoint]
-                    )
+    # history = model.fit(image_generator,
+    #                     mask_generator, 
+    #                     # batch_size=BATCH_SIZE, 
+    #                     epochs=EPOCHS, 
+    #                     verbose=1,
+    #                     shuffle=True,
+    #                     validation_data=val,
+    #                     steps_per_epoch=X_train.shape[0],
+    #                     callbacks=[model_checkpoint]
+    #                 )
+
+    history = model.fit(
+        image_datagen.flow(X_train, batch_size=32),
+        mask_datagen.flow(y_train, batch_size=32),
+        epochs=EPOCHS,
+        verbose=1,
+        shuffle=True,
+        validation_data=val,
+        steps_per_epoch=X_train.shape[0],
+        callbacks=[model_checkpoint]
+    )
 
     # history = model.fit(image_generator, mask_generator, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[model_checkpoint])
 
