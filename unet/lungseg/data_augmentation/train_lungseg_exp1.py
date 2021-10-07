@@ -253,7 +253,8 @@ def train():
     
     print('Fitting model...')
     print('-'*30)
-    history = model.fit(train, 
+    history = model.fit(image_generator,
+                        mask_generator, 
                         # batch_size=BATCH_SIZE, 
                         epochs=EPOCHS, 
                         verbose=1,
