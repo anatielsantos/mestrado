@@ -209,7 +209,7 @@ def train():
     # imgs_mask_train = imgs_mask_train.astype(np.float32)
 
     print('Train test split')
-    X_train, X_test, y_train, y_test = train_test_split(imgs_train, imgs_mask_train, test_size=0.1)
+    X_train, X_test, y_train, y_test = train_test_split(imgs_train, imgs_mask_train, test_size=0.9)
     print("X_train:", X_train.shape)
     print("X_test:", X_test.shape)
     print('-'*30)
