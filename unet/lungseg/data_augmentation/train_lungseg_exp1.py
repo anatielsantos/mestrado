@@ -258,7 +258,8 @@ def train():
                         epochs=EPOCHS, 
                         verbose=1,
                         shuffle=True,
-                        validation_data=val,
+                        # validation_data=val,
+                        validation_split=0.1,
                         steps_per_epoch=X_train.shape[0],
                         callbacks=[model_checkpoint]
                     )
