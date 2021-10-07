@@ -260,7 +260,7 @@ def train():
                         verbose=1,
                         shuffle=True,
                         validation_data=val,
-                        steps_per_epoch=258,
+                        steps_per_epoch=X_train.shape[0],
                         callbacks=[model_checkpoint]
                     )
 
