@@ -282,3 +282,7 @@ class Pix2Pix(tf.keras.Model):
 #             model, filepath, overwrite, include_optimizer, save_format,
 #             signatures, options, save_traces
 #         )
+
+    def call(self, inputs):
+        x = self.dense1(inputs)
+        return self.dense2(x)
