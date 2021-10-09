@@ -284,5 +284,4 @@ class Pix2Pix(tf.keras.Model):
 #         )
 
     def call(self, inputs):
-        x = self.dense1(inputs)
-        return self.dense2(x)
+        return inputs
