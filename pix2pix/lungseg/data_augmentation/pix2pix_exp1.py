@@ -118,12 +118,7 @@ def train(path_weights, src_images_train, tar_images_train):
     #checkpoint2 = ModelCheckpoint(path_weights+'best_weights_val_gan_512_masked_lung_blur_500epc.hdf5', monitor='val_dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
     
     # history = model.fit(src_images_train, tar_images_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[checkpoint])
-    history=model.fit(train, 
-        batch_size=BATCH_SIZE, 
-        epochs=EPOCHS,
-        callbacks=[checkpoint,checkpoint],
-        validation_data=(X_test, y_test)
-        )
+    history=model.fit(train, batch_size=BATCH_SIZE, epochs=EPOCHS, validation_data=(X_test, y_test), callbacks=[checkpoint,checkpoint])
     
     model.save(path_weights+'gan_lungseg_exp1_100epc_augment_last.hdf5')
     
