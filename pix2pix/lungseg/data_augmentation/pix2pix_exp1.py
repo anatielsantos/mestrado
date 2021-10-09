@@ -59,9 +59,9 @@ def load_images(path_src, path_mask):
     src = src_npz['arr_0']
     tar = tar_npz['arr_0']
     
-    return np.expand_dims(np.concatenate(src), axis=-1), np.expand_dims(np.concatenate(tar), axis=-1)
+    return np.float32(np.expand_dims(np.concatenate(src), axis=-1)), np.float32(np.expand_dims(np.concatenate(tar), axis=-1))
 
-def train(path_weights, src_images_train, tar_images_train):  
+def train(path_weights, src_images_train, tar_images_train):    
     # dataset = [src_images_train, tar_images_train]
 
     # createing pix2pix
