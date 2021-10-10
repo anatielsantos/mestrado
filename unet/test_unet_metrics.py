@@ -199,9 +199,9 @@ def main():
     dataset = 'dataset2'
 
     # local
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/equalizeHist/ZeroPedding'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive'
     main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/PulmoesMascara/PulmoesMascaraFillHoles'
-    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/Lungseg_EqualHist/unet_exp3_100epc_lungseg_equahist_best.h5'
+    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/Lungseg/augment/unet_exp1_100epc_lungseg_32bits_augment_best.h5'
 
     # remote
     # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
@@ -210,7 +210,7 @@ def main():
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = '{}/UnetLungsegExp3PredsLastt'.format(main_dir)
+    dst_dir = '{}/UnetLungsegExp1AugmentBest'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
