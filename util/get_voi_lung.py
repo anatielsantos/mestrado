@@ -107,7 +107,7 @@ def exec_get_voi_lung(mask_dir, dst_dir, ext, reverse = False, desc = None):
 def main():
     dataset = 'dataset2'
     ext = '.nii.gz' 
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive/Equal32Bits/GANLungsegExp4PredsLast'
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive/UnetLungsegExp2AugmentLast'
     
     mask_dir = '{}'.format(main_mask_dir)
     dst_dir = '{}/VoiPulmoesMascara'.format(main_mask_dir)
