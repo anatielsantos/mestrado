@@ -14,7 +14,6 @@ from itertools import repeat
 
 from tqdm import tqdm
 from losses import calc_metric
-from skimage.exposure import rescale_intensity
 
 def istarmap(self, func, iterable, chunksize=1):
     """starmap-version of imap
@@ -137,7 +136,7 @@ def main():
     dataset = 'dataset2'
 
     # local
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive/UnetLungsegExp2AugmentLast/VoiPulmoesMascara'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive/VoiLung/VoiLungFillHoles'
     main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/PulmoesMascara/PulmoesMascaraFillHoles'
 
     # remote
