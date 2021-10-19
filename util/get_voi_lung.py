@@ -110,7 +110,7 @@ def main():
     main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive/UnetLungsegExp2AugmentLast'
     
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = '{}/VoiPulmoesMascara'.format(main_mask_dir)
+    dst_dir = '{}/VoiLung'.format(main_mask_dir)
 
     exec_get_voi_lung(mask_dir, dst_dir, ext, reverse = False, desc = f'Getting VOI from {dataset}')
 

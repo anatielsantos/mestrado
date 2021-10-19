@@ -60,6 +60,29 @@ def load_patient(image):
     npyImage = np.expand_dims(npyImage, axis=-1)
 
     return npyImage
+
+def get_bbox(mask, pred_mask):
+    new_image = np.zeros(pred_mask.shape)
+    for s in range(len(new_image[:,0,0])):
+        menor_c =  640
+        maior_c =  0
+        menor_l =  640
+        maior_l =  0
+        print(s, "/", len(mask[:,0,0]))
+        for l in range(len(mask[0,:,0])):
+            for c in range(len(mask[0,0,:])):
+                if ((mask[s,l,c] == 1) & (c < menor_c)):
+                    menor_c = c
+                if ((mask[s,l,c] == 1) & (l < menor_l)):
+                    menor_l = l
+                if ((mask[s,l,c] == 1) & (c > maior_c)):
+                    maior_c = c
+                if ((mask[s,l,c] == 1) & (l > maior_l)):
+                    maior_l = l
+                
+        new_image[s, menor_l+5:maior_l-4,menor_c+5:maior_c-4] = pred_mask[s, menor_l+5:maior_l-4,menor_c+5:maior_c-4]
+    
+    return np.expand_dims(new_image, axis=-1)
     
 def predictPatient(model, image):
 
@@ -97,8 +120,7 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         binary_masks = predictPatient(model, input_path)
         npyMedMask = load_patient(input_mask_path)
 
-        print(binary_masks.shape)
-        print(npyMedMask.shape)
+        binary_masks = get_bbox(npyMedMask, binary_masks)
 
         # calc metrics
         print('-'*30)
@@ -120,22 +142,7 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         image = sitk.ReadImage(input_path)
         #npyImage = sitk.GetArrayFromImage(image)
 
-        # print(image.GetSize())
-        # print(image.GetSpacing())
-        # print(image.GetPixelIDTypeAsString())
-        # print(itkImage.GetSize())
-        # print(itkImage.GetSpacing())
-        # print(itkImage.GetPixelIDTypeAsString())
-
-        # corrige o tipo da imagem pois no Colab está saindo 64 bits
-        # itkImage = sitk.Cast(itkImage,image.GetPixelIDValue())    
-        
         itkImage.CopyInformation(image)
-
-        # print(itkImage.GetSize())
-        # print(itkImage.GetSpacing())
-        # print(itkImage.GetPixelIDTypeAsString())    
-        
         sitk.WriteImage(itkImage, output_path)
 
         del image
@@ -158,7 +165,6 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
     input_mask_pathAll.sort(reverse=reverse)
 
     exam_ids = []
-    mask_ids = []
     input_paths = []
     input_mask_paths = []
     output_paths = []
@@ -189,6 +195,7 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
                           total=len(exam_ids)):
                 pass
     else:
+        print(str(len(input_paths)) + " - " + str(len(input_mask_paths)) + " - " + str(len(output_paths)))
         for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
             execPredict(exam_id, input_paths[i], input_mask_paths[i], output_paths[i], model)
 
@@ -199,9 +206,9 @@ def main():
     dataset = 'dataset2'
 
     # local
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive'
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/PulmoesMascara/PulmoesMascaraFillHoles'
-    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/Lungseg/augment/unet_exp2_100epc_lungseg_32bits_augment_last.h5'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive/VoiLungBB/Testes_Melhores_Resultados'
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive/VoiLungBB/Testes_Melhores_Resultados/overrided/mask'
+    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/Lungseg/augment/unet_exp2_100epc_lungseg_32bits_augment_best.h5'
 
     # remote
     # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
@@ -210,7 +217,7 @@ def main():
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = '{}/UnetLungsegExp2AugmentLast'.format(main_dir)
+    dst_dir = '{}/PredsAugment'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
