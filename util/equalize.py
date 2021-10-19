@@ -100,7 +100,7 @@ def main():
     dataset = 'dataset2'
 
     # local
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive/VoiLungBB'
     main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/lesion_mask'
 
     # remote
