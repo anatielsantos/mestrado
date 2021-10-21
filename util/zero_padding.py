@@ -52,7 +52,7 @@ def exec_zero_padding(src_dir, dst_dir, ext, width, reverse = False, desc = None
     except:
         os.mkdir(dst_dir)    
 
-    input_pathAll = glob.glob(src_dir + '/*' + ext)
+    input_pathAll = glob.glob(src_dir + '/*10*' + ext)
     input_pathAll.sort(reverse=reverse) 
 
     exam_ids = []
@@ -79,7 +79,7 @@ def main():
     ext = '.nii.gz'
     width = 640 # new width
     dataset = 'dataset2'
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/equalizeHist'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/lesion_mask'
     
     src_dir = '{}'.format(main_dir)
     dst_dir = '{}/ZeroPedding'.format(main_dir)
