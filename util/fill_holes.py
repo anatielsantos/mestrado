@@ -9,17 +9,24 @@ import traceback
 import glob
 from tqdm import tqdm
 from scipy.ndimage import morphology
+from skimage.morphology import ball, disk
 
 def fill_holes(binary_masks):
+    elementStructure = ball(3, dtype=np.uint8)
+    # elementStructure = np.transpose(np.expand_dims(elementStructure, axis=-1), (2, 0, 1))
+    # binary_masks = morphology.binary_erosion(
+    #         morphology.binary_dilation(
+    #             morphology.binary_fill_holes(
+    #                 binary_masks > 0
+    #             ), iterations=1, structure=elementStructure
+    #         ), structure=elementStructure
+    #     )
+
+    # fh = morphology.binary_fill_holes(binary_masks)
     binary_masks = morphology.binary_closing(
-        morphology.binary_fill_holes(
-            morphology.binary_closing(
-                morphology.binary_fill_holes(
-                    binary_masks > 0
-                ), iterations=3, structure=np.ones((3,8,8))
+                binary_masks, iterations=2, structure=elementStructure
             )
-        ), iterations=3, structure=np.ones((3,8,8))
-    ).astype(np.int)
+    
 
     return binary_masks
 
@@ -30,9 +37,13 @@ def get_voi_lung(exam_id, path_mask, output_path, bbox=False):
         image_mask = sitk.ReadImage(path_mask)
         image_array = sitk.GetArrayFromImage(image_mask).astype(np.int16)
 
-        image_array = fill_holes(image_array)
+        image_array_fh = fill_holes(image_array)
 
-        itkImage = sitk.GetImageFromArray(image_array.astype(np.int16))
+        image_array_fh = abs(image_array - image_array_fh)
+        image_array_fh = image_array + image_array_fh
+        image_array_fh[image_array_fh[:,:] > 1] = 1
+
+        itkImage = sitk.GetImageFromArray(image_array_fh.astype(np.int16))
         sitk.WriteImage(itkImage, output_path)
 
         del image_mask
@@ -79,7 +90,7 @@ def exec_get_voi_lung(mask_dir, dst_dir, ext, reverse = False, desc = None):
 def main():
     dataset = 'dataset2'
     ext = '.nii.gz' 
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive/VoiLung'
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive/VoiLung/bk_VoiLungFillHoles'
     mask_dir = '{}'.format(main_mask_dir)
     dst_dir = '{}/VoiLungFillHoles'.format(main_mask_dir)
 
