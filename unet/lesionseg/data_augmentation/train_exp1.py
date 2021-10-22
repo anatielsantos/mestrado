@@ -23,7 +23,7 @@ from skimage.io import imsave
 import skimage.transform as trans
 import skimage.io as io
 from sklearn.model_selection import train_test_split
-from data_covid import load_train_data, load_test_data, dice_coef, dice_coef_loss, dice_bce_loss
+from data_covid import dice_coef, dice_coef_loss, dice_bce_loss
 
 
 BATCH_SIZE = 1
