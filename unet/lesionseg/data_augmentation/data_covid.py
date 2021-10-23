@@ -23,7 +23,7 @@ def dice_coef_loss(y_true, y_pred):
 def dice_bce_loss(y_true, y_pred):
     dice_loss = -dice_coef(y_true, y_pred)
     bce = tf.keras.losses.BinaryCrossentropy(from_logits=True)
-    bce_ = bce(y_true, y_pred).numpy()
+    bce_ = bce(y_true, y_pred)
     
     dice_bce_loss = (dice_loss + bce_) / 2
     
