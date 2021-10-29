@@ -3,7 +3,7 @@ from __future__ import print_function
 # GPU
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "4"
+os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 
 
 import numpy as np
@@ -224,8 +224,8 @@ def train():
     imgs_train -= mean
     imgs_train /= std
 
-    print('Train test split')
-    X_train, X_test, y_train, y_test = train_test_split(imgs_train, imgs_mask_train, test_size=0.1)
+    # print('Train test split')
+    # X_train, X_test, y_train, y_test = train_test_split(imgs_train, imgs_mask_train, test_size=0.1)
 
     # print('-'*30)
     # print('Data Augmentation Start')
@@ -249,7 +249,7 @@ def train():
     # mask_generator = mask_datagen.flow(y_train, batch_size = BATCH_SIZE)
 
     # train = zip(image_generator, mask_generator)
-    train = zip(X_train, y_train)
+    # train = zip(X_train, y_train)
     # val = zip(X_test, y_test)
 
     # print('-'*30)
@@ -265,14 +265,14 @@ def train():
     
     print('Fitting model...')
     print('-'*30)
-    history = model.fit(train,
+    history = model.fit(imgs_train, imgs_mask_train,
                         batch_size=BATCH_SIZE, 
                         epochs=EPOCHS, 
                         verbose=1,
                         shuffle=True,
-                        validation_data=(X_test, y_test),
-                        # validation_split=0.1,
-                        steps_per_epoch=X_train.shape[0],
+                        # validation_data=(X_test, y_test),
+                        validation_split=0.1,
+                        steps_per_epoch=imgs_train.shape[0] * 0.9,
                         callbacks=[model_checkpoint]
                     )
 
