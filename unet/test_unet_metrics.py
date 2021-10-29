@@ -120,7 +120,7 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         binary_masks = predictPatient(model, input_path)
         npyMedMask = load_patient(input_mask_path)
 
-        binary_masks = get_bbox(npyMedMask, binary_masks)
+        # binary_masks = get_bbox(npyMedMask, binary_masks)
 
         # calc metrics
         print('-'*30)
@@ -142,8 +142,8 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         image = sitk.ReadImage(input_path)
         #npyImage = sitk.GetArrayFromImage(image)
 
-        itkImage.CopyInformation(image)
-        sitk.WriteImage(itkImage, output_path)
+        # itkImage.CopyInformation(image)
+        # sitk.WriteImage(itkImage, output_path)
 
         del image
 
@@ -171,7 +171,7 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_PredLungseg' + ext
+        output_path = dst_dir + '/' + exam_id + '_PredLesionseg' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -206,9 +206,9 @@ def main():
     dataset = 'dataset2'
 
     # local
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive/VoiLungBB/Testes_Melhores_Resultados'
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive/VoiLungBB/Testes_Melhores_Resultados/overrided/mask'
-    model_path = '/home/anatielsantos/mestrado/models/dissertacao/unet/Lungseg/augment/unet_exp2_100epc_lungseg_32bits_augment_best.h5'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/teste3/Test'
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/teste3/Test_mask'
+    model_path = '/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/unet_exp3_2_last.h5'
 
     # remote
     # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'

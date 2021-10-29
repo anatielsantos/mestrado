@@ -7,8 +7,8 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "4"
 
 
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
+# import pandas as pd
+# import matplotlib.pyplot as plt
 
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import *
