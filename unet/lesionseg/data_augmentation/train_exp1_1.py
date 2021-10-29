@@ -1,5 +1,17 @@
 from __future__ import print_function
 
+from tensorflow.compat.v1 import ConfigProto
+from tensorflow.compat.v1 import InteractiveSession
+
+
+def fix_gpu():
+    config = ConfigProto()
+    config.gpu_options.allow_growth = True
+    session = InteractiveSession(config=config)
+
+
+fix_gpu()
+
 # GPU
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
