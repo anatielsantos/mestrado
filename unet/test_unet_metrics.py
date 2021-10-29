@@ -142,8 +142,8 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         image = sitk.ReadImage(input_path)
         #npyImage = sitk.GetArrayFromImage(image)
 
-        # itkImage.CopyInformation(image)
-        # sitk.WriteImage(itkImage, output_path)
+        itkImage.CopyInformation(image)
+        sitk.WriteImage(itkImage, output_path)
 
         del image
 
