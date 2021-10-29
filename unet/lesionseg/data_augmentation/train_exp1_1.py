@@ -1,17 +1,5 @@
 from __future__ import print_function
 
-from tensorflow.compat.v1 import ConfigProto
-from tensorflow.compat.v1 import InteractiveSession
-
-
-def fix_gpu():
-    config = ConfigProto()
-    config.gpu_options.allow_growth = True
-    session = InteractiveSession(config=config)
-
-
-fix_gpu()
-
 # GPU
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
@@ -24,14 +12,14 @@ import matplotlib.pyplot as plt
 
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import *
-from tensorflow.keras.optimizers import Adam, SGD
-from tensorflow.keras.callbacks import ModelCheckpoint, LearningRateScheduler, History
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.callbacks import ModelCheckpoint
+# from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 from skimage.segmentation import mark_boundaries
-from skimage.exposure import rescale_intensity
-from skimage.transform import resize
-from skimage.io import imsave
+# from skimage.exposure import rescale_intensity
+# from skimage.transform import resize
+# from skimage.io import imsave
 import skimage.transform as trans
 import skimage.io as io
 from sklearn.model_selection import train_test_split
