@@ -227,33 +227,34 @@ def train():
     print('Train test split')
     X_train, X_test, y_train, y_test = train_test_split(imgs_train, imgs_mask_train, test_size=0.1)
 
-    print('-'*30)
-    print('Data Augmentation Start')
-    data_gen_args = dict(shear_range=0.1,
-			rotation_range=20,
-			width_shift_range=0.1, 
-			height_shift_range=0.1,
-			zoom_range=0.3,
-			fill_mode='constant',
-			horizontal_flip=True,
-			vertical_flip=True,
-			cval=0)
-    image_datagen = ImageDataGenerator(**data_gen_args)
-    mask_datagen = ImageDataGenerator(**data_gen_args)
+    # print('-'*30)
+    # print('Data Augmentation Start')
+    # data_gen_args = dict(shear_range=0.1,
+	# 		rotation_range=20,
+	# 		width_shift_range=0.1, 
+	# 		height_shift_range=0.1,
+	# 		zoom_range=0.3,
+	# 		fill_mode='constant',
+	# 		horizontal_flip=True,
+	# 		vertical_flip=True,
+	# 		cval=0)
+    # image_datagen = ImageDataGenerator(**data_gen_args)
+    # mask_datagen = ImageDataGenerator(**data_gen_args)
 
-    seed = 1
-    image_datagen.fit(X_train, augment=True, seed=seed)
-    mask_datagen.fit(y_train, augment=True, seed=seed)
+    # seed = 1
+    # image_datagen.fit(X_train, augment=True, seed=seed)
+    # mask_datagen.fit(y_train, augment=True, seed=seed)
 
-    image_generator = image_datagen.flow(X_train, batch_size = BATCH_SIZE)
-    mask_generator = mask_datagen.flow(y_train, batch_size = BATCH_SIZE)
+    # image_generator = image_datagen.flow(X_train, batch_size = BATCH_SIZE)
+    # mask_generator = mask_datagen.flow(y_train, batch_size = BATCH_SIZE)
 
-    train = zip(image_generator, mask_generator)
+    # train = zip(image_generator, mask_generator)
+    train = zip(X_train, y_train)
     # val = zip(X_test, y_test)
 
-    print('-'*30)
-    print('Data Augmentation End')
-    print('-'*30)
+    # print('-'*30)
+    # print('Data Augmentation End')
+    # print('-'*30)
 
     print('Creating and compiling model...')
     print('-'*30)
