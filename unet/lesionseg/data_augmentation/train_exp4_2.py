@@ -199,8 +199,8 @@ def unet(pretrained_weights = None,input_size = (640,640,1)):
 
 def load_train_data():
     # remote
-    imgs_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/final_tests/train_images_exp4.npz', allow_pickle=True)
-    masks_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/final_tests/train_masks_exp4.npz', allow_pickle=True)
+    imgs_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/final_tests/train_images_exp4_lesion.npz', allow_pickle=True)
+    masks_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/final_tests/train_masks_exp4_lesion.npz', allow_pickle=True)
 
     imgs_train = imgs_train_npz['arr_0']
     masks_train = masks_train_npz['arr_0']
