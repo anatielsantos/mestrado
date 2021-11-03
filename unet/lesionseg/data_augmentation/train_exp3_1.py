@@ -11,7 +11,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from tensorflow.keras.models import Model
-from tensorflow.keras.layers import *dormindo menos ainda por causa
+from tensorflow.keras.layers import *
 from tensorflow.keras.optimizers import Adam, SGD
 from tensorflow.keras.callbacks import ModelCheckpoint, LearningRateScheduler, History
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
