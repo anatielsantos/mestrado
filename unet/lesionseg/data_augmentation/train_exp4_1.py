@@ -224,65 +224,68 @@ def train():
     imgs_train -= mean
     imgs_train /= std
 
-    # print('Train test split')
-    # X_train, X_test, y_train, y_test = train_test_split(imgs_train, imgs_mask_train, test_size=0.1)
+    imgs_mask_train = imgs_mask_train.astype(np.float32)
 
-    # print('-'*30)
-    # print('Data Augmentation Start')
-    # data_gen_args = dict(shear_range=0.1,
-	# 		rotation_range=20,
-	# 		width_shift_range=0.1, 
-	# 		height_shift_range=0.1,
-	# 		zoom_range=0.3,
-	# 		fill_mode='constant',
-	# 		horizontal_flip=True,
-	# 		vertical_flip=True,
-	# 		cval=0)
-    # image_datagen = ImageDataGenerator(**data_gen_args)
-    # mask_datagen = ImageDataGenerator(**data_gen_args)
+    print('Train test split')
+    X_train, X_test, y_train, y_test = train_test_split(imgs_train, imgs_mask_train, test_size=0.1)
 
-    # seed = 1
-    # image_datagen.fit(X_train, augment=True, seed=seed)
-    # mask_datagen.fit(y_train, augment=True, seed=seed)
+    print('-'*30)
+    print('Data Augmentation Start')
+    data_gen_args = dict(shear_range=0.1,
+			rotation_range=20,
+			width_shift_range=0.1, 
+			height_shift_range=0.1,
+			zoom_range=0.3,
+			fill_mode='constant',
+			horizontal_flip=True,
+			vertical_flip=True,
+			cval=0)
+    image_datagen = ImageDataGenerator(**data_gen_args)
+    mask_datagen = ImageDataGenerator(**data_gen_args)
 
-    # image_generator = image_datagen.flow(X_train, batch_size = BATCH_SIZE)
-    # mask_generator = mask_datagen.flow(y_train, batch_size = BATCH_SIZE)
+    seed = 1
+    image_datagen.fit(X_train, augment=True, seed=seed)
+    mask_datagen.fit(y_train, augment=True, seed=seed)
 
-    # train = zip(image_generator, mask_generator)
+    image_generator = image_datagen.flow(X_train, batch_size = BATCH_SIZE)
+    mask_generator = mask_datagen.flow(y_train, batch_size = BATCH_SIZE)
+
+    train = zip(image_generator, mask_generator)
     # train = zip(X_train, y_train)
     # val = zip(X_test, y_test)
 
-    # print('-'*30)
-    # print('Data Augmentation End')
-    # print('-'*30)
+    print('-'*30)
+    print('Data Augmentation End')
+    print('-'*30)
 
     print('Creating and compiling model...')
     print('-'*30)
     
     model = unet()
     #Saving the weights and the loss of the best predictions we obtained
-    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/models/dissertacao/final_tests/unet_exp4_1_best.h5', monitor='val_loss', save_best_only=True, mode="min")
+    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/models/dissertacao/final_tests/augment_unet_exp4_1_best.h5', monitor='val_loss', save_best_only=True, mode="min")
     
     print('Fitting model...')
     print('-'*30)
-    history = model.fit(imgs_train, imgs_mask_train,
+    # history = model.fit(imgs_train, imgs_mask_train,
+    history = model.fit(train,
                         batch_size=BATCH_SIZE, 
                         epochs=EPOCHS, 
                         verbose=1,
                         shuffle=True,
-                        # validation_data=(X_test, y_test),
-                        validation_split=0.1,
+                        validation_data=(X_test, y_test),
+                        # validation_split=0.1,
                         steps_per_epoch=imgs_train.shape[0] * 0.9,
                         callbacks=[model_checkpoint]
                     )
 
-    model.save('/data/flavio/anatiel/models/dissertacao/final_tests/unet_exp4_1_last.h5')
+    model.save('/data/flavio/anatiel/models/dissertacao/final_tests/augment_unet_exp4_1_last.h5')
         
     # convert the history.history dict to a pandas DataFrame:     
     hist_df = pd.DataFrame(history.history)
     
     # save to json:  
-    hist_json_file = '/data/flavio/anatiel/models/dissertacao/final_tests/unet_exp4_1.json'
+    hist_json_file = '/data/flavio/anatiel/models/dissertacao/final_tests/augment_unet_exp4_1.json'
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("history saved")
@@ -294,7 +297,7 @@ def train():
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Val'], loc='upper left')
     # save plot to file
-    plt.savefig('/data/flavio/anatiel/models/dissertacao/final_tests/unet_exp4_1.png')
+    plt.savefig('/data/flavio/anatiel/models/dissertacao/final_tests/augment_unet_exp4_1.png')
     # plt.show()
     
 if __name__ == "__main__":
