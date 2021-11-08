@@ -206,14 +206,14 @@ def main():
     dataset = 'dataset2'
 
     # local
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/teste2_dataset2/Test'
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/teste2_dataset2/Test_mask'
-    model_path = '/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/original_unet_exp2_2_last.h5'
+    # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/teste2_dataset2/Test'
+    # main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/teste2_dataset2/Test_mask'
+    # model_path = '/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/original_unet_exp2_2_last.h5'
 
     # remote
-    # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
-    # main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/mask'
-    # model_path = '/data/flavio/anatiel/models/dissertacao/unet_500epc_last.h5'
+    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/tests'
+    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/tests/Test_mask'
+    model_path = '/data/flavio/anatiel/models/dissertacao/final_tests/original_unet_exp4_1_best.h5'
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
