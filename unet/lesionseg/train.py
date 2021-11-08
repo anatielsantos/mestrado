@@ -75,10 +75,10 @@ def unet(pretrained_weights = None,input_size = (640,640,1)):
     otimizador = Adam(lr=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.000000199)
     
     # 1 loss function
-    model.compile(optimizer = otimizador,  loss=dice_coef_loss, metrics=[dice_coef], run_eagerly=True)
+    # model.compile(optimizer = otimizador,  loss=dice_coef_loss, metrics=[dice_coef], run_eagerly=True)
 
     # 2 loss function
-    # model.compile(optimizer = otimizador,  loss=dice_bce_loss, metrics=[dice_coef], run_eagerly=True)
+    model.compile(optimizer = otimizador,  loss=dice_bce_loss, metrics=[dice_coef], run_eagerly=True)
 
 
 
