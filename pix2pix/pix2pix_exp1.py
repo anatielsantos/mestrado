@@ -24,7 +24,7 @@ import matplotlib.pyplot as plt
 # train settings
 BUFFER_SIZE = 400
 BATCH_SIZE = 1
-EPOCHS = 200
+EPOCHS = 150
 IMG_WIDTH = 640
 IMG_HEIGHT = 640
 INPUT_CHANNELS = 1
@@ -79,20 +79,20 @@ def train(path_weights, src_images_train, tar_images_train):
     # src_images_train = rescale_intensity(src_images_train, in_range=(-1, 1))
 
     # train model
-    checkpoint = ModelCheckpoint(path_weights+'gan_exp1_200epc_best.hdf5', monitor='dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
+    checkpoint = ModelCheckpoint(path_weights+'gan_exp1_1_best.h5', monitor='dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
     #checkpoint2 = ModelCheckpoint(path_weights+'best_weights_val_gan_512_masked_lung_blur_500epc.hdf5', monitor='val_dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
     
     history = model.fit(src_images_train, tar_images_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[checkpoint])
     #history=model.fit(src_images_train, tar_images_train, batch_size=BATCH_SIZE, epochs=EPOCHS,callbacks=[checkpoint,checkpoint2],validation_data=(src_images_val, tar_images_val))
     
-    model.save(path_weights+'gan_exp1_200epc_last.hdf5')
+    model.save(path_weights+'gan_exp1_1_last.h5')
     
     # convert the history.history dict to a pandas DataFrame:     
     hist_df = pd.DataFrame(history.history) 
     
     # save to json:  
     print("Saving history")
-    hist_json_file = path_json+'gan_exp1_history_200epc.json' 
+    hist_json_file = path_json+'gan_exp1_1_history_150epc.json' 
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("History saved")
@@ -105,22 +105,22 @@ def train(path_weights, src_images_train, tar_images_train):
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Val', 'Loss'], loc='upper left')
     # save plot to file
-    plt.savefig(path_plot+'gan_exp1_plot_200epc.png')
+    plt.savefig(path_plot+'gan_exp1_1_plot_150epc.png')
     # plt.show()
 
 if __name__=="__main__":
     # dataset path remote
-    path_src_train = '/data/flavio/anatiel/datasets/dissertacao/train_images.npz'
-    path_mask_train = '/data/flavio/anatiel/datasets/dissertacao/train_masks.npz'
+    path_src_train = '/data/flavio/anatiel/datasets/dissertacao/final_tests/train_images_exp1_lesion.npz'
+    path_mask_train = '/data/flavio/anatiel/datasets/dissertacao/final_tests/train_masks_exp1_lesion.npz'
 
     # dataset path local
     # path_src_train = '/home/anatielsantos/mestrado/datasets/dissertacao/train_images.npz'
     # path_mask_train = '/home/anatielsantos/mestrado/datasets/dissertacao/train_masks.npz'
 
     # paths save
-    path_weights = '/data/flavio/anatiel/models/dissertacao/'
-    path_json = '/data/flavio/anatiel/models/dissertacao/'
-    path_plot = '/data/flavio/anatiel/models/dissertacao/'
+    path_weights = '/data/flavio/anatiel/models/dissertacao/final_tests/'
+    path_json = '/data/flavio/anatiel/models/dissertacao/final_tests/'
+    path_plot = '/data/flavio/anatiel/models/dissertacao/final_tests/'
 
     # load dataset
     [src_images_train, tar_images_train] = load_images(path_src_train, path_mask_train)
