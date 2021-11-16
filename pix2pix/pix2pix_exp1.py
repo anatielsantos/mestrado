@@ -79,13 +79,13 @@ def train(path_weights, src_images_train, tar_images_train):
     # src_images_train = rescale_intensity(src_images_train, in_range=(-1, 1))
 
     # train model
-    checkpoint = ModelCheckpoint(path_weights+'gan_exp1_1_best.h5', monitor='dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
+    checkpoint = ModelCheckpoint(path_weights+'gan_exp1_1_best.hdf5', monitor='dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
     #checkpoint2 = ModelCheckpoint(path_weights+'best_weights_val_gan_512_masked_lung_blur_500epc.hdf5', monitor='val_dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
     
     history = model.fit(src_images_train, tar_images_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[checkpoint])
     #history=model.fit(src_images_train, tar_images_train, batch_size=BATCH_SIZE, epochs=EPOCHS,callbacks=[checkpoint,checkpoint2],validation_data=(src_images_val, tar_images_val))
     
-    model.save(path_weights+'gan_exp1_1_last.h5')
+    model.save(path_weights+'gan_exp1_1_last.hdf5')
     
     # convert the history.history dict to a pandas DataFrame:     
     hist_df = pd.DataFrame(history.history) 
