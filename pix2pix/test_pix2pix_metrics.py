@@ -78,11 +78,11 @@ def predictPatient(model, image):
     print("Image shape:", npyImage.shape)
 
     # Normalization of the train set (Exp 1)
-    npyImage = npyImage.astype('float32')
-    mean = np.mean(npyImage)  # mean for data centering
-    std = np.std(npyImage)  # std for data normalization
-    npyImage -= mean
-    npyImage /= std
+    # npyImage = npyImage.astype('float32')
+    # mean = np.mean(npyImage)  # mean for data centering
+    # std = np.std(npyImage)  # std for data normalization
+    # npyImage -= mean
+    # npyImage /= std
 
     # npyImage = rescale_intensity(npyImage, in_range=(0, 1))
     # npyImage = npyImage.astype('float32')
@@ -101,8 +101,8 @@ def predictPatient(model, image):
             npyImagePredict = np.concatenate([npyImagePredict,pred],axis=0)
     
     npyImagePredict = preprocess_squeeze(npyImagePredict)
-    npyImagePredict = np.around(npyImagePredict, decimals=0)
-    npyImagePredict = (npyImagePredict>0.5)*1
+    # npyImagePredict = np.around(npyImagePredict, decimals=0)
+    # npyImagePredict = (npyImagePredict>0.5)*1
 
     return npyImagePredict.astype(np.float32)
 
@@ -181,7 +181,7 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_PredExp1_1_best' + ext
+        output_path = dst_dir + '/' + exam_id + '_PredExp1_2_last' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -217,7 +217,7 @@ def main():
     # local
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/teste1_dataset1/Test'
     main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/teste1_dataset1/Test_mask'
-    model_path = '/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/gan_exp1_1_best.h5'
+    model_path = '/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/gan_exp1_2_150_epc_last.hdf5'
 
     # remote
     # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'

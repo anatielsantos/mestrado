@@ -89,24 +89,24 @@ def compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, de
         list_images.append(images)
         list_masks.append(masks)
 
-    np.savez_compressed(f"{output_path}/{joint}_images_exp5_lesion", list_images)
-    np.savez_compressed(f"{output_path}/{joint}_masks_exp5_lesion", list_masks)
+    np.savez_compressed(f"{output_path}/{joint}_images_exp2_lesion", list_images)
+    np.savez_compressed(f"{output_path}/{joint}_masks_exp2_lesion", list_masks)
 
     # np.save(f"{output_path}/{joint}_images.npy", list_images)
     # np.save(f"{output_path}/{joint}_masks.npy", list_masks)
             
 def main():
     ext = '.nii.gz'
-    joint = 'train' # [train, test]
-    main_dir_image = f'/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/teste5/Train'
-    main_dir_mask = f'/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/teste5/Train_mask'
+    joint = 'test' # [train, test]
+    main_dir_image = f'/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/teste2_dataset2/Test'
+    main_dir_mask = f'/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/teste2_dataset2/Test_mask'
     
     src = main_dir_image
     tar = main_dir_mask
     src_dir = '{}'.format(src)
     mask_dir = '{}'.format(tar)
     
-    dst_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/teste5'
+    dst_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/teste2_dataset2'
 
     compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, desc = f'Compressing {joint} datasets', remove_no_lesion=True)
 
