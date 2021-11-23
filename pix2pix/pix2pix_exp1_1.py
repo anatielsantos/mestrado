@@ -59,7 +59,7 @@ def load_images(path_src, path_mask):
     src = src_npz['arr_0']
     tar = tar_npz['arr_0']
     
-    return np.float32(np.expand_dims(np.concatenate(src), axis=-1)), np.float32(np.expand_dims(np.concatenate(tar), axis=-1))
+    return np.float32(np.expand_dims(np.concatenate(src), axis=-1)), np.expand_dims(np.concatenate(tar), axis=-1)
 
 def train(path_weights, src_images_train, tar_images_train):    
     # dataset = [src_images_train, tar_images_train]
@@ -79,20 +79,20 @@ def train(path_weights, src_images_train, tar_images_train):
     # src_images_train = rescale_intensity(src_images_train, in_range=(-1, 1))
 
     # train model
-    checkpoint = ModelCheckpoint(path_weights+'gan_exp1_1_best.hdf5', monitor='dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
-    #checkpoint2 = ModelCheckpoint(path_weights+'best_weights_val_gan_512_masked_lung_blur_500epc.hdf5', monitor='val_dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
+    checkpoint = ModelCheckpoint(path_weights+'gan_test2_exp1_1_best.hdf5', monitor='dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
+    #checkpoint2 = ModelCheckpoint(path_weights+'best_weights_val__test2_512_masked_lung_blur_500epc.hdf5', monitor='val_dice', verbose=1, save_best_only=True,save_weights_only=True, mode='max')
     
     history = model.fit(src_images_train, tar_images_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[checkpoint])
     #history=model.fit(src_images_train, tar_images_train, batch_size=BATCH_SIZE, epochs=EPOCHS,callbacks=[checkpoint,checkpoint2],validation_data=(src_images_val, tar_images_val))
     
-    model.save(path_weights+'gan_exp1_1_last.hdf5')
+    model.save(path_weights+'gan_test2_exp1_1_last.hdf5')
     
     # convert the history.history dict to a pandas DataFrame:     
     hist_df = pd.DataFrame(history.history) 
     
     # save to json:  
     print("Saving history")
-    hist_json_file = path_json+'gan_exp1_1_history_150epc.json' 
+    hist_json_file = path_json+'gan_test2_exp1_1_history_150epc.json' 
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("History saved")
@@ -105,7 +105,7 @@ def train(path_weights, src_images_train, tar_images_train):
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Val', 'Loss'], loc='upper left')
     # save plot to file
-    plt.savefig(path_plot+'gan_exp1_1_plot_150epc.png')
+    plt.savefig(path_plot+'gan_test2_exp1_1_plot_150epc.png')
     # plt.show()
 
 if __name__=="__main__":
