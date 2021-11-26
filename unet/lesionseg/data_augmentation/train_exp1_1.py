@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+import tensorflow as tf
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import *
 from tensorflow.keras.optimizers import Adam
@@ -229,34 +230,61 @@ def train():
     print('Train test split')
     X_train, X_test, y_train, y_test = train_test_split(imgs_train, imgs_mask_train, test_size=0.1)
 
-    print('-'*30)
-    print('Data Augmentation Start')
-    data_gen_args = dict(shear_range=0.1,
-			rotation_range=20,
-			width_shift_range=0.1, 
-			height_shift_range=0.1,
-			zoom_range=0.3,
-			fill_mode='constant',
-			horizontal_flip=True,
-			vertical_flip=True,
-			cval=0)
-    image_datagen = ImageDataGenerator(**data_gen_args)
-    mask_datagen = ImageDataGenerator(**data_gen_args)
+    # print('-'*30)
+    # print('Data Augmentation Start')
+    # data_gen_args = dict(shear_range=0.1,
+	# 		rotation_range=20,
+	# 		width_shift_range=0.1, 
+	# 		height_shift_range=0.1,
+	# 		zoom_range=0.3,
+	# 		fill_mode='constant',
+	# 		horizontal_flip=True,
+	# 		vertical_flip=True,
+	# 		cval=0)
+    # image_datagen = ImageDataGenerator(**data_gen_args)
+    # mask_datagen = ImageDataGenerator(**data_gen_args)
 
-    seed = 1
-    image_datagen.fit(X_train, augment=True, seed=seed)
-    mask_datagen.fit(y_train, augment=True, seed=seed)
+    # seed = 1
+    # image_datagen.fit(X_train, augment=True, seed=seed)
+    # mask_datagen.fit(y_train, augment=True, seed=seed)
 
-    image_generator = image_datagen.flow(X_train, seed=seed)
-    mask_generator = mask_datagen.flow(y_train, seed=seed)
+    # image_generator = image_datagen.flow(X_train, seed=seed)
+    # mask_generator = mask_datagen.flow(y_train, seed=seed)
 
-    train = zip(image_generator, mask_generator)
+    # train = zip(image_generator, mask_generator)
     # train = zip(X_train, y_train)
     # val = zip(X_test, y_test)
 
     ###########################################################
-  
+    def my_image_mask_generator(image_data_generator, mask_data_generator):
+        train_generator = zip(image_data_generator, mask_data_generator)
+        for (img, mask) in train_generator:
+            yield (img, mask)
 
+    SEED = 1
+
+    image_datagen = ImageDataGenerator(
+        width_shift_range = 0.1,
+        height_shift_range = 0.1,
+        rotation_range = 10,
+        zoom_range = 0.1
+    )
+
+    mask_datagen = ImageDataGenerator(
+        width_shift_range = 0.1,
+        height_shift_range = 0.1,
+        rotation_range = 10,
+        zoom_range = 0.1
+    )
+
+    # seed = 1
+    # image_datagen.fit(X_train, augment=True, seed=seed)
+    # mask_datagen.fit(y_train, augment=True, seed=seed)
+
+    image_generator = image_datagen.flow(X_train, seed=seed)
+    mask_generator = mask_datagen.flow(y_train, seed=seed)
+
+    train = my_image_mask_generator(image_generator, mask_generator)
     ###########################################################
 
     print('-'*30)
