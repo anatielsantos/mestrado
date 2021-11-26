@@ -281,8 +281,8 @@ def train():
     # image_datagen.fit(X_train, augment=True, seed=seed)
     # mask_datagen.fit(y_train, augment=True, seed=seed)
 
-    image_generator = image_datagen.flow(X_train, seed=seed)
-    mask_generator = mask_datagen.flow(y_train, seed=seed)
+    image_generator = image_datagen.flow(X_train,  batch_size = BATCH_SIZE, seed=seed)
+    mask_generator = mask_datagen.flow(y_train,  batch_size = BATCH_SIZE, seed=seed)
 
     train = my_image_mask_generator(image_generator, mask_generator)
     ###########################################################
