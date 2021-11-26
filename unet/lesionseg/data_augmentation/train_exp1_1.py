@@ -261,7 +261,7 @@ def train():
         for (img, mask) in train_generator:
             yield (img, mask)
 
-    SEED = 1
+    seed = 1
 
     image_datagen = ImageDataGenerator(
         width_shift_range = 0.1,
