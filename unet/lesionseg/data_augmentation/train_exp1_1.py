@@ -78,10 +78,10 @@ def unet(pretrained_weights = None,input_size = (640,640,1)):
     otimizador = Adam(lr=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.000000199)
     
     # 1 loss function
-    model.compile(optimizer = otimizador,  loss=dice_coef_loss, metrics=[dice_coef], run_eagerly=True)
+    model.compile(optimizer = otimizador,  loss=dice_coef_loss, metrics=['accuracy', dice_coef], run_eagerly=True)
 
     # 2 loss function
-    # model.compile(optimizer = otimizador,  loss=dice_bce_loss, metrics=[dice_coef], run_eagerly=True)
+    # model.compile(optimizer = otimizador,  loss=dice_bce_loss, metrics=['accuracy', dice_coef], run_eagerly=True)
 
 
 
@@ -225,7 +225,7 @@ def train():
     imgs_train -= mean
     imgs_train /= std
 
-    imgs_mask_train = imgs_mask_train.astype(np.float32)
+    # imgs_mask_train = imgs_mask_train.astype(np.float32)
 
     print('Train test split')
     X_train, X_test, y_train, y_test = train_test_split(imgs_train, imgs_mask_train, test_size=0.1)
@@ -278,8 +278,8 @@ def train():
     )
 
     # seed = 1
-    # image_datagen.fit(X_train, augment=True, seed=seed)
-    # mask_datagen.fit(y_train, augment=True, seed=seed)
+    image_datagen.fit(X_train, augment=True, seed=seed)
+    mask_datagen.fit(y_train, augment=True, seed=seed)
 
     image_generator = image_datagen.flow(X_train,  batch_size = BATCH_SIZE, seed=seed)
     mask_generator = mask_datagen.flow(y_train,  batch_size = BATCH_SIZE, seed=seed)
