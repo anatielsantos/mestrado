@@ -292,8 +292,9 @@ def train():
 
     train = my_image_mask_generator(image_generator, mask_generator)
 
-    for x in train:
-        print(np.unique(x[1]))
+    for x in mask_generator:
+        print(np.amin(x))
+        print(np.amax(x))
         break
     ###########################################################
 
