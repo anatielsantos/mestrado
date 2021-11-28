@@ -285,6 +285,9 @@ def train():
     mask_generator = mask_datagen.flow(y_train,  batch_size = BATCH_SIZE, seed=seed)
 
     train = my_image_mask_generator(image_generator, mask_generator)
+
+    for x in train:
+        print(x[0].shape)
     ###########################################################
 
     print('-'*30)
