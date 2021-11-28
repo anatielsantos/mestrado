@@ -301,6 +301,7 @@ def train():
     print('Fitting model...')
     print('-'*30)
     # history = model.fit(imgs_train, imgs_mask_train,
+    exit()
     history = model.fit(train,
                         batch_size=BATCH_SIZE, 
                         epochs=EPOCHS, 
