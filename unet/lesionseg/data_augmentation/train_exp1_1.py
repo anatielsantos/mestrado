@@ -273,6 +273,8 @@ def train():
     )
 
     mask_datagen = ImageDataGenerator(
+        featurewise_center=False, samplewise_center=False,
+        featurewise_std_normalization=False, samplewise_std_normalization=False,
         width_shift_range = 0.1,
         height_shift_range = 0.1,
         rotation_range = 10,
