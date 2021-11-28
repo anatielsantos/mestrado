@@ -314,15 +314,13 @@ def train():
     print('Fitting model...')
     print('-'*30)
     # history = model.fit(imgs_train, imgs_mask_train,
-    exit()
-    history = model.fit(train,
-                        batch_size=BATCH_SIZE, 
+    history = model.fit_generator(train, 
                         epochs=EPOCHS, 
                         verbose=1,
                         shuffle=True,
                         validation_data=(X_test, y_test),
                         # validation_split=0.1,
-                        steps_per_epoch=imgs_train.shape[0] * 0.9,
+                        steps_per_epoch=np.ceil(imgs_train.shape[0] / BATCH_SIZE),
                         callbacks=[model_checkpoint]
                     )
 
