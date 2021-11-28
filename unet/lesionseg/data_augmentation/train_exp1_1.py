@@ -217,6 +217,8 @@ def train():
     print('Loaded train images: ', imgs_train.shape, imgs_train.dtype, imgs_mask_train.shape, imgs_mask_train.dtype)
     print('-'*30)
 
+    print(np.unique(imgs_mask_train))
+
     mean = np.mean(imgs_train)  # mean for data centering
     std = np.std(imgs_train)  # std for data normalization
 
