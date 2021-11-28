@@ -232,6 +232,8 @@ def train():
     print('Train test split')
     X_train, X_test, y_train, y_test = train_test_split(imgs_train, imgs_mask_train, test_size=0.1)
 
+    print("depois do split: ", np.unique(imgs_mask_train))
+
     # print('-'*30)
     # print('Data Augmentation Start')
     # data_gen_args = dict(shear_range=0.1,
