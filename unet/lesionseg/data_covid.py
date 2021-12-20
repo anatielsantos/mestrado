@@ -31,12 +31,12 @@ def dice_bce_loss(y_true, y_pred):
 
 def load_train_data():
     # remote
-    imgs_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/train_images_clahe_ds1.npz', allow_pickle=True)
-    masks_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/train_masks_clahe_ds1.npz', allow_pickle=True)
+    # imgs_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/train_images_clahe_ds1.npz', allow_pickle=True)
+    # masks_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/train_masks_clahe_ds1.npz', allow_pickle=True)
 
     # local
-    # imgs_train_npz = np.load('/home/anatielsantos/mestrado/datasets/dissertacao/train_images.npz', allow_pickle=True)
-    # masks_train_npz = np.load('/home/anatielsantos/mestrado/datasets/dissertacao/train_masks.npz', allow_pickle=True)
+    imgs_train_npz = np.load('/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/teste2_dataset2/train_images_exp2_lesion.npz', allow_pickle=True)
+    masks_train_npz = np.load('/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/teste2_dataset2/train_masks_exp2_lesion.npz', allow_pickle=True)
 
     imgs_train = imgs_train_npz['arr_0']
     masks_train = masks_train_npz['arr_0']

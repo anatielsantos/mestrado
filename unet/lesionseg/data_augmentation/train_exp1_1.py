@@ -314,7 +314,7 @@ def train():
     print('Fitting model...')
     print('-'*30)
     # history = model.fit(imgs_train, imgs_mask_train,
-    history = model.fit_generator(train, 
+    history = model.fit(train, 
                         epochs=EPOCHS, 
                         verbose=1,
                         shuffle=True,
