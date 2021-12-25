@@ -89,17 +89,20 @@ def compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, de
         list_masks.append(masks)
 
         # min max val
-        for i in range(images.shape[0]):
-            if np.amax(images[i]) > max:
-                max = np.amax(images[i])
-            if np.amin(images[i]) < min:
-                min = np.amin(images[i])
+        for c in range(images.shape[0]):
+            if (np.amax(images[c]) > 0):
+                ds = np.unique(sorted(np.asarray(images[c].ravel())))
+                if ds[1] < min:
+                    min = ds[1]
 
-        print("Menor pixel do dataset:", min)
-        print("Maior pixel do dataset:", max)
+                if ds[-1] > max:
+                    max = ds[-1]
 
-    np.savez_compressed(f"{output_path}/{joint}_images", list_images)
-    np.savez_compressed(f"{output_path}/{joint}_masks", list_masks)
+    print("Segundo menor pixel do dataset:", min)
+    print("Maior pixel do dataset:", max)
+
+    # np.savez_compressed(f"{output_path}/{joint}_images", list_images)
+    # np.savez_compressed(f"{output_path}/{joint}_masks", list_masks)
 
     # np.save(f"{output_path}/{joint}_images.npy", list_images)
     # np.save(f"{output_path}/{joint}_masks.npy", list_masks)
@@ -107,7 +110,7 @@ def compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, de
 def main():
     ext = '.nii.gz'
     joint = 'test' # [train, test]
-    main_dir_image = f'/home/anatielsantos/mestrado/datasets/dissertacao/dataset2/image'
+    main_dir_image = f'/home/anatielsantos/mestrado/datasets/dissertacao/dataset2/image/ZeroPedding/lung_extracted'
     main_dir_mask = f'/home/anatielsantos/mestrado/datasets/dissertacao/dataset2/lesion_mask'
     
     src = main_dir_image
