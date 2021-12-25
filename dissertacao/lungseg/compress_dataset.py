@@ -38,9 +38,6 @@ def load_image(path_image, path_mask, remove_no_lesion = False):
             print(f"Shape depois da remoção de {len(remove_list_mask)} slices:", npyImage.shape)
             # print(f"Slices removidos {(a-b)}")
 
-        # del(npyMask[i])
-        # npyMask = np.delete(npyMask, i)
-
         del image
         del mask
 
@@ -84,10 +81,22 @@ def compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, de
         input_mask_paths.append(input_mask_path)
 
     list_images, list_masks = list(), list()
+    min = 99999
+    max = 0
     for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
         images, masks = load_image(input_src_paths[i], input_mask_paths[i], remove_no_lesion=remove_no_lesion)
         list_images.append(images)
         list_masks.append(masks)
+
+        # min max val
+        for i in range(images.shape[0]):
+            if np.amax(images[i]) > max:
+                max = np.amax(images[i])
+            if np.amin(images[i]) < min:
+                min = np.amin(images[i])
+
+        print("Menor pixel do dataset:", min)
+        print("Maior pixel do dataset:", max)
 
     np.savez_compressed(f"{output_path}/{joint}_images", list_images)
     np.savez_compressed(f"{output_path}/{joint}_masks", list_masks)
@@ -98,8 +107,8 @@ def compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, de
 def main():
     ext = '.nii.gz'
     joint = 'test' # [train, test]
-    main_dir_image = f'/home/anatielsantos/mestrado/datasets/dissertacao/dataset2/image/ZeroPedding/Test'
-    main_dir_mask = f'/home/anatielsantos/mestrado/datasets/dissertacao/dataset2/lesion_mask/LesionZeroPedding/sample'
+    main_dir_image = f'/home/anatielsantos/mestrado/datasets/dissertacao/dataset2/image'
+    main_dir_mask = f'/home/anatielsantos/mestrado/datasets/dissertacao/dataset2/lesion_mask'
     
     src = main_dir_image
     tar = main_dir_mask

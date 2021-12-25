@@ -259,7 +259,6 @@ class Pix2Pix(tf.keras.Model):
         return self.generator.predict(data,batch_size=batch_size)
 
     def test_step(self,data):
-        print("TESTE",len(data))
         input_image, target = data
         pred = self.generator(input_image,training=False)
         print(target)
