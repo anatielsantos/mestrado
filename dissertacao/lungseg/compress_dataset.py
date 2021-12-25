@@ -124,4 +124,3 @@ if __name__=="__main__":
     main()
     stop = time.time()
     print("Elapsed time: "+str(stop - start)+" seconds")
-    
