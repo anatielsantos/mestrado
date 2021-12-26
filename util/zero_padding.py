@@ -17,16 +17,17 @@ def zero_pad(width, exam_id, input_path, output_path):
         image = sitk.ReadImage(input_path)
         npyImage = sitk.GetArrayFromImage(image)
 
-        if npyImage.shape[1] != npyImage.shape[2]:
-            raise ValueError("Image needs to be square.")
+        # if npyImage.shape[1] != npyImage.shape[2]:
+        #     raise ValueError("Image needs to be square.")
 
-        if width <= npyImage.shape[1]:
-            raise ValueError("New width needs to be bigger than current.")    
+        # if width <= npyImage.shape[1]:
+        #     raise ValueError("New width needs to be bigger than current.")
 
         new_width = (width - npyImage.shape[1]) // 2
+        new_heigth = (width - npyImage.shape[2]) // 2
 
         # image_pad = np.pad(npyImage, new_width, mode='minimum') # 3D
-        image_pad = np.pad(npyImage, [(0,0), (new_width, new_width), (new_width, new_width)], 'constant', constant_values=(np.amin(npyImage))) # 2D
+        image_pad = np.pad(npyImage, [(0,0), (new_width, new_width), (new_heigth, new_heigth)], 'constant', constant_values=(np.amin(npyImage))) # 2D
         
         # zerar padding
         imgMin = np.amin(image_pad)
@@ -52,7 +53,7 @@ def exec_zero_padding(src_dir, dst_dir, ext, width, reverse = False, desc = None
     except:
         os.mkdir(dst_dir)    
 
-    input_pathAll = glob.glob(src_dir + '/*10*' + ext)
+    input_pathAll = glob.glob(src_dir + '/*' + ext)
     input_pathAll.sort(reverse=reverse) 
 
     exam_ids = []
@@ -77,9 +78,9 @@ def exec_zero_padding(src_dir, dst_dir, ext, width, reverse = False, desc = None
             
 def main():
     ext = '.nii.gz'
-    width = 640 # new width
-    dataset = 'dataset2'
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/lesion_mask'
+    width = 534 # new width
+    dataset = 'dataset1'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox'
     
     src_dir = '{}'.format(main_dir)
     dst_dir = '{}/ZeroPedding'.format(main_dir)

@@ -20,7 +20,14 @@ def lung_extract(exam_id, src_path, mask_path, output_path):
         mask = sitk.ReadImage(mask_path)
         npyMask = sitk.GetArrayFromImage(mask)
 
-        newImage = npyImage * npyMask
+        # postivate values if negative values
+        imgMin = np.amin(npyImage)
+        npyImage_aux = npyImage
+        if (imgMin < 0):
+            imgMin = imgMin * -1
+            npyImage_aux = npyImage + imgMin
+
+        newImage = npyImage_aux * npyMask
 
         itkImage = sitk.GetImageFromArray(newImage)
         sitk.WriteImage(itkImage, output_path)
@@ -31,7 +38,8 @@ def lung_extract(exam_id, src_path, mask_path, output_path):
         print("type error: " + str(e))
         print(traceback.format_exc())
         return
-    
+
+
 def exec_lung_extract(src_dir, mask_dir, dst_dir, ext, reverse = False, desc = None):
     try:
         os.stat(dst_dir)
@@ -51,7 +59,7 @@ def exec_lung_extract(src_dir, mask_dir, dst_dir, ext, reverse = False, desc = N
 
     for input_path in input_src_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_ball' + ext
+        output_path = dst_dir + '/' + exam_id + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -68,12 +76,13 @@ def exec_lung_extract(src_dir, mask_dir, dst_dir, ext, reverse = False, desc = N
 
     for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
         lung_extract(exam_id, input_src_paths[i], input_mask_paths[i], output_paths[i])
-            
+
+
 def main():
-    dataset = 'dataset2'
+    dataset = 'dataset1'
     ext = '.nii.gz'
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive'
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive/VoiLung/bk_VoiLungFillHoles/VoiLungFillHoles'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/lung_mask'
     
     src_dir = '{}'.format(main_dir)
     dst_dir = '{}/lung_extracted'.format(main_dir)
@@ -81,6 +90,7 @@ def main():
     mask_dir = '{}'.format(main_mask_dir)
 
     exec_lung_extract(src_dir, mask_dir, dst_dir, ext, reverse = False, desc = f'Extracting lungs')
+
 
 if __name__=="__main__":    
     start = time.time()

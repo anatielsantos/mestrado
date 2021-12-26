@@ -1,13 +1,14 @@
 # GPU
 import os
-os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-
 import numpy as np
 import SimpleITK as sitk
 import glob, time
-from tqdm import tqdm
 import traceback
+from tqdm import tqdm
+
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
 
 def load_image(path_image, path_mask, remove_no_lesion = False):
     try:
@@ -101,8 +102,8 @@ def compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, de
     print("Segundo menor pixel do dataset:", min)
     print("Maior pixel do dataset:", max)
 
-    # np.savez_compressed(f"{output_path}/{joint}_images", list_images)
-    # np.savez_compressed(f"{output_path}/{joint}_masks", list_masks)
+    np.savez_compressed(f"{output_path}/{joint}_images", list_images)
+    np.savez_compressed(f"{output_path}/{joint}_masks", list_masks)
 
     # np.save(f"{output_path}/{joint}_images.npy", list_images)
     # np.save(f"{output_path}/{joint}_masks.npy", list_masks)
@@ -122,7 +123,7 @@ def main():
 
     compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, desc = f'Compressing {joint} datasets', remove_no_lesion=False)
 
-if __name__=="__main__":    
+if __name__=="__main__":
     start = time.time()
     main()
     stop = time.time()
