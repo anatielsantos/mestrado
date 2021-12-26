@@ -2,7 +2,8 @@
 import os
 import numpy as np
 import SimpleITK as sitk
-import glob, time
+import glob
+import time
 import traceback
 from tqdm import tqdm
 
@@ -10,7 +11,7 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 
-def load_image(path_image, path_mask, remove_no_lesion = False):
+def load_image(path_image, path_mask, remove_no_lesion=False):
     try:
         image = sitk.ReadImage(path_image)
         npyImage = sitk.GetArrayFromImage(image)
@@ -19,7 +20,7 @@ def load_image(path_image, path_mask, remove_no_lesion = False):
         npyMask = sitk.GetArrayFromImage(mask)
 
         # bin mask
-        npyMask = (npyMask>0)*1
+        npyMask = (npyMask > 0) * 1
         npyMask = npyMask.astype(np.float32)
 
         # no lesion image remover
@@ -30,7 +31,7 @@ def load_image(path_image, path_mask, remove_no_lesion = False):
                 if np.amax(npyMask[i]) < 1:
                     remove_list_image.append(i)
                     remove_list_mask.append(i)
-        
+
             print("Shape antes da remoção: ", npyImage.shape)
             # a = npyImage.shape[0]
             npyImage = np.delete(npyImage, remove_list_image, axis=0)
@@ -51,18 +52,29 @@ def load_image(path_image, path_mask, remove_no_lesion = False):
         print("type error: " + str(e))
         print(traceback.format_exc())
         return
-    
-def compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, desc = None, remove_no_lesion = False):
+
+
+def compress_dataset(
+    src_dir,
+    mask_dir,
+    dst_dir,
+    ext,
+    joint,
+    reverse=False,
+    desc=None,
+    remove_no_lesion=False
+):
+
     try:
         os.stat(dst_dir)
     except:
-        os.mkdir(dst_dir)    
+        os.mkdir(dst_dir)
 
     input_src_pathAll = glob.glob(src_dir + '/*' + ext)
     input_src_pathAll.sort(reverse=reverse)
 
     input_mask_pathAll = glob.glob(mask_dir + '/*' + ext)
-    input_mask_pathAll.sort(reverse=reverse) 
+    input_mask_pathAll.sort(reverse=reverse)
 
     exam_ids = []
     input_src_paths = []
@@ -70,7 +82,7 @@ def compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, de
     output_paths = []
 
     output_path = dst_dir
-    
+
     for input_path in input_src_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
 
@@ -84,8 +96,13 @@ def compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, de
     list_images, list_masks = list(), list()
     min = 99999
     max = 0
-    for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
-        images, masks = load_image(input_src_paths[i], input_mask_paths[i], remove_no_lesion=remove_no_lesion)
+    for i, exam_id in enumerate(tqdm(exam_ids, desc=desc)):
+        images, masks = load_image(
+            input_src_paths[i],
+            input_mask_paths[i],
+            remove_no_lesion=remove_no_lesion
+        )
+
         list_images.append(images)
         list_masks.append(masks)
 
@@ -107,23 +124,34 @@ def compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, de
 
     # np.save(f"{output_path}/{joint}_images.npy", list_images)
     # np.save(f"{output_path}/{joint}_masks.npy", list_masks)
-            
+
+
 def main():
     ext = '.nii.gz'
-    joint = 'test' # [train, test]
-    main_dir_image = f'/home/anatielsantos/mestrado/datasets/dissertacao/dataset2/image/ZeroPedding/lung_extracted'
-    main_dir_mask = f'/home/anatielsantos/mestrado/datasets/dissertacao/dataset2/lesion_mask'
-    
+    joint = 'test'  # [train, test]
+    main_dir_image = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset2/image/ZeroPedding/lung_extracted'
+    main_dir_mask = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset2/lesion_mask'
+
     src = main_dir_image
     tar = main_dir_mask
     src_dir = '{}'.format(src)
     mask_dir = '{}'.format(tar)
-    
+
     dst_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/samples'
 
-    compress_dataset(src_dir, mask_dir, dst_dir, ext, joint, reverse = False, desc = f'Compressing {joint} datasets', remove_no_lesion=False)
+    compress_dataset(
+        src_dir,
+        mask_dir,
+        dst_dir,
+        ext,
+        joint,
+        reverse=False,
+        desc=f'Compressing {joint} datasets',
+        remove_no_lesion=False
+    )
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     start = time.time()
     main()
     stop = time.time()

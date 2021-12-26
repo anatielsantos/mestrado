@@ -47,7 +47,7 @@ def load_image(path_image, path_mask, volume):
                 y = npyRoi.shape[2]
 
             sitk.WriteImage(roi, f"/home/anatielsantos/mestrado/datasets/dissertacao/bbox/{file_save}")
-        
+
         print("VOL " + str(volume + 1) + " - ROI OK")
 
         del image
@@ -71,11 +71,11 @@ def get_roi_lung(path_image, path_mask):
             x1 = x
         if y > y1:
             y1 = y
-    
+
     print("Maior X:", x1)
     print("Maior Y:", y1)
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     # get_roi_lung(path_src1, path_mask_lung1)
     get_roi_lung(path_src2, path_mask_lung2)

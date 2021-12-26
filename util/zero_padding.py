@@ -1,19 +1,21 @@
 # GPU
 import os
+import numpy as np
+import SimpleITK as sitk
+import glob
+import time
+from tqdm import tqdm
+import traceback
+
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
-import numpy as np
-import SimpleITK as sitk
-import glob, time
-from tqdm import tqdm
-import traceback
 
 # width = new image width (needs to be bigger than current)
 def zero_pad(width, exam_id, input_path, output_path):
     try:
         print(exam_id + ':')
-        
+
         image = sitk.ReadImage(input_path)
         npyImage = sitk.GetArrayFromImage(image)
 
@@ -27,8 +29,17 @@ def zero_pad(width, exam_id, input_path, output_path):
         new_heigth = (width - npyImage.shape[2]) // 2
 
         # image_pad = np.pad(npyImage, new_width, mode='minimum') # 3D
-        image_pad = np.pad(npyImage, [(0,0), (new_width, new_width), (new_heigth, new_heigth)], 'constant', constant_values=(np.amin(npyImage))) # 2D
-        
+        image_pad = np.pad(
+            npyImage,
+            [
+                (0, 0),
+                (new_width, new_width),
+                (new_heigth, new_heigth)
+            ],
+            'constant',
+            constant_values=(np.amin(npyImage))
+        )  # 2D
+
         # zerar padding
         imgMin = np.amin(image_pad)
         npyImage_aux = image_pad
@@ -36,7 +47,7 @@ def zero_pad(width, exam_id, input_path, output_path):
 
         # bin
         # image_pad = np.int16((image_pad>0)*1)
-        
+
         itkImage = sitk.GetImageFromArray(npyImage_aux)
         sitk.WriteImage(itkImage, output_path)
 
@@ -47,14 +58,15 @@ def zero_pad(width, exam_id, input_path, output_path):
         print(traceback.format_exc())
         return
 
-def exec_zero_padding(src_dir, dst_dir, ext, width, reverse = False, desc = None):
+
+def exec_zero_padding(src_dir, dst_dir, ext, width, reverse=False, desc=None):
     try:
         os.stat(dst_dir)
     except:
-        os.mkdir(dst_dir)    
+        os.mkdir(dst_dir)
 
     input_pathAll = glob.glob(src_dir + '/*' + ext)
-    input_pathAll.sort(reverse=reverse) 
+    input_pathAll.sort(reverse=reverse)
 
     exam_ids = []
     input_paths = []
@@ -73,21 +85,29 @@ def exec_zero_padding(src_dir, dst_dir, ext, width, reverse = False, desc = None
         input_paths.append(input_path)
         output_paths.append(output_path)
 
-    for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
+    for i, exam_id in enumerate(tqdm(exam_ids, desc=desc)):
         zero_pad(width, exam_id, input_paths[i], output_paths[i])
-            
+
+
 def main():
     ext = '.nii.gz'
-    width = 534 # new width
-    dataset = 'dataset1'
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox'
-    
+    width = 534  # new width
+    main_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox'
+
     src_dir = '{}'.format(main_dir)
     dst_dir = '{}/ZeroPedding'.format(main_dir)
 
-    exec_zero_padding(src_dir, dst_dir, ext, width, reverse = False, desc = 'Making zero padding')
+    exec_zero_padding(
+        src_dir,
+        dst_dir,
+        ext,
+        width,
+        reverse=False,
+        desc='Making zero padding'
+    )
 
-if __name__=="__main__":    
+
+if __name__ == "__main__":
     start = time.time()
     main()
     stop = time.time()
