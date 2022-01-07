@@ -18,37 +18,17 @@ def zero_pad(width, exam_id, input_path, output_path):
 
         image = sitk.ReadImage(input_path)
         npyImage = sitk.GetArrayFromImage(image)
+        npyImageCrop = np.zeros((npyImage.shape[0], 544, 544))
 
-        if npyImage.shape[1] != npyImage.shape[2]:
-            raise ValueError("Image needs to be square.")
+        print(npyImage.shape)
+        print(npyImageCrop.shape)
 
-        if width <= npyImage.shape[1]:
-            raise ValueError("New width needs to be bigger than current.")
+        for i in range(npyImage.shape[0]):
+            npyImageCrop[i] = npyImage[i][48:592, 48:592]
 
-        new_width = (width - npyImage.shape[1]) // 2
-        new_heigth = (width - npyImage.shape[2]) // 2
+        npyImageCrop = npyImageCrop.astype(np.int16)
 
-        # image_pad = np.pad(npyImage, new_width, mode='minimum') # 3D
-        image_pad = np.pad(
-            npyImage,
-            [
-                (0, 0),
-                (new_width, new_width),
-                (new_heigth, new_heigth)
-            ],
-            'constant',
-            constant_values=(np.amin(npyImage))
-        )  # 2D
-
-        # zerar padding
-        imgMin = np.amin(image_pad)
-        npyImage_aux = image_pad
-        npyImage_aux = image_pad - imgMin
-
-        # bin
-        # image_pad = np.int16((image_pad>0)*1)
-
-        itkImage = sitk.GetImageFromArray(npyImage_aux)
+        itkImage = sitk.GetImageFromArray(npyImageCrop)
         sitk.WriteImage(itkImage, output_path)
 
         del image
@@ -74,7 +54,7 @@ def exec_zero_padding(src_dir, dst_dir, ext, width, reverse=False, desc=None):
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_zeroPedding' + ext
+        output_path = dst_dir + '/' + exam_id + '_crop' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -92,10 +72,10 @@ def exec_zero_padding(src_dir, dst_dir, ext, width, reverse=False, desc=None):
 def main():
     ext = '.nii.gz'
     width = 640  # new width
-    main_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset2/lung_mask'
+    main_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/lesion_mask/ZeroPedding'
 
     src_dir = '{}'.format(main_dir)
-    dst_dir = '{}/ZeroPedding'.format(main_dir)
+    dst_dir = '{}/crop'.format(main_dir)
 
     exec_zero_padding(
         src_dir,
@@ -103,7 +83,7 @@ def main():
         ext,
         width,
         reverse=False,
-        desc='Making zero padding'
+        desc='croping'
     )
 
 

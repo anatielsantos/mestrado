@@ -128,16 +128,16 @@ def compress_dataset(
 
 def main():
     ext = '.nii.gz'
-    joint = 'test'  # [train, test]
-    main_dir_image = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset2/image/ZeroPedding/lung_extracted'
-    main_dir_mask = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset2/lesion_mask'
+    joint = 'train'  # [train, test]
+    main_dir_image = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/image/lung_extracted/k2/train'
+    main_dir_mask = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/lesion_mask/k2/train'
 
     src = main_dir_image
     tar = main_dir_mask
     src_dir = '{}'.format(src)
     mask_dir = '{}'.format(tar)
 
-    dst_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/samples'
+    dst_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/dataset1/image/lung_extracted/k1'
 
     compress_dataset(
         src_dir,

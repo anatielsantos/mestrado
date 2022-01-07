@@ -28,8 +28,14 @@ def lung_extract(exam_id, src_path, mask_path, output_path):
             npyImage_aux = npyImage + imgMin
 
         newImage = npyImage_aux * npyMask
+        newImageInt = newImage
 
-        itkImage = sitk.GetImageFromArray(newImage)
+        for i in range(newImage.shape[0]):
+            newImageInt[i] = np.around(newImage[i])
+
+        newImageInt = newImageInt.astype(np.int16)
+
+        itkImage = sitk.GetImageFromArray(newImageInt)
         sitk.WriteImage(itkImage, output_path)
 
         del image
@@ -63,8 +69,8 @@ def exec_lung_extract(src_dir, mask_dir, dst_dir, ext, reverse = False, desc = N
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
-            print('Arquivo ' + output_path + ' ja existe e será removido')
-            os.remove(output_path)
+            print('Arquivo ' + output_path + ' ja existe')
+            # os.remove(output_path)
             # continue
 
         exam_ids.append(exam_id)
@@ -79,10 +85,10 @@ def exec_lung_extract(src_dir, mask_dir, dst_dir, ext, reverse = False, desc = N
 
 
 def main():
-    dataset = 'dataset1'
+    dataset = 'dataset2'
     ext = '.nii.gz'
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image'
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/lung_mask'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive'
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/lung_mask/ZeroPedding'
     
     src_dir = '{}'.format(main_dir)
     dst_dir = '{}/lung_extracted'.format(main_dir)
