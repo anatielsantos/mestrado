@@ -1,4 +1,3 @@
-from os import truncate
 import SimpleITK as sitk
 import glob
 import numpy as np
@@ -22,7 +21,7 @@ def get_bounding_box_lung(image, intensity):
     return statistics.GetBoundingBox(intensity)
 
 
-def imadjust(x,a,b,c,d,gamma=1):
+def imadjust(x, a, b, c, d, gamma=1):
     y = (((x - a) / (b - a)) ** gamma) * (d - c) + c
     return y
 
