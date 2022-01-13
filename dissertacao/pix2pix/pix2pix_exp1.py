@@ -21,8 +21,8 @@ session = tf.compat.v1.InteractiveSession(config=config)
 BUFFER_SIZE = 400
 BATCH_SIZE = 1
 EPOCHS = 150
-IMG_WIDTH = 640
-IMG_HEIGHT = 640
+IMG_WIDTH = 544
+IMG_HEIGHT = 544
 INPUT_CHANNELS = 1
 OUTPUT_CHANNELS = 1
 
@@ -80,7 +80,7 @@ def train(path_weights, src_images_train, tar_images_train):
 
     # train model
     checkpoint = ModelCheckpoint(
-        path_weights+'gan_test2_exp1_1_best.hdf5',
+        path_weights+'gan_ds1_150epc_best_k0.hdf5',
         monitor='dice',
         verbose=1,
         save_best_only=True,
@@ -115,14 +115,14 @@ def train(path_weights, src_images_train, tar_images_train):
     #     validation_data=(src_images_val, tar_images_val)
     # )
 
-    model.save(path_weights+'gan_test2_exp1_1_last.hdf5')
+    model.save(path_weights+'gan_ds1_150epc_last_k0.hdf5')
 
     # convert the history.history dict to a pandas DataFrame:
     hist_df = pd.DataFrame(history.history)
 
     # save to json:
     print("Saving history")
-    hist_json_file = path_json+'gan_test2_exp1_1_history_150epc.json'
+    hist_json_file = path_json+'gan_ds1_150epc_k0.json'
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("History saved")
@@ -135,7 +135,7 @@ def train(path_weights, src_images_train, tar_images_train):
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Val', 'Loss'], loc='upper left')
     # save plot to file
-    plt.savefig(path_plot+'gan_test2_exp1_1_plot_150epc.png')
+    plt.savefig(path_plot+'gan_ds1_150epc_k0.png')
     # plt.show()
 
 
@@ -143,11 +143,11 @@ if __name__ == "__main__":
     # dataset path remote
     path_src_train = """
         /data/flavio/anatiel/datasets/dissertacao/
-        final_tests/train_images_exp1_lesion.npz
+        final_tests/images_fold_0.npz
     """
     path_mask_train = """
         /data/flavio/anatiel/datasets/dissertacao
-        /final_tests/train_masks_exp1_lesion.npz
+        /final_tests/masks_fold_0.npz
     """
 
     # dataset path local
