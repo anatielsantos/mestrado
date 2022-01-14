@@ -148,5 +148,15 @@ if __name__ == "__main__":
         tar_images_train.shape
     )
 
+    # Normalization of the train set (Exp 1)
+    mean = np.mean(src_images_train)  # mean for data centering
+    std = np.std(src_images_train)  # std for data normalization
+    src_images_train = src_images_train.astype(np.float32)
+    src_images_train -= mean
+    src_images_train /= std
+
+    # src_images_train = src_images_train.astype(np.float32)
+    tar_images_train = tar_images_train.astype(np.float32)
+
     # model training
     train(path_weights, src_images_train, tar_images_train)
