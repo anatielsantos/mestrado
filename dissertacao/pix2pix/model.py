@@ -1,5 +1,4 @@
 import tensorflow as tf
-# from tensorflow.python.keras.engine import data_adapter
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import *
 from losses import dice
@@ -25,6 +24,7 @@ class Pix2Pix(tf.keras.Model):
         self.build_generator()
         self.build_discriminator()
 
+
     def downsample(self, filters, size, apply_batchnorm=True):
         initializer = tf.random_normal_initializer(0., 0.02)
 
@@ -46,6 +46,7 @@ class Pix2Pix(tf.keras.Model):
         result.add(tf.keras.layers.LeakyReLU())
 
         return result
+
 
     def upsample(self, filters, size, apply_dropout=False):
         initializer = tf.random_normal_initializer(0., 0.02)
@@ -69,6 +70,7 @@ class Pix2Pix(tf.keras.Model):
         result.add(tf.keras.layers.ReLU())
 
         return result
+
 
     # Original tensorflow generator
     def Generator():
@@ -227,6 +229,7 @@ class Pix2Pix(tf.keras.Model):
 
         self.generator = Model(inputs=inputs, outputs=[conv10])'''
 
+
     def build_discriminator(self):
         initializer = tf.random_normal_initializer(0., 0.02)
 
@@ -252,12 +255,14 @@ class Pix2Pix(tf.keras.Model):
 
         self.discriminator = tf.keras.Model(inputs=[inp, tar], outputs=last)
 
+
     def compile(self, discriminator_optimizer, generator_optimizer, discriminator_loss, generator_loss, metrics=[]):
         super().compile()
         self.discriminator_optimizer = discriminator_optimizer
         self.generator_optimizer = generator_optimizer
         self.discriminator_loss = discriminator_loss
         self.generator_loss = generator_loss
+
 
     def train_step(self, data):
         input_image, target = data
@@ -278,8 +283,10 @@ class Pix2Pix(tf.keras.Model):
 
         return {"d_loss": disc_loss, "g_total": gen_total_loss, 'g_gan': gen_gan_loss, 'g_l1': gen_l1_loss, 'dice': dice(target, gen_output)}
 
+
     def predict(self, data, batch_size):
         return self.generator.predict(data, batch_size=batch_size)
+
 
     def test_step(self, data):
         input_image, target = data
@@ -287,14 +294,18 @@ class Pix2Pix(tf.keras.Model):
         print(target)
         return {'dice': dice(target, pred)}
 
+
     def save(self, filepath, overwrite=True, include_optimizer=True, save_format=None, signatures=None, options=None):
         self.generator.save(filepath, overwrite, include_optimizer, save_format, signatures, options)
+
 
     def save_weights(self, filepath, overwrite=True, save_format=None, options=None):
         self.generator.save_weights(filepath, overwrite, save_format, options)
 
+
     def load_weights(self, filepath, by_name=False, skip_mismatch=False):
         self.generator.load_weights(filepath, by_name, skip_mismatch)
+
 
     # def save_model(self,
     #     model, filepath, overwrite=True, include_optimizer=True, save_format=None,

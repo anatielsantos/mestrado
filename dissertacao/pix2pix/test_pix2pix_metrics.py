@@ -49,11 +49,12 @@ np.random.seed(1337)
 project_name = 'Pix2pix LungSeg'
 BUFFER_SIZE = 400
 BATCH_SIZE = 1
-EPOCHS = 100
-IMG_WIDTH = 640
-IMG_HEIGHT = 640
+EPOCHS = 150
+IMG_WIDTH = 544
+IMG_HEIGHT = 544
 INPUT_CHANNELS = 1
 OUTPUT_CHANNELS = 1
+
 
 def preprocess_squeeze(imgs):
     imgs = np.squeeze(imgs, axis=3)
@@ -61,13 +62,15 @@ def preprocess_squeeze(imgs):
     print('-'*30)
     return imgs
 
+
 def load_patient(image):
     itkImage = sitk.ReadImage(image)
     npyImage = sitk.GetArrayFromImage(itkImage)
     npyImage = np.expand_dims(npyImage, axis=-1)
 
     return npyImage
-    
+
+
 def predictPatient(model, image):
 
     print('-'*30)
@@ -76,16 +79,6 @@ def predictPatient(model, image):
     npyImage = load_patient(image)
 
     print("Image shape:", npyImage.shape)
-
-    # Normalization of the train set (Exp 1)
-    # npyImage = npyImage.astype('float32')
-    # mean = np.mean(npyImage)  # mean for data centering
-    # std = np.std(npyImage)  # std for data normalization
-    # npyImage -= mean
-    # npyImage /= std
-
-    # npyImage = rescale_intensity(npyImage, in_range=(0, 1))
-    # npyImage = npyImage.astype('float32')
 
     print('-'*30)
     print('Predicting test data...')
@@ -99,12 +92,13 @@ def predictPatient(model, image):
             npyImagePredict=pred
         else:
             npyImagePredict = np.concatenate([npyImagePredict,pred],axis=0)
-    
+
     npyImagePredict = preprocess_squeeze(npyImagePredict)
     # npyImagePredict = np.around(npyImagePredict, decimals=0)
     # npyImagePredict = (npyImagePredict>0.5)*1
 
     return npyImagePredict.astype(np.float32)
+
 
 def execPredict(exam_id, input_path, input_mask_path, output_path, model):
     try:
@@ -129,29 +123,10 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         print("Prec:\t", prec)
         print("FScore:\t", fscore)
 
-
         # binary_masks.dtype='float32'
         itkImage = sitk.GetImageFromArray(binary_masks)
-
         image = sitk.ReadImage(input_path)
-        #npyImage = sitk.GetArrayFromImage(image)
-
-        # print(image.GetSize())
-        # print(image.GetSpacing())
-        # print(image.GetPixelIDTypeAsString())
-        # print(itkImage.GetSize())
-        # print(itkImage.GetSpacing())
-        # print(itkImage.GetPixelIDTypeAsString())
-
-        # corrige o tipo da imagem pois no Colab está saindo 64 bits
-        # itkImage = sitk.Cast(itkImage,image.GetPixelIDValue())    
-        
         itkImage.CopyInformation(image)
-
-        # print(itkImage.GetSize())
-        # print(itkImage.GetSpacing())
-        # print(itkImage.GetPixelIDTypeAsString())    
-        
         sitk.WriteImage(itkImage, output_path)
 
         del image
@@ -160,6 +135,7 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         print("type error: " + str(e))
         print(traceback.format_exc())
         return
+
 
 def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = None, parallel = True):
     try:
@@ -208,25 +184,21 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
         for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
             execPredict(exam_id, input_paths[i], input_mask_paths[i], output_paths[i], model)
 
+
 def main():
 
     ext = '.nii.gz'
     search_pattern = '*'
     dataset = 'dataset2'
 
-    # local
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/teste2_dataset2/Test'
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/teste2_dataset2/Test_mask'
-    model_path = '/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/gan_test2_exp2_2_150epc_last.hdf5'
-
     # remote
-    # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
-    # main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/mask'
-    # model_path = '/data/flavio/anatiel/models/dissertacao/unet_500epc_last.h5'
+    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
+    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/mask'
+    model_path = '/data/flavio/anatiel/models/dissertacao/unet_500epc_last.h5'
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = '{}/GANExp2Tests2Preds'.format(main_dir)
+    dst_dir = '{}/gan_ds1_preds'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
@@ -241,6 +213,7 @@ def main():
     model.load_weights(model_path)
 
     execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = 'Predicting (GAN)', parallel=False)
+
 
 if __name__ == '__main__':
     start = time.time()

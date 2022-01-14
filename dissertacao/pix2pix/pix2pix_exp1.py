@@ -10,7 +10,7 @@ from utils import *
 from losses import *
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "4"
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
 # configuração necessária nas GPU's RTX
 config = tf.compat.v1.ConfigProto()
@@ -74,10 +74,6 @@ def train(path_weights, src_images_train, tar_images_train):
         metrics=['accuracy', dice]
     )
 
-    # Normalization of the train set (Exp 2)
-    # src_images_train = src_images_train.astype('float32')
-    # src_images_train = rescale_intensity(src_images_train, in_range=(-1, 1))
-
     # train model
     checkpoint = ModelCheckpoint(
         path_weights+'gan_ds1_150epc_best_k0.hdf5',
@@ -87,14 +83,6 @@ def train(path_weights, src_images_train, tar_images_train):
         save_weights_only=True,
         mode='max'
     )
-    # checkpoint2 = ModelCheckpoint(
-    #     path_weights+'best_weights_val__test2_512_masked_lung_blur_500epc.hdf5',
-    #     monitor='val_dice',
-    #     verbose=1,
-    #     save_best_only=True,
-    #     save_weights_only=True,
-    #     mode='max'
-    # )
 
     history = model.fit(
         src_images_train,
@@ -106,14 +94,6 @@ def train(path_weights, src_images_train, tar_images_train):
         validation_split=0.1,
         callbacks=[checkpoint]
     )
-    # history=model.fit(
-    #     src_images_train,
-    #     tar_images_train,
-    #     batch_size=BATCH_SIZE,
-    #     epochs=EPOCHS,
-    #     callbacks=[checkpoint,checkpoint2],
-    #     validation_data=(src_images_val, tar_images_val)
-    # )
 
     model.save(path_weights+'gan_ds1_150epc_last_k0.hdf5')
 
@@ -140,25 +120,16 @@ def train(path_weights, src_images_train, tar_images_train):
 
 
 if __name__ == "__main__":
-    # dataset path remote
+    # dataset path
     path_src_train = """
         /data/flavio/anatiel/datasets/dissertacao/
         final_tests/images_fold_0.npz
     """
+
     path_mask_train = """
         /data/flavio/anatiel/datasets/dissertacao
         /final_tests/masks_fold_0.npz
     """
-
-    # dataset path local
-    # path_src_train = """
-    #   /home/anatielsantos/mestrado/datasets/
-    #   dissertacao/train_images.npz
-    # """
-    # path_mask_train = """
-    #   /home/anatielsantos/mestrado/datasets/
-    #   dissertacao/train_masks.npz
-    # """
 
     # paths save
     path_weights = '/data/flavio/anatiel/models/dissertacao/final_tests/'
@@ -170,6 +141,7 @@ if __name__ == "__main__":
         path_src_train,
         path_mask_train
     )
+
     print(
         'Loaded train images: ',
         src_images_train.shape,
