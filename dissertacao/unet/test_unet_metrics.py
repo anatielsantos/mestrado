@@ -1,8 +1,4 @@
-# GPU
 import os
-os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-
 import SimpleITK as sitk
 import numpy as np
 import glob, time
@@ -11,11 +7,15 @@ import traceback
 import time
 import multiprocessing.pool as mpp
 from itertools import repeat
-
 from tqdm import tqdm
 from lesionseg.train import unet
 from losses import calc_metric
 from skimage.exposure import rescale_intensity
+
+# GPU
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
 
 def istarmap(self, func, iterable, chunksize=1):
     """starmap-version of imap
@@ -40,19 +40,20 @@ def istarmap(self, func, iterable, chunksize=1):
     return (item for chunk in result for item in chunk)
 
 mpp.Pool.istarmap = istarmap
-
 np.random.seed(1337)
 
 project_name = 'Unet CovidSeg'
-img_rows = 640
-img_cols = 640
+img_rows = 544
+img_cols = 544
 img_depth = 1
 smooth = 1.
+
 
 def preprocess_squeeze(imgs):
     imgs = np.squeeze(imgs, axis=3)
     print(' ---------------- preprocessed squeezed -----------------')
     return imgs
+
 
 def load_patient(image):
     itkImage = sitk.ReadImage(image)
@@ -60,6 +61,7 @@ def load_patient(image):
     npyImage = np.expand_dims(npyImage, axis=-1)
 
     return npyImage
+
 
 def get_bbox(mask, pred_mask):
     new_image = np.zeros(pred_mask.shape)
@@ -83,7 +85,8 @@ def get_bbox(mask, pred_mask):
         new_image[s, menor_l+5:maior_l-4,menor_c+5:maior_c-4] = pred_mask[s, menor_l+5:maior_l-4,menor_c+5:maior_c-4]
     
     return np.expand_dims(new_image, axis=-1)
-    
+
+
 def predictPatient(model, image):
 
     print('-'*30)
@@ -112,6 +115,7 @@ def predictPatient(model, image):
     npyImagePredict = (npyImagePredict>0.5)*1
 
     return npyImagePredict.astype(np.float32)
+
 
 def execPredict(exam_id, input_path, input_mask_path, output_path, model):
     try:
@@ -151,6 +155,7 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         print("type error: " + str(e))
         print(traceback.format_exc())
         return
+
 
 def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = None, parallel = True):
     try:
@@ -199,25 +204,21 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
         for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
             execPredict(exam_id, input_paths[i], input_mask_paths[i], output_paths[i], model)
 
+
 def main():
 
     ext = '.nii.gz'
     search_pattern = '*'
     dataset = 'dataset2'
 
-    # local
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/teste1_dataset1/Test'
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/teste1_dataset1/Test_mask'
-    model_path = '/home/anatielsantos/mestrado/datasets/dissertacao/final_tests_dis/original_unet_test2_exp1_2_last.h5'
-
     # remote
-    # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/tests'
-    # main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/tests/Test_mask'
-    # model_path = '/data/flavio/anatiel/models/dissertacao/final_tests/original_unet_exp4_1_best.h5'
+    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/tests'
+    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/tests/Test_mask'
+    model_path = '/data/flavio/anatiel/models/dissertacao/final_tests/original_unet_exp4_1_best.h5'
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = '{}/PredsOriginalTest2'.format(main_dir)
+    dst_dir = '{}/unet_ds1_preds'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
@@ -226,6 +227,7 @@ def main():
     model.load_weights(model_path)
 
     execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model, reverse = False, desc = 'Predicting (UNet)', parallel=False)
+
 
 if __name__ == '__main__':
     start = time.time()

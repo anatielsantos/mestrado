@@ -1,7 +1,4 @@
 import tensorflow as tf
-# print(tf.__version__)
-# tf.config.run_functions_eagerly(True)
-
 import os
 import numpy as np
 from tensorflow.keras import backend as K
@@ -24,10 +21,11 @@ def dice_bce_loss(y_true, y_pred):
     dice_loss = -dice_coef(y_true, y_pred)
     bce = tf.keras.losses.BinaryCrossentropy(from_logits=True)
     bce_ = bce(y_true, y_pred)#.numpy()
-    
+
     dice_bce_loss = (dice_loss + bce_) / 2
     
     return dice_bce_loss
+
 
 def load_train_data():
     # remote
@@ -36,7 +34,7 @@ def load_train_data():
 
     imgs_train = imgs_train_npz['arr_0']
     masks_train = masks_train_npz['arr_0']
-    
+
     return np.expand_dims(np.concatenate(imgs_train), axis=-1), np.expand_dims(np.concatenate(masks_train), axis=-1)
     
 

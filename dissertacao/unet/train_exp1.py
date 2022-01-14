@@ -1,20 +1,11 @@
 from __future__ import print_function
-
-# GPU
-import os
-os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "4"
-
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import *
 from tensorflow.keras.optimizers import Adam, SGD
 from tensorflow.keras.callbacks import ModelCheckpoint, LearningRateScheduler, History
-
 from skimage.segmentation import mark_boundaries
 from skimage.exposure import rescale_intensity
 from skimage.transform import resize
@@ -23,9 +14,14 @@ import skimage.transform as trans
 import skimage.io as io
 from data_covid import load_train_data, load_test_data, dice_coef, dice_coef_loss, dice_bce_loss
 
+# GPU
+import os
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"] = "4"
 
 BATCH_SIZE = 1
 EPOCHS = 150
+
 
 # model
 def unet(pretrained_weights = None,input_size = (640,640,1)):
@@ -195,6 +191,7 @@ def unet(pretrained_weights = None,input_size = (640,640,1)):
 
     return model
 
+
 # train
 def train():
     print('Loading and preprocessing train data...')
@@ -215,31 +212,28 @@ def train():
     # imgs_train = imgs_train.astype(np.float32)
     imgs_mask_train = imgs_mask_train.astype(np.float32)
 
-    print(imgs_train.dtype)
-    print(imgs_mask_train.dtype)
-
     print('Creating and compiling model...')
     print('-'*30)
-    
+
     model = unet()
     #Saving the weights and the loss of the best predictions we obtained
     model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/models/dissertacao/unet_ds1_150epc_best_k2.h5', monitor='val_loss', save_best_only=True, mode="min")
-    
+
     print('Fitting model...')
     print('-'*30)
     history = model.fit(imgs_train, imgs_mask_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[model_checkpoint])
 
     model.save('/data/flavio/anatiel/models/dissertacao/unet_ds1_150epc_last_k2.h5')
-        
+
     # convert the history.history dict to a pandas DataFrame:     
     hist_df = pd.DataFrame(history.history)
-    
+
     # save to json:  
     hist_json_file = '/data/flavio/anatiel/models/dissertacao/unet_ds1_150epc_k2.json'
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("history saved")
-    
+
     plt.plot(history.history['dice_coef'])
     plt.plot(history.history['val_dice_coef'])
     plt.title('Model dice coeff')
@@ -249,7 +243,8 @@ def train():
     # save plot to file
     plt.savefig('/data/flavio/anatiel/models/dissertacao/unet_ds1_150epc_k2.png')
     # plt.show()
-    
+
+
 if __name__ == "__main__":
     # model training
     train()
