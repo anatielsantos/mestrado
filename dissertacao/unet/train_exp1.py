@@ -12,12 +12,12 @@ from skimage.transform import resize
 from skimage.io import imsave
 import skimage.transform as trans
 import skimage.io as io
-from data_covid import load_train_data, load_test_data, dice_coef, dice_coef_loss, dice_bce_loss
+from data_covid import load_train_data, dice_coef, dice_coef_loss, dice_bce_loss
 
 # GPU
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "4"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 BATCH_SIZE = 1
 EPOCHS = 150
