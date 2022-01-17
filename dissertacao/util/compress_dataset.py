@@ -140,15 +140,15 @@ def compress_dataset(
 def main():
     ext = '.nii.gz'
     # joint = 'train'  # [train, test]
-    main_dir_image = '/home/anatiel/dados/anatiel/dataset1/images'
-    main_dir_mask = '/home/anatiel/dados/anatiel/dataset1/masks'
+    main_dir_image = '/home/anatiel/dados/anatiel/dataset2/images'
+    main_dir_mask = '/home/anatiel/dados/anatiel/dataset2/masks'
 
     src = main_dir_image
     tar = main_dir_mask
     src_dir = '{}'.format(src)
     mask_dir = '{}'.format(tar)
 
-    dst_dir = '/home/anatiel/dados/anatiel/dataset1'
+    dst_dir = '/home/anatiel/dados/anatiel/dataset2'
 
     compress_dataset(
         src_dir,
