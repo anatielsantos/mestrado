@@ -16,7 +16,9 @@ debugpy==1.4.0
 decorator==4.4.2
 defusedxml==0.7.1
 entrypoints==0.3
+flake8==4.0.1
 flatbuffers==1.12
+fonttools==4.28.5
 gast==0.4.0
 google-auth==1.33.1
 google-auth-oauthlib==0.4.4
@@ -26,9 +28,9 @@ h5py==3.1.0
 idna==3.2
 imageio==2.9.0
 importlib-metadata==3.10.1
-# ipykernel==6.0.3
-# ipython==7.25.0
-# ipython-genutils==0.2.0
+ipykernel==6.6.0
+ipython==7.30.1
+ipython-genutils==0.2.0
 ipywidgets==7.6.3
 jedi==0.18.0
 Jinja2==3.0.1
@@ -47,23 +49,25 @@ Keras-Preprocessing==1.1.2
 kiwisolver==1.3.1
 Markdown==3.3.4
 MarkupSafe==2.0.1
-# matplotlib==3.4.2
-# matplotlib-inline==0.1.2
+matplotlib==3.5.1
+matplotlib-inline==0.1.3
+mccabe==0.6.1
 mistune==0.8.4
 mpmath==1.2.1
 nbclient==0.5.3
-# nbconvert==6.1.0
-# nbformat==5.1.3
+nbconvert==6.3.0
+nbformat==5.1.3
 nest-asyncio==1.5.1
 networkx==2.5.1
 nose==1.3.7
 notebook==6.4.0
 numpy==1.19.5
 oauthlib==3.1.1
+opencv-python==4.5.4.60
 opt-einsum==3.3.0
 packaging==21.0
-pandas
-# pandocfilters==1.4.3
+pandas==1.3.5
+pandocfilters==1.5.0
 parso==0.8.2
 pexpect==4.8.0
 pickleshare==0.7.5
@@ -74,7 +78,9 @@ protobuf==3.17.3
 ptyprocess==0.7.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
+pycodestyle==2.8.0
 pycparser==2.20
+pyflakes==2.4.0
 Pygments==2.9.0
 pyparsing==2.4.7
 pyrsistent==0.18.0
@@ -88,9 +94,9 @@ QtPy==1.9.0
 requests==2.26.0
 requests-oauthlib==1.3.0
 rsa==4.7.2
-scikit-image
-scikit-learn
-scipy
+scikit-image==0.19.1
+scikit-learn==1.0.1
+scipy==1.7.3
 Send2Trash==1.7.1
 SimpleITK==2.0.2
 six==1.15.0
@@ -104,16 +110,15 @@ termcolor==1.1.0
 terminado==0.10.1
 testpath==0.5.0
 threadpoolctl==2.2.0
-tifffile
+tifffile==2021.11.2
 tornado==6.1
 tqdm==4.61.2
-traitlets
-typing-extensions
-urllib3
-wcwidth
-webencodings
-Werkzeug
-widgetsnbextension
-wrapt
-zipp
-opencv-python
+traitlets==5.1.1
+typing-extensions==4.0.1
+urllib3==1.26.7
+wcwidth==0.2.5
+webencodings==0.5.1
+Werkzeug==2.0.2
+widgetsnbextension==3.5.2
+wrapt==1.13.3
+zipp==3.6.0
