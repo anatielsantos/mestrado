@@ -24,7 +24,7 @@ EPOCHS = 150
 
 
 # model
-def unet(pretrained_weights = None,input_size = (640,640,1)):
+def unet(pretrained_weights = None,input_size = (544,544,1)):
     # Unet original model
     # inputs = Input(input_size)
     # conv1 = Conv2D(64, 3, activation = 'relu', padding = 'same', kernel_initializer = 'he_normal')(inputs)
