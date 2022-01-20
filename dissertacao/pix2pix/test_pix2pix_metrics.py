@@ -192,9 +192,9 @@ def main():
     dataset = 'dataset2'
 
     # remote
-    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
-    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/mask'
-    model_path = '/data/flavio/anatiel/models/dissertacao/unet_500epc_last.h5'
+    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/images_fold_0.npz'
+    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/masks_fold_0.npz'
+    model_path = '/data/flavio/anatiel/models/dissertacao/unet_150epc_last.h5'
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
