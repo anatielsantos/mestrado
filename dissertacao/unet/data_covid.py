@@ -40,3 +40,4 @@ def load_train_data():
 
 if __name__ == '__main__':
     load_train_data()
+ 
