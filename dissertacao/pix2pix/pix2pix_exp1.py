@@ -10,7 +10,7 @@ from utils import *
 from losses import *
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "89"
+os.environ["CUDA_VISIBLE_DEVICES"] = "7"
 
 # configuração necessária nas GPU's RTX
 config = tf.compat.v1.ConfigProto()
