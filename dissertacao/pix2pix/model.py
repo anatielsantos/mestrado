@@ -73,7 +73,7 @@ class Pix2Pix(tf.keras.Model):
 
 
     # Original tensorflow generator
-    def Generator():
+    """def Generator():
         inputs = tf.keras.layers.Input(
             shape=[
                 self.image_height,
@@ -127,10 +127,10 @@ class Pix2Pix(tf.keras.Model):
 
         x = last(x)
 
-        return tf.keras.Model(inputs=inputs, outputs=x)
+        return tf.keras.Model(inputs=inputs, outputs=x)"""
 
     # Unet generator architecture changed
-    '''def build_generator(self):
+    def build_generator(self):
         inputs = tf.keras.layers.Input(
             shape=[
                 self.image_height,
@@ -227,7 +227,7 @@ class Pix2Pix(tf.keras.Model):
 
         conv10 = Conv2D(1, (1, 1), activation='sigmoid')(conc9)
 
-        self.generator = Model(inputs=inputs, outputs=[conv10])'''
+        self.generator = Model(inputs=inputs, outputs=[conv10])
 
 
     def build_discriminator(self):
