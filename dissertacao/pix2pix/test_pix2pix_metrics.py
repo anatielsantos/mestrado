@@ -1,7 +1,7 @@
 # GPU
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "4"
+os.environ["CUDA_VISIBLE_DEVICES"] = "5"
 
 import tensorflow as tf
 
@@ -189,7 +189,7 @@ def main():
 
     ext = '.nii.gz'
     search_pattern = '*'
-    dataset = 'dataset2'
+    dataset = 'dataset1'
 
     # remote
     main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/images_fold_0.npz'
