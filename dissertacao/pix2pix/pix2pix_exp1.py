@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from model import Pix2Pix
 from tensorflow.keras.callbacks import ModelCheckpoint
-# from utils import *
+# from util import *
 from losses import *
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"

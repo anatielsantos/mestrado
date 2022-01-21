@@ -1,7 +1,7 @@
 # GPU
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "7"
 
 import tensorflow as tf
 
@@ -189,12 +189,12 @@ def main():
 
     ext = '.nii.gz'
     search_pattern = '*'
-    dataset = 'dataset2'
+    dataset = 'dataset1'
 
     # remote
-    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
-    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/mask'
-    model_path = '/data/flavio/anatiel/models/dissertacao/unet_500epc_last.h5'
+    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/images_fold_2.npz'
+    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/masks_fold_2.npz'
+    model_path = '/data/flavio/anatiel/models/dissertacao/unet_150epc_last.h5'
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
