@@ -6,16 +6,16 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from model import Pix2Pix
 from tensorflow.keras.callbacks import ModelCheckpoint
-from utils import *
+# from util import *
 from losses import *
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+os.environ["CUDA_VISIBLE_DEVICES"] = "5"
 
 # configuração necessária nas GPU's RTX
-config = tf.compat.v1.ConfigProto()
-config.gpu_options.allow_growth = True
-session = tf.compat.v1.InteractiveSession(config=config)
+# config = tf.compat.v1.ConfigProto()
+# config.gpu_options.allow_growth = True
+# session = tf.compat.v1.InteractiveSession(config=config)
 
 # train settings
 BUFFER_SIZE = 400
@@ -121,20 +121,14 @@ def train(path_weights, src_images_train, tar_images_train):
 
 if __name__ == "__main__":
     # dataset path
-    path_src_train = """
-        /data/flavio/anatiel/datasets/dissertacao/
-        final_tests/images_fold_0.npz
-    """
+    path_src_train = "/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/images_fold_0.npz"
 
-    path_mask_train = """
-        /data/flavio/anatiel/datasets/dissertacao
-        /final_tests/masks_fold_0.npz
-    """
+    path_mask_train = "/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/masks_fold_0.npz"
 
     # paths save
-    path_weights = '/data/flavio/anatiel/models/dissertacao/final_tests/'
-    path_json = '/data/flavio/anatiel/models/dissertacao/final_tests/'
-    path_plot = '/data/flavio/anatiel/models/dissertacao/final_tests/'
+    path_weights = '/data/flavio/anatiel/models/models_kfold/'
+    path_json = '/data/flavio/anatiel/models/models_kfold/'
+    path_plot = '/data/flavio/anatiel/models/models_kfold/'
 
     # load dataset
     [src_images_train, tar_images_train] = load_images(
