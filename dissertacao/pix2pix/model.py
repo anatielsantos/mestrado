@@ -3,9 +3,9 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import *
 from losses import dice
 
-config = tf.compat.v1.ConfigProto()
-config.gpu_options.allow_growth = True
-session = tf.compat.v1.InteractiveSession(config=config)
+# config = tf.compat.v1.ConfigProto()
+# config.gpu_options.allow_growth = True
+# session = tf.compat.v1.InteractiveSession(config=config)
 
 
 class Pix2Pix(tf.keras.Model):
