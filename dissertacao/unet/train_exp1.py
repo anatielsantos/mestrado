@@ -205,12 +205,12 @@ def train():
     std = np.std(imgs_train)  # std for data normalization
 
     # Normalization of the train set (Exp 1)
-    # imgs_train = imgs_train.astype(np.float32)
+    imgs_train = imgs_train.astype(np.float32)
     imgs_train -= mean
     imgs_train /= std
 
     # imgs_train = imgs_train.astype(np.float32)
-    # imgs_mask_train = imgs_mask_train.astype(np.float32)
+    imgs_mask_train = imgs_mask_train.astype(np.float32)
 
     print('Creating and compiling model...')
     print('-'*30)
