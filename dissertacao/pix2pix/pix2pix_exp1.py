@@ -10,12 +10,12 @@ from tensorflow.keras.callbacks import ModelCheckpoint
 from losses import *
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "5"
+os.environ["CUDA_VISIBLE_DEVICES"] = "4"
 
 # configuração necessária nas GPU's RTX
-# config = tf.compat.v1.ConfigProto()
-# config.gpu_options.allow_growth = True
-# session = tf.compat.v1.InteractiveSession(config=config)
+config = tf.compat.v1.ConfigProto()
+config.gpu_options.allow_growth = True
+session = tf.compat.v1.InteractiveSession(config=config)
 
 # train settings
 BUFFER_SIZE = 400
@@ -55,7 +55,7 @@ def load_images(path_src, path_mask):
     src = src_npz['arr_0']
     tar = tar_npz['arr_0']
 
-    src = np.float32(np.expand_dims(np.concatenate(src), axis=-1))
+    src = np.expand_dims(np.concatenate(src), axis=-1)
     tar = np.expand_dims(np.concatenate(tar), axis=-1)
 
     return src, tar
