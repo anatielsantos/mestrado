@@ -10,7 +10,7 @@ from tensorflow.keras.callbacks import ModelCheckpoint
 from losses import *
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "6"
+os.environ["CUDA_VISIBLE_DEVICES"] = "7"
 
 # configuração necessária nas GPU's RTX
 # config = tf.compat.v1.ConfigProto()
@@ -121,9 +121,9 @@ def train(path_weights, src_images_train, tar_images_train):
 
 if __name__ == "__main__":
     # dataset path
-    path_src_train = "/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/images_fold_6.npz"
+    path_src_train = "/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/images_fold_7.npz"
 
-    path_mask_train = "/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/masks_fold_6.npz"
+    path_mask_train = "/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/masks_fold_7.npz"
 
     # paths save
     path_weights = '/data/flavio/anatiel/models/models_kfold/'
