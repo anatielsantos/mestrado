@@ -17,7 +17,7 @@ from data_covid import load_train_data, dice_coef, dice_coef_loss, dice_bce_loss
 # GPU
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 BATCH_SIZE = 1
 EPOCHS = 150
@@ -217,19 +217,19 @@ def train():
 
     model = unet()
     #Saving the weights and the loss of the best predictions we obtained
-    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/models/models_kfold/unet_ds1_150epc_best_k4.h5', monitor='val_loss', save_best_only=True, mode="min")
+    model_checkpoint = ModelCheckpoint('/data/flavio/anatiel/models/models_kfold/unet_ds1_150epc_best_k5.h5', monitor='val_loss', save_best_only=True, mode="min")
 
     print('Fitting model...')
     print('-'*30)
     history = model.fit(imgs_train, imgs_mask_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=1, shuffle=True, validation_split=0.1, callbacks=[model_checkpoint])
 
-    model.save('/data/flavio/anatiel/models/models_kfold/unet_ds1_150epc_last_k4.h5')
+    model.save('/data/flavio/anatiel/models/models_kfold/unet_ds1_150epc_last_k5.h5')
 
     # convert the history.history dict to a pandas DataFrame:     
     hist_df = pd.DataFrame(history.history)
 
     # save to json:  
-    hist_json_file = '/data/flavio/anatiel/models/models_kfold/unet_ds1_150epc_k4.json'
+    hist_json_file = '/data/flavio/anatiel/models/models_kfold/unet_ds1_150epc_k5.json'
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("history saved")
@@ -241,7 +241,7 @@ def train():
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Val'], loc='upper left')
     # save plot to file
-    plt.savefig('/data/flavio/anatiel/models/models_kfold/unet_ds1_150epc_k4.png')
+    plt.savefig('/data/flavio/anatiel/models/models_kfold/unet_ds1_150epc_k5.png')
     # plt.show()
 
 
