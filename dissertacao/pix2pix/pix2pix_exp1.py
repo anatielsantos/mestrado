@@ -10,7 +10,7 @@ from tensorflow.keras.callbacks import ModelCheckpoint
 from losses import *
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "7"
+os.environ["CUDA_VISIBLE_DEVICES"] = "4"
 
 # configuração necessária nas GPU's RTX
 # config = tf.compat.v1.ConfigProto()
@@ -76,7 +76,7 @@ def train(path_weights, src_images_train, tar_images_train):
 
     # train model
     checkpoint = ModelCheckpoint(
-        path_weights+'gan_ds1_150epc_best_k7.hdf5',
+        path_weights+'gan_ds1_150epc_best_k4.hdf5',
         monitor='dice',
         verbose=1,
         save_best_only=True,
@@ -95,14 +95,14 @@ def train(path_weights, src_images_train, tar_images_train):
         callbacks=[checkpoint]
     )
 
-    model.save(path_weights+'gan_ds1_150epc_last_k7.hdf5')
+    model.save(path_weights+'gan_ds1_150epc_last_k4.hdf5')
 
     # convert the history.history dict to a pandas DataFrame:
     hist_df = pd.DataFrame(history.history)
 
     # save to json:
     print("Saving history")
-    hist_json_file = path_json+'gan_ds1_150epc_k7.json'
+    hist_json_file = path_json+'gan_ds1_150epc_k4.json'
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("History saved")
@@ -115,15 +115,15 @@ def train(path_weights, src_images_train, tar_images_train):
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Val', 'Loss'], loc='upper left')
     # save plot to file
-    plt.savefig(path_plot+'gan_ds1_150epc_k7.png')
+    plt.savefig(path_plot+'gan_ds1_150epc_k4.png')
     # plt.show()
 
 
 if __name__ == "__main__":
     # dataset path
-    path_src_train = "/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/images_fold_7.npz"
+    path_src_train = "/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/images_fold_4.npz"
 
-    path_mask_train = "/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/masks_fold_7.npz"
+    path_mask_train = "/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/masks_fold_4.npz"
 
     # paths save
     path_weights = '/data/flavio/anatiel/models/models_kfold/'

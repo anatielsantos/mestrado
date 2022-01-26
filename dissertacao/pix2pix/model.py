@@ -299,8 +299,8 @@ class Pix2Pix(tf.keras.Model):
         self.generator.save(filepath, overwrite, include_optimizer, save_format, signatures, options)
 
 
-    def save_weights(self, filepath, overwrite=True, save_format=None, options=None):
-        self.generator.save_weights(filepath, overwrite, save_format, options)
+    # def save_weights(self, filepath, overwrite=True, save_format=None, options=None):
+    #     self.generator.save_weights(filepath, overwrite, save_format, options)
 
 
     def load_weights(self, filepath, by_name=False, skip_mismatch=False):
