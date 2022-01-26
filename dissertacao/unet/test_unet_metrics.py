@@ -176,7 +176,7 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_PredLesionSeg_1_2_last' + ext
+        output_path = dst_dir + '/' + exam_id + '_pred_k0' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -209,12 +209,12 @@ def main():
 
     ext = '.nii.gz'
     search_pattern = '*'
-    dataset = 'dataset2'
+    dataset = 'dataset1'
 
     # remote
-    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/tests'
-    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/tests/Test_mask'
-    model_path = '/data/flavio/anatiel/models/dissertacao/final_tests/original_unet_exp4_1_best.h5'
+    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images_fold_2.npz'
+    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/masks_fold_2.npz'
+    model_path = '/data/flavio/anatiel/models/dissertacao/unet_150epc_last.h5'
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
