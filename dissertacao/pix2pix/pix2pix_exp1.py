@@ -9,8 +9,6 @@ from tensorflow.keras.callbacks import ModelCheckpoint
 # from util import *
 from losses import *
 
-os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "7"
 
 # configuração necessária nas GPU's RTX
 # config = tf.compat.v1.ConfigProto()
@@ -25,7 +23,11 @@ IMG_WIDTH = 544
 IMG_HEIGHT = 544
 INPUT_CHANNELS = 1
 OUTPUT_CHANNELS = 1
+K = 0
+GPU = "4"
 
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"] = GPU
 
 # loss
 def generator_loss(disc_generated_output, gen_output, target, LAMBDA=100):
@@ -76,7 +78,7 @@ def train(path_weights, src_images_train, tar_images_train):
 
     # train model
     checkpoint = ModelCheckpoint(
-        path_weights+'gan_ds1_150epc_best_k7.hdf5',
+        path_weights+'gan_ds1_150epc_best_k'+K+'.hdf5',
         monitor='dice',
         verbose=1,
         save_best_only=True,
@@ -95,14 +97,14 @@ def train(path_weights, src_images_train, tar_images_train):
         callbacks=[checkpoint]
     )
 
-    model.save(path_weights+'gan_ds1_150epc_last_k7.hdf5')
+    model.save(path_weights+'gan_ds1_150epc_last_k'+K+'.hdf5')
 
     # convert the history.history dict to a pandas DataFrame:
     hist_df = pd.DataFrame(history.history)
 
     # save to json:
     print("Saving history")
-    hist_json_file = path_json+'gan_ds1_150epc_k7.json'
+    hist_json_file = path_json+'gan_ds1_150epc_k'+K+'.json'
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("History saved")
@@ -115,15 +117,15 @@ def train(path_weights, src_images_train, tar_images_train):
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Val', 'Loss'], loc='upper left')
     # save plot to file
-    plt.savefig(path_plot+'gan_ds1_150epc_k7.png')
+    plt.savefig(path_plot+'gan_ds1_150epc_k'+K+'.png')
     # plt.show()
 
 
 if __name__ == "__main__":
     # dataset path
-    path_src_train = "/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/images_fold_7.npz"
+    path_src_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/images_fold_{K}.npz"
 
-    path_mask_train = "/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/masks_fold_7.npz"
+    path_mask_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/masks_fold_{K}.npz"
 
     # paths save
     path_weights = '/data/flavio/anatiel/models/models_kfold/'
@@ -143,14 +145,14 @@ if __name__ == "__main__":
     )
 
     # Normalization of the train set (Exp 1)
-    mean = np.mean(src_images_train)  # mean for data centering
-    std = np.std(src_images_train)  # std for data normalization
-    src_images_train = src_images_train.astype(np.float32)
-    src_images_train -= mean
-    src_images_train /= std
+    # mean = np.mean(src_images_train)  # mean for data centering
+    # std = np.std(src_images_train)  # std for data normalization
+    # src_images_train = src_images_train.astype(np.float32)
+    # src_images_train -= mean
+    # src_images_train /= std
 
     # src_images_train = src_images_train.astype(np.float32)
-    tar_images_train = tar_images_train.astype(np.float32)
+    # tar_images_train = tar_images_train.astype(np.float32)
 
     # model training
     train(path_weights, src_images_train, tar_images_train)
