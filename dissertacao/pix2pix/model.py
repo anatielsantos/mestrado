@@ -7,7 +7,6 @@ from losses import dice
 # config.gpu_options.allow_growth = True
 # session = tf.compat.v1.InteractiveSession(config=config)
 
-OUTPUT_CHANNELS = 1
 
 class Pix2Pix(tf.keras.Model):
     def __init__(
@@ -74,28 +73,34 @@ class Pix2Pix(tf.keras.Model):
 
 
     # Original tensorflow generator
-    def Generator():
-        inputs = tf.keras.layers.Input(shape=[544, 544, 3])
+    """def Generator():
+        inputs = tf.keras.layers.Input(
+            shape=[
+                self.image_height,
+                self.image_width,
+                self.input_channels
+            ]
+        )
 
         down_stack = [
-        downsample(64, 4, apply_batchnorm=False),  # (batch_size, 128, 128, 64)
-        downsample(128, 4),  # (batch_size, 64, 64, 128)
-        downsample(256, 4),  # (batch_size, 32, 32, 256)
-        downsample(512, 4),  # (batch_size, 16, 16, 512)
-        downsample(512, 4),  # (batch_size, 8, 8, 512)
-        downsample(512, 4),  # (batch_size, 4, 4, 512)
-        downsample(512, 4),  # (batch_size, 2, 2, 512)
-        downsample(512, 4),  # (batch_size, 1, 1, 512)
+            downsample(64, 4, apply_batchnorm=False),  # (batch_size, 128, 128, 64)
+            downsample(128, 4),  # (batch_size, 64, 64, 128)
+            downsample(256, 4),  # (batch_size, 32, 32, 256)
+            downsample(512, 4),  # (batch_size, 16, 16, 512)
+            downsample(512, 4),  # (batch_size, 8, 8, 512)
+            downsample(512, 4),  # (batch_size, 4, 4, 512)
+            downsample(512, 4),  # (batch_size, 2, 2, 512)
+            downsample(512, 4),  # (batch_size, 1, 1, 512)
         ]
 
         up_stack = [
-        upsample(512, 4, apply_dropout=True),  # (batch_size, 2, 2, 1024)
-        upsample(512, 4, apply_dropout=True),  # (batch_size, 4, 4, 1024)
-        upsample(512, 4, apply_dropout=True),  # (batch_size, 8, 8, 1024)
-        upsample(512, 4),  # (batch_size, 16, 16, 1024)
-        upsample(256, 4),  # (batch_size, 32, 32, 512)
-        upsample(128, 4),  # (batch_size, 64, 64, 256)
-        upsample(64, 4),  # (batch_size, 128, 128, 128)
+            upsample(512, 4, apply_dropout=True),  # (batch_size, 2, 2, 1024)
+            upsample(512, 4, apply_dropout=True),  # (batch_size, 4, 4, 1024)
+            upsample(512, 4, apply_dropout=True),  # (batch_size, 8, 8, 1024)
+            upsample(512, 4),  # (batch_size, 16, 16, 1024)
+            upsample(256, 4),  # (batch_size, 32, 32, 512)
+            upsample(128, 4),  # (batch_size, 64, 64, 256)
+            upsample(64, 4),  # (batch_size, 128, 128, 128)
         ]
 
         initializer = tf.random_normal_initializer(0., 0.02)
@@ -103,7 +108,7 @@ class Pix2Pix(tf.keras.Model):
                                             strides=2,
                                             padding='same',
                                             kernel_initializer=initializer,
-                                            activation='tanh')  # (batch_size, 256, 256, 3)
+                                            activation='tanh') # (batch_size, 256, 256, 3)
 
         x = inputs
 
@@ -122,10 +127,10 @@ class Pix2Pix(tf.keras.Model):
 
         x = last(x)
 
-        return tf.keras.Model(inputs=inputs, outputs=x)
+        return tf.keras.Model(inputs=inputs, outputs=x)"""
 
     # Unet generator architecture changed
-    """def build_generator(self):
+    def build_generator(self):
         inputs = tf.keras.layers.Input(
             shape=[
                 self.image_height,
@@ -222,7 +227,7 @@ class Pix2Pix(tf.keras.Model):
 
         conv10 = Conv2D(1, (1, 1), activation='sigmoid')(conc9)
 
-        self.generator = Model(inputs=inputs, outputs=[conv10])"""
+        self.generator = Model(inputs=inputs, outputs=[conv10])
 
 
     def build_discriminator(self):
