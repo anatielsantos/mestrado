@@ -17,7 +17,8 @@ from data_covid import load_train_data, dice_coef, dice_coef_loss, dice_bce_loss
 BATCH_SIZE = 1
 EPOCHS = 150
 K = 1
-GPU = 1
+GPU = "1"
+
 # GPU
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
