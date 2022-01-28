@@ -16,8 +16,8 @@ from data_covid import load_train_data, dice_coef, dice_coef_loss, dice_bce_loss
 
 BATCH_SIZE = 1
 EPOCHS = 150
-K = 1
-GPU = "1"
+K = 2
+GPU = "2"
 
 # GPU
 import os
