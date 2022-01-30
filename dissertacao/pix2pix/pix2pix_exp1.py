@@ -23,8 +23,9 @@ IMG_WIDTH = 544
 IMG_HEIGHT = 544
 INPUT_CHANNELS = 1
 OUTPUT_CHANNELS = 1
-K = 8
-GPU = "4"
+K = 2  # Definir o fold
+GPU = "6"  # Definir a GPU
+DS = "2"  # Definir o dataset
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = GPU
@@ -123,9 +124,9 @@ def train(path_weights, src_images_train, tar_images_train):
 
 if __name__ == "__main__":
     # dataset path
-    path_src_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/images_fold_{K}.npz"
+    path_src_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset{DS}/images_fold_{K}.npz"
 
-    path_mask_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/masks_fold_{K}.npz"
+    path_mask_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset{DS}/masks_fold_{K}.npz"
 
     # paths save
     path_weights = '/data/flavio/anatiel/models/models_kfold/'
