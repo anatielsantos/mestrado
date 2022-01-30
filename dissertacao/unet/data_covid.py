@@ -5,7 +5,7 @@ from tensorflow.keras import backend as K
 
 K.set_image_data_format('channels_last')  # TF dimension ordering in this code
 smooth = 1.
-KF = "3"  # Definir o fold (k)
+KF = "4"  # Definir o fold (k)
 DS = "2"  # Definir o dataset
 
 # The functions return our metric and loss
