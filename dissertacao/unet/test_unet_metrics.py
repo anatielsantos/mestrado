@@ -8,9 +8,8 @@ import time
 import multiprocessing.pool as mpp
 from itertools import repeat
 from tqdm import tqdm
-from lesionseg.train import unet
+from train_exp1 import unet
 from losses import calc_metric
-from skimage.exposure import rescale_intensity
 
 # GPU
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
@@ -47,6 +46,7 @@ img_rows = 544
 img_cols = 544
 img_depth = 1
 smooth = 1.
+K = "0"
 
 
 def preprocess_squeeze(imgs):
@@ -63,30 +63,6 @@ def load_patient(image):
     return npyImage
 
 
-def get_bbox(mask, pred_mask):
-    new_image = np.zeros(pred_mask.shape)
-    for s in range(len(new_image[:,0,0])):
-        menor_c =  640
-        maior_c =  0
-        menor_l =  640
-        maior_l =  0
-        print(s, "/", len(mask[:,0,0]))
-        for l in range(len(mask[0,:,0])):
-            for c in range(len(mask[0,0,:])):
-                if ((mask[s,l,c] == 1) & (c < menor_c)):
-                    menor_c = c
-                if ((mask[s,l,c] == 1) & (l < menor_l)):
-                    menor_l = l
-                if ((mask[s,l,c] == 1) & (c > maior_c)):
-                    maior_c = c
-                if ((mask[s,l,c] == 1) & (l > maior_l)):
-                    maior_l = l
-                
-        new_image[s, menor_l+5:maior_l-4,menor_c+5:maior_c-4] = pred_mask[s, menor_l+5:maior_l-4,menor_c+5:maior_c-4]
-    
-    return np.expand_dims(new_image, axis=-1)
-
-
 def predictPatient(model, image):
 
     print('-'*30)
@@ -94,27 +70,17 @@ def predictPatient(model, image):
     print('-'*30)
     npyImage = load_patient(image)
 
-    # Normalization of the train set (Exp 1)
-    npyImage = npyImage.astype('float32')
-    mean = np.mean(npyImage)  # mean for data centering
-    std = np.std(npyImage)  # std for data normalization
-    npyImage -= mean
-    npyImage /= std
-
-    # npyImage = rescale_intensity(npyImage, in_range=(0, 1))
-    # npyImage = npyImage.astype('float32')
-
     print('-'*30)
     print('Predicting test data...')
     print('-'*30)
 
     npyImagePredict = model.predict(npyImage, batch_size=1, verbose=1)
-    
     npyImagePredict = preprocess_squeeze(npyImagePredict)
     npyImagePredict = np.around(npyImagePredict, decimals=0)
     npyImagePredict = (npyImagePredict>0.5)*1
 
-    return npyImagePredict.astype(np.float32)
+    # return npyImagePredict.astype(np.float32)
+    return npyImagePredict
 
 
 def execPredict(exam_id, input_path, input_mask_path, output_path, model):
@@ -124,12 +90,11 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         binary_masks = predictPatient(model, input_path)
         npyMedMask = load_patient(input_mask_path)
 
-        # binary_masks = get_bbox(npyMedMask, binary_masks)
 
         # calc metrics
         print('-'*30)
         print('Calculating metrics...')
-        dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(binary_masks.astype(int), npyMedMask.astype(int))
+        dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(binary_masks, npyMedMask)
         print("DICE:", dice)
         print("IoU:", jaccard)
         print("Sensitivity:", sensitivity)
@@ -139,8 +104,9 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         print("Prec:", prec)
         print("FScore:", fscore)
 
+        binary_masks = binary_masks.astype(np.float32)
+        npyMedMask = npyMedMask.astype(np.float32)
 
-        # binary_masks.dtype='float32'
         itkImage = sitk.GetImageFromArray(binary_masks)
 
         image = sitk.ReadImage(input_path)
@@ -176,12 +142,11 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_pred_k0' + ext
+        output_path = dst_dir + '/' + exam_id + '_pred_k' + K + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
             print('Arquivo ' + output_path + ' ja existe')
-            # os.remove(output_path)
             continue
 
         exam_ids.append(exam_id)
@@ -211,10 +176,14 @@ def main():
     search_pattern = '*'
     dataset = 'dataset1'
 
-    # remote
-    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images_fold_2.npz'
-    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/masks_fold_2.npz'
-    model_path = '/data/flavio/anatiel/models/dissertacao/unet_150epc_last.h5'
+    # remote   
+    # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images_fold_2.npz'
+    # main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/masks_fold_2.npz'
+    # model_path = '/home/anatielsantos/Downloads/models_dissertacao/unet_ds2_150epc_best_k0.h5'
+
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/images/k0'
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/masks/k0'
+    model_path = '/home/anatielsantos/Downloads/models_dissertacao/unet_ds1_150epc_best_k0.h5'
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
