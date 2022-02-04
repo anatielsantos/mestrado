@@ -46,8 +46,8 @@ img_rows = 544
 img_cols = 544
 img_depth = 1
 smooth = 1.
-K = "4"
-model_weights = "unet_ds2_150epc_best_k4.h5"
+K = "5"
+model_weights = "unet_ds2_150epc_best_k5.h5"
 
 
 def preprocess_squeeze(imgs):
