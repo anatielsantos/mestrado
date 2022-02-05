@@ -5,6 +5,8 @@ from tensorflow.keras import backend as K
 
 K.set_image_data_format('channels_last')  # TF dimension ordering in this code
 smooth = 1.
+KF = "7"  # Definir o fold (k)
+DS = "2"  # Definir o dataset
 
 # The functions return our metric and loss
 def dice_coef(y_true, y_pred):
@@ -29,8 +31,13 @@ def dice_bce_loss(y_true, y_pred):
 
 def load_train_data():
     # remote
+<<<<<<< HEAD
     imgs_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/images_fold_8.npz', allow_pickle=True)
     masks_train_npz = np.load('/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/masks_fold_8.npz', allow_pickle=True)
+=======
+    imgs_train_npz = np.load(f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset{DS}/images_fold_{KF}.npz', allow_pickle=True)
+    masks_train_npz = np.load(f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset{DS}/masks_fold_{KF}.npz', allow_pickle=True)
+>>>>>>> 6deb7199a583eb8308838e41ea533c88063a7d72
 
     imgs_train = imgs_train_npz['arr_0']
     masks_train = masks_train_npz['arr_0']

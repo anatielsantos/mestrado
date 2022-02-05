@@ -13,7 +13,7 @@ from losses import calc_metric
 
 # GPU
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 
 def istarmap(self, func, iterable, chunksize=1):
@@ -46,9 +46,10 @@ img_rows = 544
 img_cols = 544
 img_depth = 1
 smooth = 1.
-K = "0"
+K = "8"
+model_weights = "unet_ds2_150epc_best_k8.h5"
 
-
+ 
 def preprocess_squeeze(imgs):
     imgs = np.squeeze(imgs, axis=3)
     print(' ---------------- preprocessed squeezed -----------------')
@@ -174,20 +175,20 @@ def main():
 
     ext = '.nii.gz'
     search_pattern = '*'
-    dataset = 'dataset1'
+    dataset = 'dataset2'
 
     # remote   
-    # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images_fold_2.npz'
-    # main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/masks_fold_2.npz'
-    # model_path = '/home/anatielsantos/Downloads/models_dissertacao/unet_ds2_150epc_best_k0.h5'
+    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images/k{K}'
+    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/masks/k{K}'
+    model_path = f'/data/flavio/anatiel/models/models_kfold/{model_weights}'
 
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/images/k0'
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/masks/k0'
-    model_path = '/home/anatielsantos/Downloads/models_dissertacao/unet_ds1_150epc_best_k0.h5'
+    # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/images/k0'
+    # main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/masks/k0'
+    # model_path = '/home/anatielsantos/Downloads/models_dissertacao/unet_ds1_150epc_best_k0.h5'
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = '{}/unet_ds1_preds'.format(main_dir)
+    dst_dir = '{}/unet_ds2_preds'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
