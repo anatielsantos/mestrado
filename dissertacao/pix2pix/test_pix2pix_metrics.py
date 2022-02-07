@@ -157,7 +157,7 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_pred_k0' + ext
+        output_path = dst_dir + '/' + exam_id + '_pred' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -198,11 +198,11 @@ def main():
 
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/images/k0'
     main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/masks/k0'
-    model_path = '/home/anatielsantos/Downloads/models_dissertacao/gan_ds1_150epc_best_k0.hdf5'
+    model_path = '/home/anatielsantos/Downloads/models_dissertacao/gan_ds1_150epc_best.hdf5'
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = '{}/gan_ds1_preds'.format(main_dir)
+    dst_dir = '{}/gan_ds1_preds_test'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
