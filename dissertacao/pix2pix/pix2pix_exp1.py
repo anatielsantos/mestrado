@@ -95,7 +95,7 @@ def train(path_weights, src_images_train, tar_images_train):
         verbose=1,
         shuffle=True,
         validation_split=0.1,
-        callbacks=[checkpoint]
+        callbacks=checkpoint
     )
 
     model.save(path_weights+'gan_ds1_150epc_last.hdf5')
