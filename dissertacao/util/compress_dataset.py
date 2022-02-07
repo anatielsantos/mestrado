@@ -127,8 +127,8 @@ def compress_dataset(
 def main():
     ext = '.nii.gz'
     # joint = 'train'  # [train, test]
-    main_dir_image = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/images'
-    main_dir_mask = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/masks'
+    main_dir_image = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/images/*'
+    main_dir_mask = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/masks/*'
 
     src = main_dir_image
     tar = main_dir_mask
