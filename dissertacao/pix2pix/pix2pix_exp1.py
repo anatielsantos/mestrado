@@ -18,13 +18,13 @@ from losses import *
 # train settings
 BUFFER_SIZE = 400
 BATCH_SIZE = 1
-EPOCHS = 1
+EPOCHS = 150
 IMG_WIDTH = 544
 IMG_HEIGHT = 544
 INPUT_CHANNELS = 1
 OUTPUT_CHANNELS = 1
 K = 8  # Definir o fold
-GPU = "0"  # Definir a GPU
+GPU = "4"  # Definir a GPU
 DS = "2"  # Definir o dataset
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
@@ -79,7 +79,7 @@ def train(path_weights, src_images_train, tar_images_train):
 
     # train model
     checkpoint = ModelCheckpoint(
-        path_weights+'gan_ds1_150epc_best.hdf5',
+        path_weights+'gan_ds1_150epc_best_k'+str(K)+'.hdf5',
         monitor='dice',
         verbose=1,
         save_best_only=True,
@@ -95,17 +95,17 @@ def train(path_weights, src_images_train, tar_images_train):
         verbose=1,
         shuffle=True,
         validation_split=0.1,
-        callbacks=checkpoint
+        callbacks=[checkpoint]
     )
 
-    model.save(path_weights+'gan_ds1_150epc_last.hdf5')
+    model.save(path_weights+'gan_ds1_150epc_last_k'+str(K)+'.hdf5')
 
     # convert the history.history dict to a pandas DataFrame:
     hist_df = pd.DataFrame(history.history)
 
     # save to json:
     print("Saving history")
-    hist_json_file = path_json+'gan_ds1_150epc.json'
+    hist_json_file = path_json+'gan_ds1_150epc_k'+str(K)+'.json'
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("History saved")
@@ -118,15 +118,15 @@ def train(path_weights, src_images_train, tar_images_train):
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Val', 'Loss'], loc='upper left')
     # save plot to file
-    plt.savefig(path_plot+'gan_ds1_150epc.png')
+    plt.savefig(path_plot+'gan_ds1_150epc_k'+str(K)+'.png')
     # plt.show()
 
 
 if __name__ == "__main__":
     # dataset path
-    path_src_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset{DS}/images_ds{DS}.npz"
+    path_src_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset{DS}/images_fold_{K}.npz"
 
-    path_mask_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset{DS}/masks_ds{DS}.npz"
+    path_mask_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset{DS}/masks_fold_{K}.npz"
 
     # paths save
     path_weights = '/data/flavio/anatiel/models/models_kfold/'

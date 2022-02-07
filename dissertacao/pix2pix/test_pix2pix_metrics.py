@@ -157,7 +157,7 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_pred_test' + ext
+        output_path = dst_dir + '/' + exam_id + '_pred_k2' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -192,9 +192,9 @@ def main():
     dataset = 'dataset1'
 
     # remote
-    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images/k0'
-    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/masks/k0'
-    model_path = '/data/flavio/anatiel/models/models_kfold/gan_ds1_150epc_best.hdf5'
+    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images_fold_2.npz'
+    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/masks_fold_2.npz'
+    model_path = '/data/flavio/anatiel/models/dissertacao/unet_150epc_last_k2.h5'
 
     # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/images/k0'
     # main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/masks/k0'
@@ -202,7 +202,7 @@ def main():
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = '{}/gan_ds1_preds_test'.format(main_dir)
+    dst_dir = '{}/gan_ds1_preds'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
