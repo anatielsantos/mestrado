@@ -63,7 +63,8 @@ def compress_dataset(
     ext,
     reverse=False,
     desc=None,
-    remove_no_lesion=False
+    remove_no_lesion=False,
+    kfold=False
 ):
 
     try:
@@ -106,31 +107,35 @@ def compress_dataset(
         list_masks.append(masks)
 
     # k-fold
-    kf = KFold(n_splits=len(input_src_paths))
-    kf.get_n_splits(input_src_pathAll)
+    if kfold:
+        kf = KFold(n_splits=len(input_src_paths))
+        kf.get_n_splits(input_src_pathAll)
 
-    for train_index, test_index in kf.split(input_src_pathAll):
-        print("TRAIN:", train_index, "TEST:", test_index)
+        for train_index, test_index in kf.split(input_src_pathAll):
+            print("TRAIN:", train_index, "TEST:", test_index)
 
-        list_images_fold = np.delete(list_images, test_index[0], axis=0)
-        list_masks_fold = np.delete(list_masks, test_index[0], axis=0)
+            list_images_fold = np.delete(list_images, test_index[0], axis=0)
+            list_masks_fold = np.delete(list_masks, test_index[0], axis=0)
 
-        np.savez_compressed(f"{output_path}/images_fold_{test_index[0]}", list_images_fold)
-        np.savez_compressed(f"{output_path}/masks_fold_{test_index[0]}", list_masks_fold)
+            np.savez_compressed(f"{output_path}/images_fold_{test_index[0]}", list_images_fold)
+            np.savez_compressed(f"{output_path}/masks_fold_{test_index[0]}", list_masks_fold)
+    else:
+        np.savez_compressed(f"{output_path}/images_ds1", list_images)
+        np.savez_compressed(f"{output_path}/masks_ds1", list_masks)
 
 
 def main():
     ext = '.nii.gz'
     # joint = 'train'  # [train, test]
-    main_dir_image = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset2/images'
-    main_dir_mask = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset2/masks'
+    main_dir_image = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/images'
+    main_dir_mask = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1/masks'
 
     src = main_dir_image
     tar = main_dir_mask
     src_dir = '{}'.format(src)
     mask_dir = '{}'.format(tar)
 
-    dst_dir = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset2'
+    dst_dir = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset1'
 
     compress_dataset(
         src_dir,
@@ -139,7 +144,8 @@ def main():
         ext,
         reverse=False,
         desc=f'Compressing datasets',
-        remove_no_lesion=True
+        remove_no_lesion=True,
+        kfold=False
     )
 
 
