@@ -145,6 +145,8 @@ if __name__ == "__main__":
         tar_images_train.shape
     )
 
+    print(f"Running K{K} from DATASET {DS} on GPU {GPU}")
+
     # Normalization of the train set (Exp 1)
     # mean = np.mean(src_images_train)  # mean for data centering
     # std = np.std(src_images_train)  # std for data normalization
