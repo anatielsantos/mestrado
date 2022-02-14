@@ -193,8 +193,8 @@ def main():
     KF = '0'
 
     # remote
-    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/k{KF}/*'
-    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/k{KF}/*'
+    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/k{KF}/'
+    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/k{KF}/'
     model_path = f'/data/flavio/anatiel/models/models_kfold/gan_ds1_150epc_best_k{KF}.hdf5'
 
     # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/images/k0'
