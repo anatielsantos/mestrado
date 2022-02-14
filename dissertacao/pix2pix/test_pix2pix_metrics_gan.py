@@ -190,7 +190,7 @@ def main():
     ext = '.nii.gz'
     search_pattern = '*'
     dataset = 'dataset2'
-    KF = '5'
+    KF = '6'
 
     # remote
     main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images/k{KF}/'
