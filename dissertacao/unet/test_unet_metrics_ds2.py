@@ -46,8 +46,7 @@ img_rows = 544
 img_cols = 544
 img_depth = 1
 smooth = 1.
-K = "8"
-model_weights = "unet_ds2_150epc_best_k8.h5"
+K = "5"
 
  
 def preprocess_squeeze(imgs):
@@ -180,7 +179,7 @@ def main():
     # remote   
     main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images/k{K}'
     main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/masks/k{K}'
-    model_path = f'/data/flavio/anatiel/models/models_kfold/{model_weights}'
+    model_path = f'/data/flavio/anatiel/models/models_kfold/unet_ds2_150epc_best_k{K}.h5'
 
     # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/images/k0'
     # main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/masks/k0'
