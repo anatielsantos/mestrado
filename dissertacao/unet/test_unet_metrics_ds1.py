@@ -13,7 +13,7 @@ from losses import calc_metric
 
 # GPU
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 
 
 def istarmap(self, func, iterable, chunksize=1):
@@ -46,8 +46,7 @@ img_rows = 544
 img_cols = 544
 img_depth = 1
 smooth = 1.
-K = "9"
-model_weights = "unet_ds1_150epc_best_k9.h5"
+K = "5"
 
 
 def preprocess_squeeze(imgs):
@@ -180,7 +179,7 @@ def main():
     # remote   
     main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images/k{K}'
     main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/masks/k{K}'
-    model_path = f'/data/flavio/anatiel/models/models_kfold/{model_weights}'
+    model_path = f'/data/flavio/anatiel/models/models_kfold/unet_ds1_150epc_best_k{K}.h5'
 
     # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/images/k0'
     # main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/masks/k0'
