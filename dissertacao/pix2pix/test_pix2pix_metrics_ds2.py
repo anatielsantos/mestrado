@@ -97,7 +97,7 @@ def predictPatient(model, image):
     # npyImagePredict = np.around(npyImagePredict, decimals=0)
     # npyImagePredict = (npyImagePredict>0.5)*1
 
-    return npyImagePredict.astype(np.float32)
+    return npyImagePredict #.astype(np.float32)
 
 
 def execPredict(exam_id, input_path, input_mask_path, output_path, model):
@@ -123,7 +123,7 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         print("Prec:\t", prec)
         print("FScore:\t", fscore)
 
-        # binary_masks.dtype='float32'
+        binary_masks = binary_masks.astype(np.float32)
         itkImage = sitk.GetImageFromArray(binary_masks)
         image = sitk.ReadImage(input_path)
         itkImage.CopyInformation(image)
