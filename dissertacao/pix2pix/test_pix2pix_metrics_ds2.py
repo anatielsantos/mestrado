@@ -190,11 +190,11 @@ def main():
     ext = '.nii.gz'
     search_pattern = '*'
     dataset = 'dataset2'
-    KF = '5'
+    KF = '7'
 
     # remote
-    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images/k{KF}/'
-    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/masks/k{KF}/'
+    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset2/images/k{KF}/'
+    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset2/masks/k{KF}/'
     model_path = f'/data/flavio/anatiel/models/models_kfold/gan_ds2_150epc_best_k{KF}.hdf5'
 
     # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/images/k0'
