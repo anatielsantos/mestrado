@@ -12,7 +12,7 @@ from skimage.transform import resize
 from skimage.io import imsave
 import skimage.transform as trans
 import skimage.io as io
-from dissertacao.unet.data_covid_ds1 import load_train_data, dice_coef, dice_coef_loss, dice_bce_loss
+from unet.data_covid_ds1 import load_train_data, dice_coef, dice_coef_loss, dice_bce_loss
 
 BATCH_SIZE = 1
 EPOCHS = 150
