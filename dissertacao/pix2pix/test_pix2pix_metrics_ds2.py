@@ -1,7 +1,7 @@
 # GPU
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 import tensorflow as tf
 
@@ -78,6 +78,8 @@ def predictPatient(model, image):
     print('-'*30)
     npyImage = load_patient(image)
 
+    npyImage = np.float32(npyImage)
+
     print("Image shape:", npyImage.shape)
 
     print('-'*30)
@@ -94,10 +96,10 @@ def predictPatient(model, image):
             npyImagePredict = np.concatenate([npyImagePredict,pred],axis=0)
 
     npyImagePredict = preprocess_squeeze(npyImagePredict)
-    # npyImagePredict = np.around(npyImagePredict, decimals=0)
-    # npyImagePredict = (npyImagePredict>0.5)*1
+    npyImagePredict = np.around(npyImagePredict, decimals=1)
+    npyImagePredict = (npyImagePredict>0.5)*1
 
-    return npyImagePredict #.astype(np.float32)
+    return npyImagePredict
 
 
 def execPredict(exam_id, input_path, input_mask_path, output_path, model):
@@ -110,10 +112,27 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         print("Pred shape:", binary_masks.shape)
         print("Mask shape:", npyMedMask.shape)
 
+        print("Pred type:", binary_masks.dtype)
+        print("Mask type:", npyMedMask.dtype)
+
+        binary_masks = np.float32(binary_masks)
+        npyMedMask = np.float32(npyMedMask)
+        print("Pred min:", np.amin(binary_masks))
+        print("Pred max:", np.amax(binary_masks))
+        print("Mask min:", np.amin(npyMedMask))
+        print("Mask max:", np.amax(npyMedMask))
+        
+        itkImage = sitk.GetImageFromArray(binary_masks)
+        image = sitk.ReadImage(input_path)
+        itkImage.CopyInformation(image)
+        sitk.WriteImage(itkImage, output_path)
+
+        del image
+
         # calc metrics
         print('-'*30)
         print('Calculating metrics...')
-        dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(binary_masks.astype(int), npyMedMask.astype(int))
+        dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(binary_masks, npyMedMask)
         print("DICE:\t", dice)
         print("IoU:\t", jaccard)
         print("Sensitivity:\t", sensitivity)
@@ -123,13 +142,6 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         print("Prec:\t", prec)
         print("FScore:\t", fscore)
 
-        binary_masks = binary_masks.astype(np.float32)
-        itkImage = sitk.GetImageFromArray(binary_masks)
-        image = sitk.ReadImage(input_path)
-        itkImage.CopyInformation(image)
-        sitk.WriteImage(itkImage, output_path)
-
-        del image
 
     except Exception as e:
         print("type error: " + str(e))
@@ -190,20 +202,20 @@ def main():
     ext = '.nii.gz'
     search_pattern = '*'
     dataset = 'dataset2'
-    KF = '7'
+    KF = '1'
 
     # remote
-    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset2/images/k{KF}/'
-    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset2/masks/k{KF}/'
-    model_path = f'/data/flavio/anatiel/models/models_kfold/gan_ds2_150epc_best_k{KF}.hdf5'
+    # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset2/images/k{KF}/'
+    # main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset2/masks/k{KF}/'
+    # model_path = f'/data/flavio/anatiel/models/models_kfold/gan_ds2_150epc_best_k{KF}.hdf5'
 
-    # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/images/k0'
-    # main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/masks/k0'
-    # model_path = '/home/anatielsantos/Downloads/models_dissertacao/gan_ds1_150epc_best_k0.hdf5'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset2/images/k{KF}'
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset2/masks/k{KF}'
+    model_path = f'/home/anatielsantos/Downloads/models_dissertacao/gan/gan_ds2_150epc_best_k{KF}.hdf5'
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = '{}gan_preds'.format(main_dir)
+    dst_dir = '{}_gan_preds'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))

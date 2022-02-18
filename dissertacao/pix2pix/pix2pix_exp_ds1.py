@@ -23,7 +23,7 @@ IMG_WIDTH = 544
 IMG_HEIGHT = 544
 INPUT_CHANNELS = 1
 OUTPUT_CHANNELS = 1
-K = 0  # Definir o fold
+K = ""  # Definir o fold
 GPU = "0"  # Definir a GPU
 DS = "1"  # Definir o dataset
 
@@ -79,7 +79,7 @@ def train(path_weights, src_images_train, tar_images_train):
 
     # train model
     checkpoint = ModelCheckpoint(
-        path_weights+'gan_ds'+DS+'_150epc_best_k'+str(K)+'.hdf5',
+        path_weights+'gan_ds'+DS+'_150epc_best.hdf5',
         monitor='dice',
         verbose=1,
         save_best_only=True,
@@ -98,14 +98,14 @@ def train(path_weights, src_images_train, tar_images_train):
         callbacks=[checkpoint]
     )
 
-    model.save(path_weights+'gan_ds'+DS+'_150epc_last_k'+str(K)+'.hdf5')
+    model.save(path_weights+'gan_ds'+DS+'_150epc_last.hdf5')
 
     # convert the history.history dict to a pandas DataFrame:
     hist_df = pd.DataFrame(history.history)
 
     # save to json:
     print("Saving history")
-    hist_json_file = path_json+'gan_ds'+DS+'_150epc_k'+str(K)+'.json'
+    hist_json_file = path_json+'gan_ds'+DS+'_150epc.json'
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("History saved")
@@ -118,20 +118,20 @@ def train(path_weights, src_images_train, tar_images_train):
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Val', 'Loss'], loc='upper left')
     # save plot to file
-    plt.savefig(path_plot+'gan_ds'+DS+'_150epc_k'+str(K)+'.png')
+    plt.savefig(path_plot+'gan_ds'+DS+'_150epc.png')
     # plt.show()
 
 
 if __name__ == "__main__":
     # dataset path
-    path_src_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset{DS}/images_fold_{K}.npz"
+    path_src_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset{DS}/images_ds{DS}.npz"
 
-    path_mask_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset{DS}/masks_fold_{K}.npz"
+    path_mask_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset{DS}/masks_ds{DS}.npz"
 
     # paths save
-    path_weights = '/data/flavio/anatiel/models/models_kfold/'
-    path_json = '/data/flavio/anatiel/models/models_kfold/'
-    path_plot = '/data/flavio/anatiel/models/models_kfold/'
+    path_weights = f'/data/flavio/anatiel/models/models_ds{DS}'
+    path_json = f'/data/flavio/anatiel/models/models_kfold_ds{DS}'
+    path_plot = f'/data/flavio/anatiel/models/models_kfold_ds{DS}'
 
     # load dataset
     [src_images_train, tar_images_train] = load_images(
