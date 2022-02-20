@@ -118,32 +118,32 @@ def compress_dataset(
             list_images_fold = np.delete(list_images, test_index[0], axis=0)
             list_masks_fold = np.delete(list_masks, test_index[0], axis=0)
 
-            np.savez_compressed(f"{output_path}/images_fold_{i}", list_images_fold)
-            np.savez_compressed(f"{output_path}/masks_fold_{i}", list_masks_fold)
+            np.savez_compressed(f"{output_path}/images_mixed_fold_{i}", list_images_fold)
+            np.savez_compressed(f"{output_path}/masks_mixed_fold_{i}", list_masks_fold)
             i = i + 1
     else:
-        np.savez_compressed(f"{output_path}/images", list_images)
-        np.savez_compressed(f"{output_path}/masks", list_masks)
+        np.savez_compressed(f"{output_path}/images_mixed", list_images)
+        np.savez_compressed(f"{output_path}/masks_mixed", list_masks)
 
 
 def main():
     ext = '.nii.gz'
-    # main_dir_image = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset*/images'
-    # main_dir_mask = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset*/masks'
+    main_dir_image = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset*/images/*'
+    main_dir_mask = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset*/masks/*'
 
     # local
-    main_dir_image = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset*/images'
-    main_dir_mask = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset*/masks'
+    # main_dir_image = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset*/images'
+    # main_dir_mask = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset*/masks'
 
     src = main_dir_image
     tar = main_dir_mask
     src_dir = '{}'.format(src)
     mask_dir = '{}'.format(tar)
 
-    # dst_dir = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/mixed_dataset'
+    dst_dir = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/mixed_dataset'
     
     # local
-    dst_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/'
+    # dst_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/'
 
     compress_dataset(
         src_dir,
