@@ -129,9 +129,9 @@ if __name__ == "__main__":
     path_mask_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset{DS}/masks_ds{DS}.npz"
 
     # paths save
-    path_weights = f'/data/flavio/anatiel/models/models_ds{DS}'
-    path_json = f'/data/flavio/anatiel/models/models_kfold_ds{DS}'
-    path_plot = f'/data/flavio/anatiel/models/models_kfold_ds{DS}'
+    path_weights = f'/data/flavio/anatiel/models/models_ds{DS}/'
+    path_json = f'/data/flavio/anatiel/models/models_kfold_ds{DS}/'
+    path_plot = f'/data/flavio/anatiel/models/models_kfold_ds{DS}/'
 
     # load dataset
     [src_images_train, tar_images_train] = load_images(
