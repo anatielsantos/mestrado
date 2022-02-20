@@ -5,7 +5,7 @@ from tensorflow.keras import backend as K
 
 K.set_image_data_format('channels_last')  # TF dimension ordering in this code
 smooth = 1.
-KF = ""  # Definir o fold (k)
+KF = "0"  # Definir o fold (k)
 DS = "_mixed"  # Definir o dataset
 
 # The functions return our metric and loss
@@ -36,6 +36,8 @@ def load_train_data():
 
     imgs_train = imgs_train_npz['arr_0']
     masks_train = masks_train_npz['arr_0']
+
+    print(f"Train unet {DS} - Fold {KF}")
 
     return np.expand_dims(np.concatenate(imgs_train), axis=-1), np.expand_dims(np.concatenate(masks_train), axis=-1)
     
