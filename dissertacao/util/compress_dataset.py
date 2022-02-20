@@ -128,8 +128,8 @@ def compress_dataset(
 
 def main():
     ext = '.nii.gz'
-    main_dir_image = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset*/images/*'
-    main_dir_mask = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset*/masks/*'
+    main_dir_image = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/mixed_dataset/images'
+    main_dir_mask = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/mixed_dataset/masks'
 
     # local
     # main_dir_image = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset*/images'
