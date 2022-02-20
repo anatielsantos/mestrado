@@ -34,7 +34,7 @@ def load_image(path_image, path_mask, remove_no_lesion=False):
                     remove_list_image.append(i)
                     remove_list_mask.append(i)
 
-            print("Shape antes da remoção: ", npyImage.shape)
+            print("Shape antes da remoção: ", npyImage.shape, " | Exame:", path_image.split("/")[-1])
             # a = npyImage.shape[0]
             npyImage = np.delete(npyImage, remove_list_image, axis=0)
             npyMask = np.delete(npyMask, remove_list_mask, axis=0)
@@ -108,37 +108,42 @@ def compress_dataset(
 
     # k-fold
     if kfold:
-        kf = KFold(n_splits=len(input_src_paths))
+        kf = KFold(n_splits=10)
         kf.get_n_splits(input_src_pathAll)
 
+        i = 0
         for train_index, test_index in kf.split(input_src_pathAll):
             print("TRAIN:", train_index, "TEST:", test_index)
 
             list_images_fold = np.delete(list_images, test_index[0], axis=0)
             list_masks_fold = np.delete(list_masks, test_index[0], axis=0)
 
-            np.savez_compressed(f"{output_path}/images_fold_{test_index[0]}", list_images_fold)
-            np.savez_compressed(f"{output_path}/masks_fold_{test_index[0]}", list_masks_fold)
+            np.savez_compressed(f"{output_path}/images_fold_{i}", list_images_fold)
+            np.savez_compressed(f"{output_path}/masks_fold_{i}", list_masks_fold)
+            i = i + 1
     else:
-        np.savez_compressed(f"{output_path}/images_ds2", list_images)
-        np.savez_compressed(f"{output_path}/masks_ds2", list_masks)
+        np.savez_compressed(f"{output_path}/images", list_images)
+        np.savez_compressed(f"{output_path}/masks", list_masks)
 
 
 def main():
     ext = '.nii.gz'
-    # main_dir_image = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset2/images/*'
-    # main_dir_mask = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset2/masks/*'
+    # main_dir_image = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset*/images'
+    # main_dir_mask = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset*/masks'
 
     # local
-    main_dir_image = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset2/images'
-    main_dir_mask = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset2/masks'
+    main_dir_image = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset*/images'
+    main_dir_mask = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset*/masks'
 
     src = main_dir_image
     tar = main_dir_mask
     src_dir = '{}'.format(src)
     mask_dir = '{}'.format(tar)
 
-    dst_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset2'
+    # dst_dir = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/mixed_dataset'
+    
+    # local
+    dst_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/'
 
     compress_dataset(
         src_dir,
@@ -148,7 +153,7 @@ def main():
         reverse=False,
         desc=f'Compressing datasets',
         remove_no_lesion=True,
-        kfold=False
+        kfold=True
     )
 
 
