@@ -143,7 +143,7 @@ def main():
     dst_dir = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/mixed_dataset'
     
     # local
-    # dst_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/'
+    # dst_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/mixed_dataset'
 
     compress_dataset(
         src_dir,
