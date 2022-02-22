@@ -137,7 +137,7 @@ def main():
 
     # local
     main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/imagePositive/VoiLung/bk_VoiLungFillHoles/VoiLungFillHoles'
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/image/ZeroPedding/PulmoesMascara/PulmoesMascaraFillHoles'
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/{dataset}/lung_mask/ZeroPedding'
 
     # remote
     # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/{dataset}/image'
