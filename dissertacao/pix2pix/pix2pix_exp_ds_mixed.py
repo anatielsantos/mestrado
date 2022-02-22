@@ -130,8 +130,8 @@ if __name__ == "__main__":
 
     # paths save
     path_weights = f'/data/flavio/anatiel/models/models_ds{DS}/'
-    path_json = f'/data/flavio/anatiel/models/models_kfold_ds{DS}/'
-    path_plot = f'/data/flavio/anatiel/models/models_kfold_ds{DS}/'
+    path_json = f'/data/flavio/anatiel/models/models_ds{DS}/'
+    path_plot = f'/data/flavio/anatiel/models/models_ds{DS}/'
 
     # load dataset
     [src_images_train, tar_images_train] = load_images(
