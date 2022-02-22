@@ -23,7 +23,7 @@ IMG_WIDTH = 544
 IMG_HEIGHT = 544
 INPUT_CHANNELS = 1
 OUTPUT_CHANNELS = 1
-K = "1"  # Definir o fold
+KF = "1"  # Definir o fold
 GPU = "5"  # Definir a GPU
 DS = "_mixed"  # Definir o dataset
 
@@ -79,7 +79,7 @@ def train(path_weights, src_images_train, tar_images_train):
 
     # train model
     checkpoint = ModelCheckpoint(
-        path_weights+'gan_ds'+DS+'_'+K+'_150epc_best.hdf5',
+        path_weights+'gan_ds'+DS+'_'+KF+'_150epc_best.hdf5',
         monitor='dice',
         verbose=1,
         save_best_only=True,
@@ -98,14 +98,14 @@ def train(path_weights, src_images_train, tar_images_train):
         callbacks=[checkpoint]
     )
 
-    model.save(path_weights+'gan_ds'+DS+'_'+K+'_150epc_last.hdf5')
+    model.save(path_weights+'gan_ds'+DS+'_'+KF+'_150epc_last.hdf5')
 
     # convert the history.history dict to a pandas DataFrame:
     hist_df = pd.DataFrame(history.history)
 
     # save to json:
     print("Saving history")
-    hist_json_file = path_json+'gan_ds'+DS+'_'+K+'_150epc.json'
+    hist_json_file = path_json+'gan_ds'+DS+'_'+KF+'_150epc.json'
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
     print("History saved")
@@ -118,15 +118,15 @@ def train(path_weights, src_images_train, tar_images_train):
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Val', 'Loss'], loc='upper left')
     # save plot to file
-    plt.savefig(path_plot+'gan_ds'+DS+'_'+K+'_150epc.png')
+    plt.savefig(path_plot+'gan_ds'+DS+'_'+KF+'_150epc.png')
     # plt.show()
 
 
 if __name__ == "__main__":
     # dataset path
-    path_src_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset{DS}/images{DS}_fold_{K}.npz"
+    path_src_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset{DS}/images{DS}_fold_{KF}.npz"
 
-    path_mask_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset{DS}/masks{DS}_fold_{K}.npz"
+    path_mask_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset{DS}/masks{DS}_fold_{KF}.npz"
 
     # paths save
     path_weights = f'/data/flavio/anatiel/models/models_ds{DS}/'
@@ -145,7 +145,7 @@ if __name__ == "__main__":
         tar_images_train.shape
     )
 
-    print(f"Running K{K} from DATASET {DS} on GPU {GPU}")
+    print(f"Running K{KF} from DATASET {DS} on GPU {GPU}")
 
     # Normalization of the train set (Exp 1)
     # mean = np.mean(src_images_train)  # mean for data centering
