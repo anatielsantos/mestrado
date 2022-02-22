@@ -13,7 +13,7 @@ from losses import calc_metric
 
 # GPU
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 
 def istarmap(self, func, iterable, chunksize=1):
@@ -46,7 +46,7 @@ img_rows = 544
 img_cols = 544
 img_depth = 1
 smooth = 1.
-K = '4'
+K = '6'
 
  
 def preprocess_squeeze(imgs):
