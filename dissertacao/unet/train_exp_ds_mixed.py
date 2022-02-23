@@ -16,8 +16,8 @@ from data_covid_ds_mixed import load_train_data, dice_coef, dice_coef_loss, dice
 
 BATCH_SIZE = 1
 EPOCHS = 150
-K = "9"  # Definir o fold
-GPU = "1"  # Definir GPU
+K = "8"  # Definir o fold
+GPU = "0"  # Definir GPU
 DS = "_mixed"  # Definir dataset
 
 # GPU
