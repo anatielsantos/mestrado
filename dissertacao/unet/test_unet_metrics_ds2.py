@@ -8,12 +8,12 @@ import time
 import multiprocessing.pool as mpp
 from itertools import repeat
 from tqdm import tqdm
-from train_exp1 import unet
+from train_exp_ds1 import unet
 from losses import calc_metric
 
 # GPU
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 
 def istarmap(self, func, iterable, chunksize=1):
@@ -177,13 +177,13 @@ def main():
     dataset = 'dataset2'
 
     # remote   
-    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images/k{K}'
-    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/masks/k{K}'
-    model_path = f'/data/flavio/anatiel/models/models_kfold/unet_ds2_150epc_best_k{K}.h5'
+    # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images/k{K}'
+    # main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/masks/k{K}'
+    # model_path = f'/data/flavio/anatiel/models/models_kfold/unet_ds2_150epc_best_k{K}.h5'
 
-    # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/images/k0'
-    # main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/masks/k0'
-    # model_path = '/home/anatielsantos/Downloads/models_dissertacao/unet_ds1_150epc_best_k0.h5'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/{dataset}/images'
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/{dataset}/masks'
+    model_path = '/home/anatielsantos/Downloads/models_dissertacao/models_ds1/unet_ds1_150epc_best.h5'
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
