@@ -46,7 +46,7 @@ img_rows = 544
 img_cols = 544
 img_depth = 1
 smooth = 1.
-K = '3'
+K = '5'
 
  
 def preprocess_squeeze(imgs):
