@@ -133,14 +133,14 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         print('-'*30)
         print('Calculating metrics...')
         dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(binary_masks, npyMedMask)
-        print("DICE:\t", dice)
-        print("IoU:\t", jaccard)
-        print("Sensitivity:\t", sensitivity)
-        print("Specificity:\t", specificity)
-        print("ACC:\t", accuracy)
-        print("AUC:\t", auc)
-        print("Prec:\t", prec)
-        print("FScore:\t", fscore)
+        print("DICE:", dice)
+        print("IoU:", jaccard)
+        print("Sensitivity:", sensitivity)
+        print("Specificity:", specificity)
+        print("ACC:", accuracy)
+        print("AUC:", auc)
+        print("Prec:", prec)
+        print("FScore:", fscore)
 
 
     except Exception as e:
@@ -209,9 +209,9 @@ def main():
     # main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset2/masks/k{KF}/'
     # model_path = f'/data/flavio/anatiel/models/models_kfold/gan_ds2_150epc_best_k{KF}.hdf5'
 
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset2/images/k{KF}'
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset2/masks/k{KF}'
-    model_path = f'/home/anatielsantos/Downloads/models_dissertacao/gan/gan_ds2_150epc_best_k{KF}.hdf5'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/{dataset}/images'
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/{dataset}/masks'
+    model_path = '/home/anatielsantos/Downloads/models_dissertacao/models_ds1/gan_ds1_150epc_best.hdf5'
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
