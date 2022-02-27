@@ -85,7 +85,7 @@ def predictPatient(model, image):
 
 def execPredict(exam_id, input_path, input_mask_path, output_path, model):
     try:
-        print(exam_id + ':')
+        print(exam_id + " - " + K + ":")
 
         binary_masks = predictPatient(model, input_path)
         npyMedMask = load_patient(input_mask_path)
@@ -167,7 +167,6 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
     else:
         print(str(len(input_paths)) + " - " + str(len(input_mask_paths)) + " - " + str(len(output_paths)))
         for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
-            print(f"Predicting fold {K} on exam {exam_id}")
             execPredict(exam_id, input_paths[i], input_mask_paths[i], output_paths[i], model)
 
 
