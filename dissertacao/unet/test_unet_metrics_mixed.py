@@ -46,7 +46,7 @@ img_rows = 544
 img_cols = 544
 img_depth = 1
 smooth = 1.
-K = '0'
+K = '1'
 
  
 def preprocess_squeeze(imgs):
@@ -167,6 +167,7 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
     else:
         print(str(len(input_paths)) + " - " + str(len(input_mask_paths)) + " - " + str(len(output_paths)))
         for i, exam_id in enumerate(tqdm(exam_ids,desc=desc)):
+            print(f"Predicting fold {K} on exam {exam_id}")
             execPredict(exam_id, input_paths[i], input_mask_paths[i], output_paths[i], model)
 
 
