@@ -54,7 +54,7 @@ IMG_WIDTH = 544
 IMG_HEIGHT = 544
 INPUT_CHANNELS = 1
 OUTPUT_CHANNELS = 1
-KF = '0'
+KF = '1'
 
 
 def preprocess_squeeze(imgs):
@@ -103,7 +103,7 @@ def predictPatient(model, image):
 
 def execPredict(exam_id, input_path, input_mask_path, output_path, model):
     try:
-        print(exam_id + " - " + KF + ":")
+        print(exam_id + " - Fold " + KF + ":")
 
         binary_masks = predictPatient(model, input_path)
         npyMedMask = load_patient(input_mask_path)
@@ -115,14 +115,14 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         print('-'*30)
         print('Calculating metrics...')
         dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(binary_masks.astype(int), npyMedMask.astype(int))
-        print("DICE:\t", dice)
-        print("IoU:\t", jaccard)
-        print("Sensitivity:\t", sensitivity)
-        print("Specificity:\t", specificity)
-        print("ACC:\t", accuracy)
-        print("AUC:\t", auc)
-        print("Prec:\t", prec)
-        print("FScore:\t", fscore)
+        print("DICE:", dice)
+        print("IoU:", jaccard)
+        print("Sensitivity:", sensitivity)
+        print("Specificity:", specificity)
+        print("ACC:", accuracy)
+        print("AUC:", auc)
+        print("Prec:", prec)
+        print("FScore:", fscore)
 
         # binary_masks.dtype='float32'
         itkImage = sitk.GetImageFromArray(binary_masks)
