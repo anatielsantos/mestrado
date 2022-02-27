@@ -177,8 +177,8 @@ def main():
     dataset = 'dataset_mixed'
 
     # remote   
-    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images/{K}'
-    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/masks/{K}'
+    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images/k{K}'
+    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/masks/k{K}'
     model_path = f'/data/flavio/anatiel/models/models_ds_mixed/unet_ds_mixed_k{K}_150epc_best.h5'
 
     # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/images/k0'
