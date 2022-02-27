@@ -190,12 +190,12 @@ def main():
 
     ext = '.nii.gz'
     search_pattern = '*'
-    dataset = 'ds_mixed'
+    dataset = 'mixed'
 
     # remote
-    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images/k{KF}'
-    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/masks/k{KF}'
-    model_path = f'/data/flavio/anatiel/models/models_ds_mixed/gan_{dataset}_{KF}_150epc_best.hdf5'
+    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset_{dataset}/images/k{KF}'
+    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset_{dataset}/masks/k{KF}'
+    model_path = f'/data/flavio/anatiel/models/models_ds_mixed/gan_ds_{dataset}_{KF}_150epc_best.hdf5'
 
     # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/images/k0'
     # main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/masks/k0'
@@ -203,7 +203,7 @@ def main():
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/gan_preds'
+    dst_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset_{dataset}/gan_preds'
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
