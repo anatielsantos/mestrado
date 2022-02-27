@@ -8,7 +8,7 @@ import time
 import multiprocessing.pool as mpp
 from itertools import repeat
 from tqdm import tqdm
-from train_exp1 import unet
+from train_exp_ds_mixed import unet
 from losses import calc_metric
 
 # GPU
