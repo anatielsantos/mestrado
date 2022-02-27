@@ -54,6 +54,7 @@ IMG_WIDTH = 544
 IMG_HEIGHT = 544
 INPUT_CHANNELS = 1
 OUTPUT_CHANNELS = 1
+KF = '0'
 
 
 def preprocess_squeeze(imgs):
@@ -102,7 +103,7 @@ def predictPatient(model, image):
 
 def execPredict(exam_id, input_path, input_mask_path, output_path, model):
     try:
-        print(exam_id + ':')
+        print(exam_id + " - " + KF + ":")
 
         binary_masks = predictPatient(model, input_path)
         npyMedMask = load_patient(input_mask_path)
@@ -190,7 +191,6 @@ def main():
     ext = '.nii.gz'
     search_pattern = '*'
     dataset = 'ds_mixed'
-    KF = '0'
 
     # remote
     main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images/k{KF}'
