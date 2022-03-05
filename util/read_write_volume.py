@@ -1,13 +1,12 @@
-# GPU
+import SimpleITK as sitk
+import traceback
+import glob
 import os
+from tqdm import tqdm
+
+# GPU
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-
-import SimpleITK as sitk
-import numpy as np
-import glob
-from tqdm import tqdm
-import traceback
 
 def read_volume(exam_id, input_path):
     try:
