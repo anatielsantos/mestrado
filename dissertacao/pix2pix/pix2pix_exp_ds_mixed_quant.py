@@ -24,7 +24,7 @@ IMG_HEIGHT = 544
 INPUT_CHANNELS = 1
 OUTPUT_CHANNELS = 1
 KF = "1"  # Definir o fold
-GPU = "4"  # Definir a GPU
+GPU = "5"  # Definir a GPU
 DS = "_mixed_quant"  # Definir o dataset
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
