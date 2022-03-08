@@ -124,9 +124,9 @@ def train(path_weights, src_images_train, tar_images_train):
 
 if __name__ == "__main__":
     # dataset path
-    path_src_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset{DS}/quant/images{DS}_k{KF}.npz"
+    path_src_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset_mixed/quant/images{DS}_k{KF}.npz"
 
-    path_mask_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset{DS}/quant/masks{DS}_k{KF}.npz"
+    path_mask_train = f"/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset_mixed/quant/masks{DS}_k{KF}.npz"
 
     # paths save
     path_weights = f'/data/flavio/anatiel/models/models_ds{DS}/'
