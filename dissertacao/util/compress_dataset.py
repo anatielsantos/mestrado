@@ -128,22 +128,22 @@ def compress_dataset(
 
 def main():
     ext = '.nii.gz'
-    # main_dir_image = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/mixed_dataset/images'
-    # main_dir_mask = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/mixed_dataset/masks'
+    main_dir_image = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset_mixed/quant/images'
+    main_dir_mask = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset_mixed/quant/masks'
 
     # local
-    main_dir_image = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/quant/dataset*/images'
-    main_dir_mask = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/quant/dataset*/masks'
+    # main_dir_image = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/quant/dataset*/images'
+    # main_dir_mask = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/quant/dataset*/masks'
 
     src = main_dir_image
     tar = main_dir_mask
     src_dir = '{}'.format(src)
     mask_dir = '{}'.format(tar)
 
-    # dst_dir = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/mixed_dataset'
+    dst_dir = '/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset_mixed/quant'
     
     # local
-    dst_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/quant/mixed_dataset'
+    # dst_dir = '/home/anatielsantos/mestrado/datasets/dissertacao/bbox/quant/mixed_dataset'
 
     compress_dataset(
         src_dir,
