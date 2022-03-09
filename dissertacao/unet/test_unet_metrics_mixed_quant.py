@@ -13,7 +13,7 @@ from losses import calc_metric
 
 # GPU
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
 
 def istarmap(self, func, iterable, chunksize=1):
