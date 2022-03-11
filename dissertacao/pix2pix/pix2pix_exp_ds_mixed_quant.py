@@ -26,7 +26,7 @@ OUTPUT_CHANNELS = 1
 KF = "8"  # Definir o fold
 GPU = "2"  # Definir a GPU
 DS = "_mixed_quant"  # Definir o dataset
-
+ 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = GPU
 
