@@ -91,6 +91,14 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         npyMedMask = load_patient(input_mask_path)
         npyMedMask = (npyMedMask>0)*1
 
+        print(binary_masks.dtype)
+        print(np.amin(binary_masks))
+        print(np.amax(binary_masks))
+        
+        print(npyMedMask.dtype)
+        print(np.amin(npyMedMask))
+        print(np.amax(npyMedMask))
+
         # calc metrics
         print('-'*30)
         print('Calculating metrics...')
