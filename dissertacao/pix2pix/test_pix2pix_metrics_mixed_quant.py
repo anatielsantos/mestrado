@@ -78,7 +78,6 @@ def predictPatient(model, image):
     print('Loading and preprocessing test data...')
     print('-'*30)
     npyImage = load_patient(image)
-    npyImage = (npyImage>0)*1
 
     print("Image shape:", npyImage.shape)
 
@@ -108,6 +107,7 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
 
         binary_masks = predictPatient(model, input_path)
         npyMedMask = load_patient(input_mask_path)
+        npyMedMask = (npyMedMask>0)*1
 
         
         print(binary_masks.dtype)
