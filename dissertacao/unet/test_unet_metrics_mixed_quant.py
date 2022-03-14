@@ -93,7 +93,10 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         print(binary_masks.dtype)
         print(np.amin(binary_masks))
         print(np.amax(binary_masks))
-        print(binary_masks)
+        
+        print(npyMedMask.dtype)
+        print(np.amin(npyMedMask))
+        print(np.amax(npyMedMask))
 
         # calc metrics
         print('-'*30)
