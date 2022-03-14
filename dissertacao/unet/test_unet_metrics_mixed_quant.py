@@ -90,7 +90,7 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         binary_masks = predictPatient(model, input_path)
         npyMedMask = load_patient(input_mask_path)
 
-        print(binary_masks.dtype())
+        print(binary_masks.dtype)
         print(np.amin(binary_masks))
         print(np.amax(binary_masks))
 
