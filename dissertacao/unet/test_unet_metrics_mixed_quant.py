@@ -179,7 +179,7 @@ def main():
     # remote
     main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/quant/images/k{K}'
     main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/quant/masks/k{K}'
-    model_path = f'/data/flavio/anatiel/models/models_ds_mixed_quant/unet_ds_mixed_quant_{K}_150epc_best.hdf5'
+    model_path = f'/data/flavio/anatiel/models/models_ds_mixed_quant/unet_ds_mixed_quant_k{K}_150epc_best.hdf5'
 
     # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/images/k0'
     # main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/masks/k0'
