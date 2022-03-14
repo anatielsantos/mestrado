@@ -76,13 +76,13 @@ def predictPatient(model, image):
 
     npyImagePredict = model.predict(npyImage, batch_size=1, verbose=1)
     npyImagePredict = preprocess_squeeze(npyImagePredict)
-    # npyImagePredict = np.around(npyImagePredict, decimals=0)
+    npyImagePredict = np.around(npyImagePredict, decimals=0)
     
     print(npyImagePredict.dtype)
     print(np.amin(npyImagePredict))
     print(np.amax(npyImagePredict))
     
-    npyImagePredict = (npyImagePredict>0.5)*1
+    npyImagePredict = (npyImagePredict>0)*1
 
     return npyImagePredict.astype(np.float32)
     # return npyImagePredict
