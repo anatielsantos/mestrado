@@ -78,7 +78,7 @@ def predictPatient(model, image):
     print('Loading and preprocessing test data...')
     print('-'*30)
     npyImage = load_patient(image)
-    npyMedMask = (npyMedMask>0)*1
+    npyImage = (npyImage>0)*1
 
     print("Image shape:", npyImage.shape)
 
