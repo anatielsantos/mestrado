@@ -59,8 +59,9 @@ def load_patient(image):
     itkImage = sitk.ReadImage(image)
     npyImage = sitk.GetArrayFromImage(itkImage)
     npyImage = np.expand_dims(npyImage, axis=-1)
+    npyImage = (npyImage>0.5)*1
 
-    return npyImage.astype(np.float32)
+    return npyImage
 
 
 def predictPatient(model, image):
@@ -79,8 +80,8 @@ def predictPatient(model, image):
     npyImagePredict = np.around(npyImagePredict, decimals=0)
     npyImagePredict = (npyImagePredict>0.5)*1
 
-    return npyImagePredict.astype(np.float32)
-    # return npyImagePredict
+    # return npyImagePredict.astype(np.float32)
+    return npyImagePredict
 
 
 def execPredict(exam_id, input_path, input_mask_path, output_path, model):
