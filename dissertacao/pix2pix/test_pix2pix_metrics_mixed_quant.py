@@ -158,7 +158,7 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_pred' + ext
+        output_path = dst_dir + '/' + exam_id + '_pred_quant' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -193,9 +193,9 @@ def main():
     dataset = 'mixed'
 
     # remote
-    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset_{dataset}/images/k{KF}'
-    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset_{dataset}/masks/k{KF}'
-    model_path = f'/data/flavio/anatiel/models/models_ds_mixed/gan_ds_{dataset}_{KF}_150epc_best.hdf5'
+    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset_{dataset}/quant/images/k{KF}'
+    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset_{dataset}/quant/masks/k{KF}'
+    model_path = f'/data/flavio/anatiel/models/models_ds_mixed_quant/gan_ds_{dataset}_quant_{KF}_150epc_best.hdf5'
 
     # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/images/k0'
     # main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/masks/k0'
@@ -203,7 +203,7 @@ def main():
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset_{dataset}/gan_preds'
+    dst_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/dataset_{dataset}/quant/gan_preds'
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
