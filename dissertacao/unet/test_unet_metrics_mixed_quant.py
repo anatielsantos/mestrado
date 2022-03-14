@@ -60,7 +60,7 @@ def load_patient(image):
     npyImage = sitk.GetArrayFromImage(itkImage)
     npyImage = np.expand_dims(npyImage, axis=-1)
 
-    return npyImage
+    return npyImage.astype(np.float32)
 
 
 def predictPatient(model, image):
