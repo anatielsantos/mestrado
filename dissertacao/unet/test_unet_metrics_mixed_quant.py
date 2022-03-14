@@ -59,7 +59,6 @@ def load_patient(image):
     itkImage = sitk.ReadImage(image)
     npyImage = sitk.GetArrayFromImage(itkImage)
     npyImage = np.expand_dims(npyImage, axis=-1)
-    npyImage = (npyImage>0.5)*1
 
     return npyImage.astype(np.float32)
 
@@ -90,6 +89,7 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
 
         binary_masks = predictPatient(model, input_path)
         npyMedMask = load_patient(input_mask_path)
+        npyMedMask = (npyMedMask>0)*1
 
         print(binary_masks.dtype)
         print(np.amin(binary_masks))
