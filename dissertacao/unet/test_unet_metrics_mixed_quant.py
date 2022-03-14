@@ -79,8 +79,8 @@ def predictPatient(model, image):
     npyImagePredict = np.around(npyImagePredict, decimals=0)
     npyImagePredict = (npyImagePredict>0.5)*1
 
-    # return npyImagePredict.astype(np.float32)
-    return npyImagePredict
+    return npyImagePredict.astype(np.float32)
+    # return npyImagePredict
 
 
 def execPredict(exam_id, input_path, input_mask_path, output_path, model):
