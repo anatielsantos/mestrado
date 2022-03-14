@@ -102,7 +102,7 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         # calc metrics
         print('-'*30)
         print('Calculating metrics...')
-        dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(binary_masks, npyMedMask)
+        dice, jaccard, sensitivity, specificity, accuracy, auc, prec, fscore = calc_metric(binary_masks, npyMedMask.astype(np.float32))
         print("DICE:", dice)
         print("IoU:", jaccard)
         print("Sensitivity:", sensitivity)
