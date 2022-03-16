@@ -76,14 +76,9 @@ def predictPatient(model, image):
 
     npyImagePredict = model.predict(npyImage, batch_size=1, verbose=1)
     npyImagePredict = preprocess_squeeze(npyImagePredict)
-    npyImagePredict = np.around(npyImagePredict, decimals=0)
-    npyImagePredict = (npyImagePredict>0.5)*1
+    # npyImagePredict = np.around(npyImagePredict, decimals=0)
+    # npyImagePredict = (npyImagePredict>0)*1
     
-    print(npyImagePredict.dtype)
-    print(np.amin(npyImagePredict))
-    print(np.amax(npyImagePredict))
-
-    # return npyImagePredict.astype(np.float32)
     return npyImagePredict
 
 
@@ -93,15 +88,21 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
 
         binary_masks = predictPatient(model, input_path)
         npyMedMask = load_patient(input_mask_path)
-        npyMedMask = (npyMedMask>0)*1
 
-        print(binary_masks.dtype)
-        print(np.amin(binary_masks))
-        print(np.amax(binary_masks))
+        binary_masks = binary_masks.astype(np.float32)
+        npyMedMask = npyMedMask.astype(np.float32)
+
+        itkImage = sitk.GetImageFromArray(binary_masks)
+
+        image = sitk.ReadImage(input_path)
+        #npyImage = sitk.GetArrayFromImage(image)
+
+        itkImage.CopyInformation(image)
+        sitk.WriteImage(itkImage, output_path)
         
-        print(npyMedMask.dtype)
-        print(np.amin(npyMedMask))
-        print(np.amax(npyMedMask))
+        npyMedMask = (npyMedMask>0.0)*1.0
+        binary_masks = (binary_masks*255)
+        binary_masks = (binary_masks>0.0)*1
 
         # calc metrics
         print('-'*30)
@@ -115,17 +116,6 @@ def execPredict(exam_id, input_path, input_mask_path, output_path, model):
         print("AUC:", auc)
         print("Prec:", prec)
         print("FScore:", fscore)
-
-        binary_masks = binary_masks.astype(np.float32)
-        npyMedMask = npyMedMask.astype(np.float32)
-
-        itkImage = sitk.GetImageFromArray(binary_masks)
-
-        image = sitk.ReadImage(input_path)
-        #npyImage = sitk.GetArrayFromImage(image)
-
-        itkImage.CopyInformation(image)
-        sitk.WriteImage(itkImage, output_path)
 
         del image
 
@@ -189,17 +179,21 @@ def main():
     dataset = 'dataset_mixed'
 
     # remote
-    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/quant/images/k{1}'
-    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/quant/masks/k{1}'
-    model_path = f'/data/flavio/anatiel/models/models_ds_mixed_quant/unet_ds_mixed_quant_k{1}_150epc_best.h5'
+    # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/quant/images/k{K}'
+    # main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/quant/masks/k{K}'
+    # model_path = f'/data/flavio/anatiel/models/models_ds_mixed_quant/unet_ds_mixed_quant_k{K}_150epc_best.h5'
 
-    # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/images/k0'
-    # main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/dataset1/masks/k0'
-    # model_path = '/home/anatielsantos/Downloads/models_dissertacao/unet_ds1_150epc_best_k0.h5'
+    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/quant/dataset2/images'
+    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/quant/dataset2/masks'
+    model_path = '/home/anatielsantos/Downloads/models_dissertacao/unet_ds_mixed_quant_k0_150epc_best.h5'
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/quant_unet_preds'
+    
+    # local
+    dst_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/quant/dataset1/quant_unet_preds'
+    # remote
+    # dst_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/quant_unet_preds'
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
