@@ -179,21 +179,21 @@ def main():
     dataset = 'dataset_mixed'
 
     # remote
-    # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/quant/images/k{K}'
-    # main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/quant/masks/k{K}'
-    # model_path = f'/data/flavio/anatiel/models/models_ds_mixed_quant/unet_ds_mixed_quant_k{K}_150epc_best.h5'
+    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/quant/images/k{K}'
+    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/quant/masks/k{K}'
+    model_path = f'/data/flavio/anatiel/models/models_ds_mixed_quant/unet_ds_mixed_quant_k{K}_150epc_best.h5'
 
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/quant/dataset2/images'
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/quant/dataset2/masks'
-    model_path = '/home/anatielsantos/Downloads/models_dissertacao/unet_ds_mixed_quant_k0_150epc_best.h5'
+    # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/quant/dataset2/images'
+    # main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/quant/dataset2/masks'
+    # model_path = '/home/anatielsantos/Downloads/models_dissertacao/unet_ds_mixed_quant_k0_150epc_best.h5'
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
     
     # local
-    dst_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/quant/dataset1/quant_unet_preds'
+    # dst_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/quant/dataset1/quant_unet_preds'
     # remote
-    # dst_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/quant_unet_preds'
+    dst_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/quant_unet_preds'
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
