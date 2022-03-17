@@ -54,7 +54,7 @@ IMG_WIDTH = 544
 IMG_HEIGHT = 544
 INPUT_CHANNELS = 1
 OUTPUT_CHANNELS = 1
-KF = '9'
+KF = '0'
 
 
 def preprocess_squeeze(imgs):
