@@ -46,7 +46,7 @@ img_rows = 544
 img_cols = 544
 img_depth = 1
 smooth = 1.
-K = '6'
+K = '3'
 
  
 def preprocess_squeeze(imgs):
@@ -177,13 +177,13 @@ def main():
     dataset = 'dataset2'
 
     # remote   
-    # main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images/k{K}'
-    # main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/masks/k{K}'
-    # model_path = f'/data/flavio/anatiel/models/models_kfold/unet_ds2_150epc_best_k{K}.h5'
+    main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images/k{K}'
+    main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/masks/k{K}'
+    model_path = f'/data/flavio/anatiel/models/models_kfold/unet_ds1_150epc_best_k{K}.h5'
 
-    main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/{dataset}/images'
-    main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/{dataset}/masks'
-    model_path = '/home/anatielsantos/Downloads/models_dissertacao/models_ds1/unet_ds1_150epc_best.h5'
+    # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/{dataset}/images'
+    # main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/{dataset}/masks'
+    # model_path = '/home/anatielsantos/Downloads/models_dissertacao/models_ds1/unet_ds1_150epc_best.h5'
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
