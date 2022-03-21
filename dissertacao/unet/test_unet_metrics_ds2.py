@@ -142,7 +142,7 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_pred_exp3_exam_4' + K + ext
+        output_path = dst_dir + '/' + exam_id + '_pred_exp3_exam_4' + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
