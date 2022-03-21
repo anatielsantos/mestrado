@@ -187,7 +187,7 @@ def main():
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = '{}/unet_ds1_preds'.format(main_dir)
+    dst_dir = '{}/unet_ds2_preds'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
