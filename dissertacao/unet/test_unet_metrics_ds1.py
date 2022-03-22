@@ -142,7 +142,7 @@ def execExecPredictByUnet(src_dir, mask_dir, dst_dir, ext, search_pattern, model
 
     for input_path in input_pathAll:
         exam_id = os.path.basename(input_path.replace(ext, ''))
-        output_path = dst_dir + '/' + exam_id + '_pred_k_EXP2_K' + K + ext
+        output_path = dst_dir + '/' + exam_id + '_pred_EXP4_K' + K + ext
 
         # verifica se o arquivo ja existe
         if os.path.isfile(output_path):
@@ -174,7 +174,7 @@ def main():
 
     ext = '.nii.gz'
     search_pattern = '*'
-    dataset = 'dataset2'
+    dataset = 'dataset1'
 
     # remote   
     main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images/k{K}'
@@ -187,7 +187,7 @@ def main():
 
     src_dir = '{}'.format(main_dir)
     mask_dir = '{}'.format(main_mask_dir)
-    dst_dir = '{}/unet_ds2_preds'.format(main_dir)
+    dst_dir = '{}/unet_ds1_preds'.format(main_dir)
 
     nproc = mp.cpu_count()
     print('Num Processadores = ' + str(nproc))
