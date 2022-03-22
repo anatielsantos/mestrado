@@ -195,7 +195,7 @@ def main():
     # remote
     main_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/images/k{KF}/'
     main_mask_dir = f'/data/flavio/anatiel/datasets/dissertacao/final_tests/kfold/{dataset}/masks/k{KF}/'
-    model_path = f'/data/flavio/anatiel/models/models_kfold/gan_ds2_150epc_best_k{KF}.hdf5'
+    model_path = f'/data/flavio/anatiel/models/models_ds2/gan_ds2_150epc_best.hdf5'
 
     # main_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/{dataset}/images'
     # main_mask_dir = f'/home/anatielsantos/mestrado/datasets/dissertacao/bbox/{dataset}/masks'
